@@ -1,6 +1,7 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { auth } from '../firebase'
+import { useNavigation } from '@react-navigation/native'
 
 const LoginScreen = () => {
 
@@ -8,17 +9,40 @@ const LoginScreen = () => {
     const [password, setPassword] = useState('')
 
 
-    { /* Function to handle firebase actions (signup / register) */ }
+
+    const navigation = useNavigation()
+    { /* Runs when the component mounts, switches screen if user = signed in , unsubscribe takes care of abandoning the listener when we switch screens*/ }
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                navigation.replace("Home")
+            }
+        })
+
+        return unsubscribe
+    }, [])
+
+
+    { /* Function to handle firebase actions (signup / login) */ }
     const handleSignUp = () => {
         auth
             .createUserWithEmailAndPassword(email, password)
             .then(userCredentials => {
                 const user = userCredentials.user;
-                console.log(user.email);
+                console.log('Registered with: ', user.email);
             })
             .catch(error => alert(error.message))
     }
 
+    const handleLogin = () => {
+        auth
+            .signInWithEmailAndPassword(email, password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log('Logged in with: ', user.email);
+            })
+            .catch(error => alert(error.message))
+    }
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -40,7 +64,7 @@ const LoginScreen = () => {
 
         <View style={styles.buttonContainer}>
             <TouchableOpacity 
-                onPress={() => { }} 
+                onPress={handleLogin} 
                 style={styles.button}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
