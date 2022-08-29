@@ -1,3 +1,4 @@
+// Used to make firebase work with idb
 module.exports = {
     transformer: {
       getTransformOptions: async () => ({

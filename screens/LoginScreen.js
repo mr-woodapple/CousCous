@@ -11,7 +11,7 @@ const LoginScreen = () => {
     const auth = getAuth()
 
     const navigation = useNavigation()
-    
+
     { /* Runs when the component mounts, switches screen if user = signed in , unsubscribe takes care of abandoning the listener when we switch screens*/ }
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {

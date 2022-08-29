@@ -8,12 +8,12 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import ShoppingListScreen from './screens/ShoppingListScreen';
 
-import { init } from './firebase';
+import { app } from './firebase';
 
 const Stack = createNativeStackNavigator();
 
 { /* Might be super dirty, but this calls the firebase.js and initializes the app with it */ }
-init();
+app
 
 export default function App() {
   return (

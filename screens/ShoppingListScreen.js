@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react'
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
+import React, { useEffect, useState } from 'react'
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
+import { db } from '../firebase'
+import { ref, onValue, push, update, remove } from 'firebase/database'
 
 import Task from '../components/Task';
 
@@ -13,10 +14,26 @@ export default function App() {
   const [taskItems, setTaskItems] = useState([]);
 
 
+  {/* handles communitcation with the database...? */}
+  useEffect(() => {
+    return onValue(ref(db, '/taskItems'), querySnapShot => {
+      let data = querySnapShot.val() || {};
+      let taskItems = {...data};
+      setTaskItems(taskItems);
+    });
+  }, [])
+
+
   const handleAddTask = () => {
     Keyboard.dismiss();
+
     {/* append the task to the array of taskItems */}
+    push(ref(db, '/taskItems'), {
+      done: false,
+      title: taskItems,
+    });
     setTaskItems([...taskItems, task])
+    
     {/* empty the input */}
     setTask(null);
   }
@@ -29,11 +46,12 @@ export default function App() {
     setTaskItems(itemsCopy);
   }
 
+
   return (
     <View style={styles.container}>
       
       {/* Todays Tasks */}
-      <View style={styles.tasksWrapper}>
+      <ScrollView style={styles.tasksWrapper}>
 
         <View style={styles.items}>
           {/* Iterate over the task items and add a <Task> for every single one */}
@@ -48,11 +66,12 @@ export default function App() {
           }
 
         </View>
-      </View>
+      </ScrollView>
 
       {/* Write task section */}
       <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={100}
         style={styles.writeTaskWrapper}>
         
         {/* every time the text changes, set the task to this current text */}
@@ -69,6 +88,7 @@ export default function App() {
 
 
     </View>
+
   );
 }
 
@@ -79,7 +99,7 @@ const styles = StyleSheet.create({
   },
 
   tasksWrapper: {
-    paddingTop: 80,
+    paddingTop: 10,
     paddingHorizontal: 20,
   },
   sectionTitle: {
@@ -98,6 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+
   },
   input: {
     backgroundColor: '#fff',
