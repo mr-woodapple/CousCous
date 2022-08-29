@@ -1,16 +1,17 @@
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth } from '../firebase'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
+
 
 const LoginScreen = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-
-
+    const auth = getAuth()
 
     const navigation = useNavigation()
+    
     { /* Runs when the component mounts, switches screen if user = signed in , unsubscribe takes care of abandoning the listener when we switch screens*/ }
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -25,20 +26,18 @@ const LoginScreen = () => {
 
     { /* Function to handle firebase actions (signup / login) */ }
     const handleSignUp = () => {
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then(userCredentials => {
-                const user = userCredentials.user;
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(userCredential => {
+                const user = userCredential.user;
                 console.log('Registered with: ', user.email);
             })
             .catch(error => alert(error.message))
     }
 
     const handleLogin = () => {
-        auth
-            .signInWithEmailAndPassword(email, password)
-            .then(userCredentials => {
-                const user = userCredentials.user;
+        signInWithEmailAndPassword(auth, email, password)
+            .then(userCredential => {
+                const user = userCredential.user;
                 console.log('Logged in with: ', user.email);
             })
             .catch(error => alert(error.message))

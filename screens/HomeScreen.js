@@ -1,28 +1,37 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { auth } from '../firebase'
+import { getAuth, signOut } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
 
 
 const HomeScreen = () => {
 
   const navigation = useNavigation()
+  const auth = getAuth()
 
   const handleSignOut = () => {
-    auth
-      .signOut()
+    signOut(auth)
       .then(() => {
         navigation.replace("Login")
       })
-      .catch(error => AudioListener(error.message))
+      .catch(error => alert(error.message))
   }
 
   return (
     <View style={styles.container}>
+
       { /* Question mark makes it an "optional value" */ }
       <Text>E-Mail: {auth.currentUser?.email}</Text> 
+
       <TouchableOpacity style={styles.button} onPress={handleSignOut}>
         <Text style={styles.buttonText}>Sign out</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={() => navigation.navigate("ShoppingList")}>
+
+        <Text style={styles.buttonText}>Shopping List</Text>
       </TouchableOpacity>
     </View>
   )

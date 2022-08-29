@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
-import { StatusBar } from 'expo-status-bar';
+
+import React, { useState } from 'react'
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
-import Task from './components/Task';
+import { useNavigation } from '@react-navigation/native'
+
+import Task from '../components/Task';
 
 export default function App() {
 
   {/* Creating a state in a functional component, first item = name of the state, second item = function to set the state */}
-  const [task, setTask] = useState();
+  const [task, setTask] = useState()
   {/* state array to store values, standard value = empty array */}
   const [taskItems, setTaskItems] = useState([]);
 
@@ -32,20 +34,18 @@ export default function App() {
       
       {/* Todays Tasks */}
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Welcome</Text>
 
-          <View style={styles.items}>
-            {/* Iterate over the task items and add a <Task> for every single one */}
-            {
-              taskItems.map((item, index) => {
-                return (
-                  <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                    <Task text={item} />
-                  </TouchableOpacity>
-                )
-              })
-            }
-
+        <View style={styles.items}>
+          {/* Iterate over the task items and add a <Task> for every single one */}
+          {
+            taskItems.map((item, index) => {
+              return (
+                <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+                  <Task text={item} />
+                </TouchableOpacity>
+              )
+            })
+          }
 
         </View>
       </View>
