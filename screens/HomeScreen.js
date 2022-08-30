@@ -29,9 +29,9 @@ const HomeScreen = () => {
 
       <TouchableOpacity 
         style={styles.button} 
-        onPress={() => navigation.navigate("ShoppingList")}>
+        onPress={() => navigation.navigate("ToDoList")}>
 
-        <Text style={styles.buttonText}>Shopping List</Text>
+        <Text style={styles.buttonText}>To Do List</Text>
       </TouchableOpacity>
     </View>
   )

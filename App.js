@@ -3,12 +3,15 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { app } from './firebase';
 
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import ShoppingListScreen from './screens/ShoppingListScreen';
+import ToDoListScreen from './screens/ToDoListScreen';
 
-import { app } from './firebase';
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +26,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false}} name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="ShoppingList" component={ShoppingListScreen} />
+        <Stack.Screen name="ToDoList" component={ToDoListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
 
