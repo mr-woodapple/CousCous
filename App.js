@@ -7,7 +7,6 @@ import { app } from './firebase';
 
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
-import ShoppingListScreen from './screens/ShoppingListScreen';
 import ToDoListScreen from './screens/ToDoListScreen';
 
 
@@ -25,7 +24,6 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen options={{ headerShown: false}} name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="ShoppingList" component={ShoppingListScreen} />
         <Stack.Screen name="ToDoList" component={ToDoListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
