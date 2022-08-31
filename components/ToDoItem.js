@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
-import { ref, onValue, push, update, remove, set } from 'firebase/database'
+import { ref, update, remove} from 'firebase/database'
 import { db } from '../firebase'
+import { Feather } from '@expo/vector-icons';
 
 
 const ToDoItem = ({todoItem: {title, done}, id}) => {
@@ -17,25 +18,31 @@ const ToDoItem = ({todoItem: {title, done}, id}) => {
                 done: !doneState,
             },
         });
-        console.log('set done/undone')
     };
 
     const deleteTask = () => {
-        console.log('will delete: ', id);
         remove(ref(db, '/todos/'+id))
     }
 
     return (
     <View style={styles.todoItem}>
-        <BouncyCheckbox
-            onPress={onCheck}
-            value={doneState}/>
 
-        <Text style={[styles.todoText, {opacity: doneState ? 0.2 : 1}]}>
-            {title}
-        </Text>
+        <View style={styles.todoItemLeft}>
+          <BouncyCheckbox
+              onPress={onCheck}
+              value={doneState}/>
 
-        <Button title={'delete'} onPress={deleteTask}/>
+          <Text style={[styles.todoText, {opacity: doneState ? 0.2 : 1}]}>
+              {title}
+          </Text>
+        </View>
+        
+        <View style={styles.todoItemRight}>
+          <TouchableOpacity onPress={deleteTask}>
+            <Feather name="trash" size={18} color="black" />
+          </TouchableOpacity>
+        </View>
+
     </View>
     );
 };
@@ -58,17 +65,25 @@ const styles = StyleSheet.create({
     },
     todoItem: {
       flexDirection: 'row',
+      justifyContent: 'space-between',
       marginVertical: 5,
       alignItems: 'center',
       backgroundColor: 'white',
-      paddingHorizontal: 15,
-      paddingVertical: 15,
+      paddingHorizontal: 20,
+      paddingVertical: 20,
       borderRadius: 15,
       
     },
+    todoItemLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    todoItemRight: {
+
+    },
     todoText: {
       paddingHorizontal: 5,
-      fontSize: 16
+      fontSize: 16,
     },
   });
 

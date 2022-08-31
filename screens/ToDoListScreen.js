@@ -1,7 +1,8 @@
 import React, { useState, useEffect  } from 'react'
-import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Keyboard, StatusBar } from 'react-native'
-import { ref, onValue, push, update, remove } from 'firebase/database'
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Keyboard, StatusBar, TouchableOpacity } from 'react-native'
+import { ref, onValue, push, remove } from 'firebase/database'
 import { db } from '../firebase'
+import { Feather } from '@expo/vector-icons'; 
 
 import ToDoItem from '../components/ToDoItem'
 
@@ -34,18 +35,21 @@ const ToDoListScreen = () => {
     }
 
 
+
     return (
         <View
             style={styles.container}
             contentInsetAdjustmentBehavior="automatic">
 
-            <View style={styles.header}>
-                <Text>Title</Text>
+            <View style={styles.headerWrapper}>
+                <Text style={styles.headerHeading}>
+                    Einkaufsliste
+                </Text>
 
                 <View style={styles.headerRightButton}>
-                    <Text>
-                        i
-                    </Text>
+                    <TouchableOpacity>
+                        <Feather name="more-vertical" size={24} color="black" />
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -104,11 +108,28 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight || 0,
-        paddingTop: 10,
-        paddingHorizontal: 20,
     },
-    tasksWrapper: {
 
+    headerWrapper: {
+        paddingTop: 60,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        widht: '100%',
+    },
+    headerHeading: {
+        fontWeight: 'bold',
+        fontSize: 36,
+    },
+    headerRightButton: {
+        
+    },
+
+    tasksWrapper: {
+        marginTop: 10,
+        paddingHorizontal: 20,
     },
     writeTaskWrapper: {
         bottom: 100,

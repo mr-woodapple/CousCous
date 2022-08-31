@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { app } from './firebase';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Feather } from '@expo/vector-icons';
 
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -26,11 +27,11 @@ function TabScreenNavigation() {
   return(
     <Tab.Navigator screenOptions={{
       tabBarStyle: { position: 'absolute', backgroundColor: 'transparent', borderTopWidth: 0, elevation: 0 },
-      tabBarBackground: () => (<LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} />)
+      tabBarBackground: () => (<LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']}/>),
     }}>
-      <Tab.Screen name="Start" component={HomeScreen} />
-      <Tab.Screen name="Einkaufsliste" component={ToDoListNavigation} options={{ headerShown: false }} />
-      <Tab.Screen name="Mehr" component={MoreScreenNavigation} options={{ headerShown: false }} />
+      <Tab.Screen name="Start" component={HomeScreen} options={{ headerShown: false, tabBarIcon: () => (<Feather name="book-open" size={24} color="black" />) }} />
+      <Tab.Screen name="Einkaufsliste" component={ToDoListNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="list" size={24} color="black" />) }} />
+      <Tab.Screen name="Mehr" component={MoreScreenNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="more-horizontal" size={24} color="black" />) }} />
     </Tab.Navigator>
   )
 }
