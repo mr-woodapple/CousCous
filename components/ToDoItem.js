@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
-import { ref, onValue, push, update, remove } from 'firebase/database'
+import { ref, onValue, push, update, remove, set } from 'firebase/database'
 import { db } from '../firebase'
 
 
@@ -10,23 +10,32 @@ const ToDoItem = ({todoItem: {title, done}, id}) => {
     const [doneState, setDone] = useState(done);
 
     const onCheck = (isChecked) => {
-    setDone(isChecked);
-    update(ref(db, '/todos'), {
-        [id]: {
-        title,
-        done: !doneState,
-        },
-    });
+        setDone(isChecked);
+        update(ref(db, '/todos'), {
+            [id]: {
+                title,
+                done: !doneState,
+            },
+        });
+        console.log('set done/undone')
     };
+
+    const deleteTask = () => {
+        console.log('will delete: ', id);
+        remove(ref(db, '/todos/'+id))
+    }
+
     return (
     <View style={styles.todoItem}>
         <BouncyCheckbox
-        onValueChange={onCheck}
-        value={doneState}
-        />
+            onPress={onCheck}
+            value={doneState}/>
+
         <Text style={[styles.todoText, {opacity: doneState ? 0.2 : 1}]}>
-        {title}
+            {title}
         </Text>
+
+        <Button title={'delete'} onPress={deleteTask}/>
     </View>
     );
 };
@@ -34,7 +43,7 @@ const ToDoItem = ({todoItem: {title, done}, id}) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: 12
+      paddingTop: 20,
     },
     contentContainerStyle: {
       padding: 24
@@ -49,8 +58,13 @@ const styles = StyleSheet.create({
     },
     todoItem: {
       flexDirection: 'row',
-      marginVertical: 10,
-      alignItems: 'center'
+      marginVertical: 5,
+      alignItems: 'center',
+      backgroundColor: 'white',
+      paddingHorizontal: 15,
+      paddingVertical: 15,
+      borderRadius: 15,
+      
     },
     todoText: {
       paddingHorizontal: 5,

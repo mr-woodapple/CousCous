@@ -27,12 +27,6 @@ const HomeScreen = () => {
         <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => navigation.navigate("ToDoList")}>
-
-        <Text style={styles.buttonText}>To Do List</Text>
-      </TouchableOpacity>
     </View>
   )
 }

@@ -1,0 +1,11 @@
+Swipeable panel: 
+https://github.com/enesozturk/rn-swipeable-panel
+
+Splash Screen: 
+https://github.com/crazycodeboy/react-native-splash-screen
+
+UI Kit Galio: 
+https://github.com/galio-org/galio
+
+Premium Table:
+https://github.com/WrathChaos/react-native-premium-table
