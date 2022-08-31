@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Keyboard, StatusBar, TouchableOpacity, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Keyboard, StatusBar, TouchableOpacity, SafeAreaView, Button } from 'react-native'
 import { ref, onValue, push, remove } from 'firebase/database'
 import { db } from '../firebase'
 import { Feather } from '@expo/vector-icons'; 
@@ -129,8 +129,10 @@ const ToDoListScreen = () => {
                 onClose={() => setIsOpen(false)}>
 
                 <BottomSheetView style={styles.bottomSheet}>
+                    <TouchableOpacity onPress={clearTodos}>
+                        <DestructiveRow text={'Liste löschen'}></DestructiveRow>
+                    </TouchableOpacity>
                     
-                    <DestructiveRow text={'Liste löschen'} onPress={clearTodos}></DestructiveRow>
 
                 </BottomSheetView>
                 
@@ -152,7 +154,6 @@ const styles = StyleSheet.create({
     },
 
     headerWrapper: {
-        paddingTop: 60,
         paddingHorizontal: 20,
         paddingVertical: 20,
         flexDirection: 'row',
