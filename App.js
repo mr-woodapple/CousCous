@@ -29,7 +29,7 @@ function TabScreenNavigation() {
       tabBarStyle: { position: 'absolute', backgroundColor: 'transparent', borderTopWidth: 0, elevation: 0 },
       tabBarBackground: () => (<LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']}/>),
     }}>
-      <Tab.Screen name="Start" component={HomeScreen} options={{ headerShown: false, tabBarIcon: () => (<Feather name="book-open" size={24} color="black" />) }} />
+      <Tab.Screen name="Rezepte" component={HomeScreen} options={{ headerShown: false, tabBarIcon: () => (<Feather name="book-open" size={24} color="black" />) }} />
       <Tab.Screen name="Einkaufsliste" component={ToDoListNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="list" size={24} color="black" />) }} />
       <Tab.Screen name="Mehr" component={MoreScreenNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="more-horizontal" size={24} color="black" />) }} />
     </Tab.Navigator>
