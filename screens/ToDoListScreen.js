@@ -1,14 +1,29 @@
-import React, { useState, useEffect  } from 'react'
-import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Keyboard, StatusBar, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect, useRef, useCallback  } from 'react'
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Keyboard, StatusBar, TouchableOpacity, SafeAreaView } from 'react-native'
 import { ref, onValue, push, remove } from 'firebase/database'
 import { db } from '../firebase'
 import { Feather } from '@expo/vector-icons'; 
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+
 
 import ToDoItem from '../components/ToDoItem'
+import DestructiveRow from '../components/DestructiveRow';
 
 
 const ToDoListScreen = () => {
 
+    { /* functions the bottom modal sheets */ }
+    const sheetRef = useRef(null);
+    const [isOpen, setIsOpen] = useState(true);
+    const snapPoints = ["20%", "40%", "80%"]
+
+    const handleSnapPress = useCallback((index) => {
+        sheetRef.current?.snapToIndex('1');
+        setIsOpen(true);
+    }, []);
+
+
+    { /* functions to handle database stuff with the todo list */ }
     const [todos, setTodos] = useState({});
     const [presentTodo, setPresentTodo] = useState('');
     const todosKeys = Object.keys(todos);
@@ -37,22 +52,26 @@ const ToDoListScreen = () => {
 
 
     return (
-        <View
+        <SafeAreaView
             style={styles.container}
             contentInsetAdjustmentBehavior="automatic">
 
+
+            { /* header def */ }
             <View style={styles.headerWrapper}>
                 <Text style={styles.headerHeading}>
                     Einkaufsliste
                 </Text>
 
                 <View style={styles.headerRightButton}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSnapPress(0)}>
                         <Feather name="more-vertical" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
             </View>
 
+
+            { /* to do items */ }
             <ScrollView 
                 style={styles.tasksWrapper}
                 contentInsetAdjustmentBehavior="automatic">
@@ -71,6 +90,7 @@ const ToDoListScreen = () => {
             </ScrollView>
 
 
+            { /* create new to do */ }         
             <KeyboardAvoidingView 
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 keyboardVerticalOffset={10}
@@ -96,7 +116,27 @@ const ToDoListScreen = () => {
 
                 
             </KeyboardAvoidingView>
-        </View>
+             
+
+            { /* shadow for bottom sheet */ }
+            <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
+            
+            { /* bottom sheet */ }
+            <BottomSheet 
+                ref={sheetRef} 
+                snapPoints={snapPoints} 
+                enablePanDownToClose={true}
+                onClose={() => setIsOpen(false)}>
+
+                <BottomSheetView style={styles.bottomSheet}>
+                    
+                    <DestructiveRow text={'Liste löschen'} onPress={clearTodos}></DestructiveRow>
+
+                </BottomSheetView>
+                
+            </BottomSheet>
+
+        </SafeAreaView>
 
         
     )
@@ -108,6 +148,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: StatusBar.currentHeight || 0,
+        backgroundColor: '#eaeaea'
     },
 
     headerWrapper: {
@@ -145,6 +186,18 @@ const styles = StyleSheet.create({
         width: 250,
         borderRadius: 20,
         backgroundColor: 'white',
+    },
 
+
+    bottomSheet: {
+        paddingVertical: 20,
+        paddingHorizontal: 30,
+    },
+    bottomSheetShadowVisible: {
+        ...StyleSheet.absoluteFill,
+        backgroundColor: '#00000080'
+    },
+    bottomSheetShadowInvisible: {
+        // nothing to see here
     }
 })
