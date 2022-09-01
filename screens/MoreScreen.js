@@ -4,8 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { getAuth, signOut } from 'firebase/auth'
+import { useNavigation } from '@react-navigation/native'
 
-import Row from '../components/Row';
+import SingleRow from '../components/SingleRow';
 
 const MoreScreen = () => {
 
@@ -21,6 +22,7 @@ const MoreScreen = () => {
 
 
   { /* functions for the logout */ }
+  const navigation = useNavigation()
   const auth = getAuth()
 
   const handleSignOut = () => {
@@ -30,6 +32,10 @@ const MoreScreen = () => {
       })
       .catch(error => alert(error.message))
   }
+
+  { /* get app version from app.json */ }
+  const pkg = require('../package.json');
+  const appVersion = pkg.version;
 
 
   return (
@@ -52,17 +58,20 @@ const MoreScreen = () => {
       </View>
 
 
-      <ScrollView>
-        { /* Question mark makes it an "optional value" */ }
-        <Text>E-Mail: {auth.currentUser?.email}</Text> 
+      { /* main scroll view def */ }
+      <ScrollView style={styles.mainViewMore}>
 
-        <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-          <Text style={styles.buttonText}>Sign out</Text>
+        <TouchableOpacity onPress={handleSignOut}>
+          <SingleRow text={'Abmelden'} icon={'log-out'} /> 
         </TouchableOpacity>
-
-        <Row>
+        
+        <View style={styles.appInfoRow}>
+          { /* Question mark makes it an "optional value" */ }
+          <Text>Logged in with: {auth.currentUser?.email}</Text> 
+          <Text>App Version: {appVersion}</Text>
           
-        </Row>
+        </View>
+
       </ScrollView>
 
 
@@ -70,6 +79,7 @@ const MoreScreen = () => {
       { /* shadow for bottom sheet */ }
       <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
       
+
       { /* bottom sheet */ }
       <BottomSheet 
         ref={sheetRef} 
@@ -78,11 +88,10 @@ const MoreScreen = () => {
         onClose={() => setIsOpen(false)}>
 
         <BottomSheetView style={styles.bottomSheet}>
+
           <TouchableOpacity>
             <Text>Test</Text>
           </TouchableOpacity>
-            
-
         </BottomSheetView>
         
       </BottomSheet>
@@ -116,18 +125,16 @@ headerRightButton: {
     
 },
 
-button:{
-  backgroundColor: '#0782f9',
-  width: '60%',
-  padding: 15,
-  borderRadius: 10,
-  alignItems: 'center',
-  marginTop: 40,
+//main view more
+mainViewMore: {
+  paddingHorizontal: 20,
 },
-buttonText: {
-  color: 'white',
-  fontWeight: '700',
-  fontSize: 16,
+appInfoRow: {
+  marginTop: 10,
+  paddingHorizontal: 20,
+  paddingVertical: 20,
+  backgroundColor: '#add8e6',
+  borderRadius: 15,
 },
 
 // bottom sheet
