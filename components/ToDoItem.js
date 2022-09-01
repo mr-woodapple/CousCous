@@ -29,6 +29,7 @@ const ToDoItem = ({todoItem: {title, done}, id}) => {
 
         <View style={styles.todoItemLeft}>
           <BouncyCheckbox
+              fillColor='black'
               onPress={onCheck}
               value={doneState}/>
 

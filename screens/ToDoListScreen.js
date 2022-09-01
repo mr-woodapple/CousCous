@@ -4,6 +4,7 @@ import { ref, onValue, push, remove } from 'firebase/database'
 import { db } from '../firebase'
 import { Feather } from '@expo/vector-icons'; 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { Ionicons } from '@expo/vector-icons'; 
 
 
 import ToDoItem from '../components/ToDoItem'
@@ -15,10 +16,10 @@ const ToDoListScreen = () => {
     { /* functions the bottom modal sheets */ }
     const sheetRef = useRef(null);
     const [isOpen, setIsOpen] = useState(true);
-    const snapPoints = ["20%", "40%", "80%"]
+    const snapPoints = ["40%", "80%"]
 
     const handleSnapPress = useCallback((index) => {
-        sheetRef.current?.snapToIndex('1');
+        sheetRef.current?.snapToIndex('0');
         setIsOpen(true);
     }, []);
 
@@ -106,13 +107,13 @@ const ToDoListScreen = () => {
                     onSubmitEditing={addNewTodo}
                 />
 
-                 {/* onPress calls the function 
+                 {/* onPress calls the function */}
                 <TouchableOpacity onPress={() => addNewTodo()}> 
                     <View style={styles.addWrapper}>
-                        <Text style={styles.addText}>+</Text>
+                        <Ionicons name="add" size={32} color="black" />
                     </View> 
                 </TouchableOpacity>
-                */}
+                
 
                 
             </KeyboardAvoidingView>
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     writeTaskWrapper: {
-        bottom: 100,
+        bottom: 75,
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'center',
@@ -182,11 +183,18 @@ const styles = StyleSheet.create({
     },
     input: {
         backgroundColor: '#eaeaea',
-        paddingVertical: 15,
-        paddingHorizontal: 15,
-        width: 250,
-        borderRadius: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        width: 300,
+        borderRadius: 15,
         backgroundColor: 'white',
+    },
+    addWrapper: {
+        marginLeft: 10,
+        backgroundColor: 'white',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 15,
     },
 
 

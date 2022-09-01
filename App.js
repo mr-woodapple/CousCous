@@ -50,7 +50,7 @@ function ToDoListNavigation() {
 function MoreScreenNavigation() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="More" component={MoreScreen} options={{ headerLargeTitle: true, headerTransparent: true, headerBlurEffect: 'light' }} />
+      <Stack.Screen name="More" component={MoreScreen} options={{ headerShown: false, headerTransparent: true, headerBlurEffect: 'light' }} />
     </Stack.Navigator>
   )
 }
