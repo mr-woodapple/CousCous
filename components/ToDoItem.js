@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { ref, update, remove} from 'firebase/database'
 import { db } from '../firebase'
+import { getAuth } from 'firebase/auth'
 import { Feather } from '@expo/vector-icons';
 
 
@@ -10,9 +11,13 @@ const ToDoItem = ({todoItem: {title, done}, id}) => {
 
     const [doneState, setDone] = useState(done);
 
+    const auth = getAuth()
+    const userUID = auth.currentUser?.uid
+    const databasePath = userUID+'/todos'
+
     const onCheck = (isChecked) => {
         setDone(isChecked);
-        update(ref(db, '/todos'), {
+        update(ref(db, databasePath), {
             [id]: {
                 title,
                 done: !doneState,
@@ -21,7 +26,7 @@ const ToDoItem = ({todoItem: {title, done}, id}) => {
     };
 
     const deleteTask = () => {
-        remove(ref(db, '/todos/'+id))
+        remove(ref(db, databasePath+'/'+id))
     }
 
     return (

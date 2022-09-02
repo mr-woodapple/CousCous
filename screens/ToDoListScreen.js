@@ -3,8 +3,9 @@ import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Ke
 import { ref, onValue, push, remove } from 'firebase/database'
 import { db } from '../firebase'
 import { Feather } from '@expo/vector-icons'; 
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons'; 
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { getAuth } from 'firebase/auth'
 
 
 import ToDoItem from '../components/ToDoItem'
@@ -29,8 +30,13 @@ const ToDoListScreen = () => {
     const [presentTodo, setPresentTodo] = useState('');
     const todosKeys = Object.keys(todos);
 
+    { /* function to make a user write to their subdirectory in the database */ }
+    const auth = getAuth()
+    const userUID = auth.currentUser?.uid
+    const databasePath = userUID+'/todos'
+
     useEffect(() => {
-        return onValue(ref(db, '/todos'), querySnapShot => {
+        return onValue(ref(db, databasePath), querySnapShot => {
             let data = querySnapShot.val() || {};
             let todoItems = {...data};
             setTodos(todoItems);
@@ -39,7 +45,7 @@ const ToDoListScreen = () => {
 
     function addNewTodo() {
         Keyboard.dismiss();
-        push(ref(db, '/todos'), {
+        push(ref(db, databasePath), {
             done: false,
             title: presentTodo,
         });
@@ -47,7 +53,7 @@ const ToDoListScreen = () => {
     }
 
     function clearTodos() {
-        remove(ref(db, '/todos'));
+        remove(ref(db, databasePath));
     }
 
 
@@ -134,6 +140,7 @@ const ToDoListScreen = () => {
                         <DestructiveRow text={'Liste löschen'}></DestructiveRow>
                     </TouchableOpacity>
                     
+                    <Text>{databasePath}</Text>
 
                 </BottomSheetView>
                 

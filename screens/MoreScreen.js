@@ -67,7 +67,8 @@ const MoreScreen = () => {
         
         <View style={styles.appInfoRow}>
           { /* Question mark makes it an "optional value" */ }
-          <Text>Logged in with: {auth.currentUser?.email}</Text> 
+          <Text>Logged in with: {auth.currentUser?.email}</Text>
+          <Text>User ID: {auth.currentUser?.uid}</Text> 
           <Text>App Version: {appVersion}</Text>
           
         </View>

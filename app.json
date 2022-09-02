@@ -18,7 +18,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.HolzapfelGrafik.HouseholdProject",
+      "buildNumber": "0.1.1"
     },
     "android": {
       "adaptiveIcon": {
