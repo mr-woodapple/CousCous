@@ -9,3 +9,6 @@ https://github.com/galio-org/galio
 
 Premium Table:
 https://github.com/WrathChaos/react-native-premium-table
+
+Animated tabbar: 
+https://github.com/gorhom/react-native-animated-tabbar

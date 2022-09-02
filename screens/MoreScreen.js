@@ -108,46 +108,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eaeaea'
-},
+  },
 
-headerWrapper: {
+  headerWrapper: {
+      paddingHorizontal: 20,
+      paddingVertical: 20,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      widht: '100%',
+  },
+  headerHeading: {
+      fontWeight: 'bold',
+      fontSize: 36,
+  },
+  headerRightButton: {
+      
+  },
+
+  //main view more
+  mainViewMore: {
+    paddingHorizontal: 20,
+  },
+  appInfoRow: {
+    marginTop: 10,
     paddingHorizontal: 20,
     paddingVertical: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    widht: '100%',
-},
-headerHeading: {
-    fontWeight: 'bold',
-    fontSize: 36,
-},
-headerRightButton: {
-    
-},
+    backgroundColor: '#add8e6',
+    borderRadius: 15,
+  },
 
-//main view more
-mainViewMore: {
-  paddingHorizontal: 20,
-},
-appInfoRow: {
-  marginTop: 10,
-  paddingHorizontal: 20,
-  paddingVertical: 20,
-  backgroundColor: '#add8e6',
-  borderRadius: 15,
-},
-
-// bottom sheet
-bottomSheet: {
-  paddingVertical: 20,
-  paddingHorizontal: 30,
-},
-bottomSheetShadowVisible: {
-  ...StyleSheet.absoluteFill,
-  backgroundColor: '#00000080'
-},
-bottomSheetShadowInvisible: {
-  // nothing to see here
-}
+  // bottom sheet
+  bottomSheet: {
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+  },
+  bottomSheetShadowVisible: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: '#00000080'
+  },
+  bottomSheetShadowInvisible: {
+    // nothing to see here
+  }
 })

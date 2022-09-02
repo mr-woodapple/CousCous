@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Ke
 import { ref, onValue, push, remove } from 'firebase/database'
 import { db } from '../firebase'
 import { Feather } from '@expo/vector-icons'; 
-import { Ionicons } from '@expo/vector-icons'; 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { getAuth } from 'firebase/auth'
 
@@ -92,7 +91,7 @@ const ToDoListScreen = () => {
                     />
                 ))
                 ) : (
-                <Text>No todo item</Text>
+                <Text>Es steht nichts auf deinem Einkaufszettel. ^^</Text>
                 )}
             </ScrollView>
 
@@ -113,10 +112,10 @@ const ToDoListScreen = () => {
                     onSubmitEditing={addNewTodo}
                 />
 
-                 {/* onPress calls the function */}
+                {/* onPress calls the function */}
                 <TouchableOpacity onPress={() => addNewTodo()}> 
                     <View style={styles.addWrapper}>
-                        <Ionicons name="add" size={32} color="black" />
+                        <Feather name="add" size={32} color="black" />
                     </View> 
                 </TouchableOpacity>
                 
@@ -140,7 +139,7 @@ const ToDoListScreen = () => {
                         <DestructiveRow text={'Liste löschen'}></DestructiveRow>
                     </TouchableOpacity>
                     
-                    <Text>{databasePath}</Text>
+                    <Text>Datenbankpfad = {databasePath}</Text>
 
                 </BottomSheetView>
                 
