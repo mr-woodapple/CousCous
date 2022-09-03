@@ -3,23 +3,27 @@
 // Created 02.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, RefreshControlBase } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { getAuth } from 'firebase/auth'
 import { ref, push, remove, onValue } from 'firebase/database';
 import { db } from '../firebase'
+import { TextInput } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native'
 
 import ReceipeItem from '../components/ReceipeItem';
-import { TextInput } from 'react-native-gesture-handler';
-
 
 const HomeScreen = () => {
 
+  const navigation = useNavigation()
 
   { /* functions to handle the receipe data stuff */ }
-  const [receipes, setReceipes] = useState({});
+  const [ receipes, setReceipes] = useState({});
+  const [testreceipes, setTestReceipes ] = useState({
+    title: 'Pfannenbohnen', favorite: true, howTo: 'This is a long text here explaining the how to', key: '1'
+  });
   const [ presentTitle, setPresentTitle] = useState('');
   const [ presentIngredients, setPresentIngredients] = useState('');
   const [ presentHowTo, setPresentHowTo ] = useState('');
@@ -46,7 +50,7 @@ const HomeScreen = () => {
       howTo: presentHowTo,
       ingredients: presentIngredients,
     });
-    setPresentTitle(''); // finished??
+    setPresentTitle('');
     setPresentIngredients('');
     setPresentHowTo('');
   }
@@ -75,7 +79,7 @@ const HomeScreen = () => {
 
       { /* header def */ }
       <View style={styles.headerWrapper}>
-        <Text style={styles.headerHeading}>Rezepte</Text>
+        <Text style={styles.headerHeading}>Receipes</Text>
 
         <View style={styles.headerRightButton}>
           <TouchableOpacity onPress={() => handleSnapPress(0)}>
@@ -87,20 +91,30 @@ const HomeScreen = () => {
 
       { /* main scroll view def */ }
       <ScrollView>
-
         {receipeKeys.length > 0 ? (
           receipeKeys.map(key => (
-            <ReceipeItem
+            <TouchableOpacity
               key = {key}
-              id = {key}
-              receipe = {receipes[key]}
-            />
+              onPress={() => navigation.navigate('ReceipeDetailsScreen', receipe )} >
+
+              <ReceipeItem
+                key = {key}
+                id = {key}
+                receipe = {receipes[key]}
+              />
+              
+
+            </TouchableOpacity>
+            
+
           ))
         ) : (
           <Text>Keine Rezepte vorhanden.</Text>
         )}
-
       </ScrollView>
+
+
+
 
       { /* shadow for bottom sheet */ }
       <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>

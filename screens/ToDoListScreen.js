@@ -115,7 +115,7 @@ const ToDoListScreen = () => {
                 {/* onPress calls the function */}
                 <TouchableOpacity onPress={() => addNewTodo()}> 
                     <View style={styles.addWrapper}>
-                        <Feather name="add" size={32} color="black" />
+                        <Feather name="plus" size={32} color="black" />
                     </View> 
                 </TouchableOpacity>
                 
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     addWrapper: {
         marginLeft: 10,
         backgroundColor: 'white',
-        paddingVertical: 10,
+        paddingVertical: 12,
         paddingHorizontal: 15,
         borderRadius: 15,
     },
