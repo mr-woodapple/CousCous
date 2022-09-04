@@ -2,11 +2,11 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 
-const ReceipeDetailScreen = () => {
+const ReceipeDetailScreen = ({ navigation }) => {
 
-    const [receipes, setReceipes] = useState({});
-    const [ presentTitle, setPresentTitle] = useState('');
-    const [ presentIngredients, setPresentIngredients] = useState('');
+    const [ receipes, setReceipes ] = useState({});
+    const [ presentTitle, setPresentTitle ] = useState('');
+    const [ presentIngredients, setPresentIngredients ] = useState('');
     const [ presentHowTo, setPresentHowTo ] = useState('');
     const receipeKeys = Object.keys(receipes)
     
@@ -15,7 +15,7 @@ const ReceipeDetailScreen = () => {
 
         <ScrollView>
             <Text>ReceipeDetailScreen</Text>
-            <Text>Rezept ID = {navigation.getParam('title')}</Text>
+            <Text>Rezept ID = </Text>
 
             
         </ScrollView>

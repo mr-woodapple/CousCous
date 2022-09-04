@@ -20,12 +20,12 @@ const HomeScreen = () => {
   const navigation = useNavigation()
 
   { /* functions to handle the receipe data stuff */ }
-  const [ receipes, setReceipes] = useState({});
-  const [testreceipes, setTestReceipes ] = useState({
+  const [ receipes, setReceipes ] = useState({});
+  const [ testreceipes, setTestReceipes ] = useState({
     title: 'Pfannenbohnen', favorite: true, howTo: 'This is a long text here explaining the how to', key: '1'
-  });
-  const [ presentTitle, setPresentTitle] = useState('');
-  const [ presentIngredients, setPresentIngredients] = useState('');
+  }); // for debugging only, remove
+  const [ presentTitle, setPresentTitle ] = useState('');
+  const [ presentIngredients, setPresentIngredients ] = useState('');
   const [ presentHowTo, setPresentHowTo ] = useState('');
   const receipeKeys = Object.keys(receipes)
 
@@ -95,7 +95,7 @@ const HomeScreen = () => {
           receipeKeys.map(key => (
             <TouchableOpacity
               key = {key}
-              onPress={() => navigation.navigate('ReceipeDetailsScreen', receipe )} >
+              onPress={() => navigation.navigate('ReceipeDetailsScreen', key )} >
 
               <ReceipeItem
                 key = {key}
@@ -130,7 +130,7 @@ const HomeScreen = () => {
         <BottomSheetView style={styles.bottomSheet}>
 
           <KeyboardAvoidingView>
-            <Text>AddReceipe</Text>
+            <Text>Rezept hinzufügen</Text>
 
             <TextInput 
               placeholder="Titel"
