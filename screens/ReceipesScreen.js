@@ -21,9 +21,7 @@ const HomeScreen = () => {
 
   { /* functions to handle the receipe data stuff */ }
   const [ receipes, setReceipes ] = useState({});
-  const [ testreceipes, setTestReceipes ] = useState({
-    title: 'Pfannenbohnen', favorite: true, howTo: 'This is a long text here explaining the how to', key: '1'
-  }); // for debugging only, remove
+
   const [ presentTitle, setPresentTitle ] = useState('');
   const [ presentIngredients, setPresentIngredients ] = useState('');
   const [ presentHowTo, setPresentHowTo ] = useState('');
@@ -39,6 +37,8 @@ const HomeScreen = () => {
       let data = querySnapshot.val() || {};
       let receipeItems = {...data};
       setReceipes(receipeItems);
+
+      console.log('ReceipeScreen | Keys = ', receipeKeys)
     })
   }, [])
 
@@ -93,6 +93,7 @@ const HomeScreen = () => {
       <ScrollView>
         {receipeKeys.length > 0 ? (
           receipeKeys.map(key => (
+            // links to the matching detail screen, passing along the key of the receipe
             <TouchableOpacity
               key = {key}
               onPress={() => navigation.navigate('ReceipeDetailsScreen', key )} >
@@ -103,17 +104,12 @@ const HomeScreen = () => {
                 receipe = {receipes[key]}
               />
               
-
             </TouchableOpacity>
-            
-
           ))
         ) : (
           <Text>Keine Rezepte vorhanden.</Text>
         )}
       </ScrollView>
-
-
 
 
       { /* shadow for bottom sheet */ }
@@ -198,6 +194,12 @@ const styles = StyleSheet.create({
   },
   headerRightButton: {
       
+  },
+
+  flatList: {
+    backgroundColor: 'red',
+    marginTop: 200,
+    height: 20,
   },
 
   // input stuff
