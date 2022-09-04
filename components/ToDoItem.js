@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import BouncyCheckbox from "react-native-bouncy-checkbox"
 import { ref, update, remove} from 'firebase/database'
 import { db } from '../firebase'
@@ -54,10 +54,7 @@ const ToDoItem = ({todoItem: {title, done}, id}) => {
 };
   
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: 20,
-    },
+
     contentContainerStyle: {
       padding: 24
     },

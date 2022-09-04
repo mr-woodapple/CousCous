@@ -7,11 +7,10 @@ import React from 'react'
 
 const ReceipeItem = ({receipe: {title, howTo, ingredients}, id}) => {
   return (
-    <View style={styles.container}>
-      <Text>{title}</Text>
-      <Text>{howTo}</Text>
-      <Text>{ingredients}</Text>
-      <Text>{id}</Text>
+    <View style={styles.receipeItem}>
+      <Text style={styles.mainHeading}>{title}</Text>
+      <Text style={styles.subHeading}>{ingredients}</Text>
+
     </View>
   )
 }
@@ -19,7 +18,21 @@ const ReceipeItem = ({receipe: {title, howTo, ingredients}, id}) => {
 export default ReceipeItem
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'green',
+  receipeItem: {
+    flex: 1,
+    backgroundColor: 'white',
+    borderRadius: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
+  mainHeading: {
+    paddingTop: 50,
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  subHeading: {
+    paddingTop: 5,
   },
 })

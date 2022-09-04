@@ -44,7 +44,7 @@ function ReceipesScreenNavigation() {
   return(
     <Stack.Navigator>
       <Stack.Screen name="ReceipesScreenNav" component={ReceipesScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="ReceipeDetailsScreen" component={ReceipeDetailScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="ReceipeDetailsScreen" component={ReceipeDetailScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   )
 }
@@ -52,7 +52,7 @@ function ReceipesScreenNavigation() {
 function ToDoListNavigation() {
   return(
     <Stack.Navigator>
-      <Stack.Screen  name="ToDoListNav" component={ToDoListScreen} options={{ headerShown: false, headerLargeTitle: true, headerTransparent: true, headerBlurEffect: 'light' }}/>
+      <Stack.Screen  name="ToDoListNav" component={ToDoListScreen} options={{ headerShown: false }}/>
     </Stack.Navigator>
   )
 }

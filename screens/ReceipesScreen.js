@@ -17,7 +17,7 @@ import ReceipeItem from '../components/ReceipeItem';
 
 const HomeScreen = () => {
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   { /* functions to handle the receipe data stuff */ }
   const [ receipes, setReceipes ] = useState({});
@@ -176,8 +176,7 @@ export default HomeScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-    backgroundColor: '#eaeaea'
+    backgroundColor: '#eaeaea',
   },
 
   headerWrapper: {
