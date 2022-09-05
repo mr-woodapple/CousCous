@@ -50,6 +50,7 @@ const HomeScreen = () => {
       howTo: presentHowTo,
       ingredients: presentIngredients,
     });
+    handleClosePress();
     setPresentTitle('');
     setPresentIngredients('');
     setPresentHowTo('');
@@ -59,7 +60,7 @@ const HomeScreen = () => {
   { /* functions the bottom modal sheets */ }
   const sheetRef = useRef(null);
   const [isOpen, setIsOpen] = useState(true);
-  const snapPoints = ["40%", "80%"]
+  const snapPoints = ["40%", "90%"]
 
   const handleSnapPress = useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
@@ -69,6 +70,8 @@ const HomeScreen = () => {
   const handleSheetChanges = useCallback((index) => {
     console.log('handleSheetChanges', index);
   }, []);
+
+  const handleClosePress = () => sheetRef.current.close()
 
 
   return (
@@ -82,7 +85,7 @@ const HomeScreen = () => {
         <Text style={styles.headerHeading}>Receipes</Text>
 
         <View style={styles.headerRightButton}>
-          <TouchableOpacity onPress={() => handleSnapPress(0)}>
+          <TouchableOpacity onPress={() => handleSnapPress(1)}>
             <Feather name="plus-circle" size={32} color="black" />
           </TouchableOpacity>
         </View>
@@ -125,42 +128,55 @@ const HomeScreen = () => {
 
         <BottomSheetView style={styles.bottomSheet}>
 
-          <KeyboardAvoidingView>
-            <Text>Rezept hinzufügen</Text>
+          <View style={styles.bottomSheetHeader}>
+            <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
 
-            <TextInput 
-              placeholder="Titel"
-              value={presentTitle}
-              style={styles.input}
-              onChangeText={text => {
-                setPresentTitle(text);
-              }}/>
+            <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+              <Feather name="x" size={20} color="black" />
+            </TouchableOpacity> 
+          </View>
+          
 
-            <TextInput 
-              placeholder="Zutaten"
-              value={presentIngredients}
-              style={styles.input}
-              onChangeText={text => {
-                setPresentIngredients(text);
-              }}/>
+          <ScrollView>
+            <KeyboardAvoidingView>
+              
+              <TextInput 
+                placeholder="Titel"
+                value={presentTitle}
+                style={styles.input}
+                onChangeText={text => {
+                  setPresentTitle(text);
+                }}/>
 
-            <TextInput 
-              placeholder="Anleitung"
-              value={presentHowTo}
-              style={styles.input}
-              onChangeText={text => {
-                setPresentHowTo(text);
-              }}/>
+              <TextInput 
+                placeholder="Zutaten"
+                value={presentIngredients}
+                style={styles.input}
+                onChangeText={text => {
+                  setPresentIngredients(text);
+                }}/>
 
-            {/* onPress calls the function */}
-            <TouchableOpacity onPress={() => addNewReceipe()}> 
-              <View style={styles.addButton}>
-                <Text>Hinzufügen</Text>
-              </View> 
-            </TouchableOpacity>
-            
+              <TextInput 
+                placeholder="Anleitung"
+                multiline={true}
+                numberOfLines={4}
+                value={presentHowTo}
+                style={styles.input}
+                onChangeText={text => {
+                  setPresentHowTo(text);
+                }}/>
 
-          </KeyboardAvoidingView>
+              {/* onPress calls the function */}
+              <TouchableOpacity onPress={() => addNewReceipe()}> 
+                <View style={styles.addButton}>
+                  <Text>Hinzufügen</Text>
+                </View> 
+              </TouchableOpacity>
+              
+
+            </KeyboardAvoidingView>
+          </ScrollView>
+          
         </BottomSheetView>
         
       </BottomSheet>
@@ -178,6 +194,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#eaeaea',
   },
+  mediumHeading: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingVertical: 10,
+},
 
   headerWrapper: {
     paddingHorizontal: 20,
@@ -195,12 +216,6 @@ const styles = StyleSheet.create({
       
   },
 
-  flatList: {
-    backgroundColor: 'red',
-    marginTop: 200,
-    height: 20,
-  },
-
   // input stuff
   input: {
     marginTop: 20,
@@ -212,9 +227,10 @@ const styles = StyleSheet.create({
   },
   addButton: {
     marginTop: 20,
-    backgroundColor: 'yellow',
+    backgroundColor: '#add8e6',
     paddingHorizontal: 10,
     paddingVertical: 10,
+    borderRadius: 15,
   },
 
   // bottom sheet
@@ -228,5 +244,18 @@ const styles = StyleSheet.create({
   },
   bottomSheetShadowInvisible: {
     // nothing to see here
-  }
+  },
+  bottomSheetHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bottomSheetCloseButton: {
+    backgroundColor: '#eaeaea',
+    height: 30,
+    width: 30,
+    alignItems: 'center',
+    borderRadius: 15,
+    paddingTop: 5,
+  },
 })
