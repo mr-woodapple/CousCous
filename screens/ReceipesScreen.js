@@ -14,6 +14,8 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 
 import ReceipeItem from '../components/ReceipeItem';
+import Ingredients from '../components/Ingredients';
+
 
 const HomeScreen = () => {
 
@@ -23,7 +25,8 @@ const HomeScreen = () => {
   const [ receipes, setReceipes ] = useState({});
 
   const [ presentTitle, setPresentTitle ] = useState('');
-  const [ presentIngredients, setPresentIngredients ] = useState('');
+  const [ presentIngredients, setPresentIngredients ] = useState([]);
+  const [ presentIngredient, setPresentIngredient ] = useState('');
   const [ presentHowTo, setPresentHowTo ] = useState('');
   const receipeKeys = Object.keys(receipes)
 
@@ -52,8 +55,16 @@ const HomeScreen = () => {
     });
     handleClosePress();
     setPresentTitle('');
-    setPresentIngredients('');
+    setPresentIngredients([]);
     setPresentHowTo('');
+  }
+
+  // update the ingredients array after each input
+  function addIngredient() {
+    Keyboard.dismiss();
+    setPresentIngredients(presentIngredients => [...presentIngredients, presentIngredient]);
+    setPresentIngredient('');
+
   }
 
 
@@ -71,7 +82,10 @@ const HomeScreen = () => {
     console.log('handleSheetChanges', index);
   }, []);
 
-  const handleClosePress = () => sheetRef.current.close()
+  const handleClosePress = () => {
+    sheetRef.current.close();
+    Keyboard.dismiss()
+  }
 
 
   return (
@@ -148,13 +162,30 @@ const HomeScreen = () => {
                   setPresentTitle(text);
                 }}/>
 
-              <TextInput 
-                placeholder="Zutaten"
-                value={presentIngredients}
-                style={styles.input}
-                onChangeText={text => {
-                  setPresentIngredients(text);
-                }}/>
+              { /* adding a to-do list for the ingredients */ }
+              <View style={styles.ingredientsWrapper}>
+                {presentIngredients.length > 0 ? (
+                  presentIngredients.map(key => (
+                      <Ingredients
+                          key={key}
+                          ingredients={key}
+                          //todoItem={todos[key]}
+                      />
+                  ))
+                ) : (
+                  <Text>Füge deine erste Zutat hinzu.</Text>
+                )}
+
+                <TextInput 
+                  placeholder='Weitere Zutat?'
+                  onChangeText={text => {setPresentIngredient(text)}}>
+
+                </TextInput>
+                <TouchableOpacity onPress={() => addIngredient()}>
+                  <Feather name="plus" size={20} color="black" />
+                </TouchableOpacity>
+              </View>
+              
 
               <TextInput 
                 placeholder="Anleitung"

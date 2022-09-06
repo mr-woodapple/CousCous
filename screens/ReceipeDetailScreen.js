@@ -15,7 +15,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useNavigation } from '@react-navigation/native'
+
+
 import DestructiveRow from '../components/DestructiveRow';
+import Ingredients from '../components/Ingredients';
 
 
 
@@ -81,6 +84,7 @@ const ReceipeDetailScreen = ({ route }) => {
 
                 <View style={styles.headerImage}>
                     <Text style={styles.headerHeading}>{receipe.title}</Text>
+                    {console.log('Rezept Titel = ' + receipe.title)}
                 </View>
 
                 <View style={styles.mainReceipeContainer}>
@@ -89,6 +93,26 @@ const ReceipeDetailScreen = ({ route }) => {
                         <Text style={styles.mediumHeading}>Zutaten:</Text>
 
                         <Text>{receipe.ingredients} </Text>
+
+                        {console.log('Zutaten Array = ' + receipe.ingredients)}
+
+                        { /* adding a to-do list for the ingredients 
+                        <View style={styles.ingredientsWrapper}>
+
+
+                            {receipe.ingredients.length > 0 ? (
+                                receipe.ingredients.map(key => (
+                                <Ingredients
+                                    key={key}
+                                    ingredients={key}
+                                    //todoItem={todos[key]}
+                                />
+                            ))
+                            ) : (
+                            <Text>Keine Zutat vorhanden.</Text>
+                            )} 
+
+                        </View>*/ }
                     </View>
 
                     <View style={styles.howTo}>
@@ -102,7 +126,7 @@ const ReceipeDetailScreen = ({ route }) => {
             </ScrollView>
 
             { /* shadow for bottom sheet */ }
-            <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
+            <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View> 
             
 
             { /* bottom sheet */ }
