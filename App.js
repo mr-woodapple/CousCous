@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
@@ -28,8 +29,7 @@ app
 function TabScreenNavigation() {
   return(
     <Tab.Navigator screenOptions={{
-      tabBarStyle: { position: 'absolute', backgroundColor: '#fff', borderTopWidth: 0, elevation: 0 },
-      tabBarBackground: () => (<LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']}/>),
+      tabBarStyle: { position: 'absolute', backgroundColor: '#fff', borderTopWidth: 0, elevation: 0, style: styles.tabBar },
     }}>
       <Tab.Screen name="Rezepte" component={ReceipesScreenNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="book-open" size={24} color="black" />) }} />
       <Tab.Screen name="Einkaufsliste" component={ToDoListNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="list" size={24} color="black" />) }} />
@@ -87,4 +87,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#e8eaed',
   },
+  tabBar: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  }
 });

@@ -26,20 +26,7 @@ const ReceipeDetailScreen = ({ route }) => {
 
     const navigation = useNavigation();
 
-    { /* functions the bottom modal sheets */ }
-    const sheetRef = useRef(null);
-    const [isOpen, setIsOpen] = useState(true);
-    const snapPoints = ["40%", "80%"]
-
-    const handleSnapPress = useCallback((index) => {
-        sheetRef.current?.snapToIndex('0');
-        setIsOpen(true);
-    }, []);
-
-    
-    { /* functions to handle the receipe data stuff */ }
-    const [ receipe, setReceipe ] = useState({});
-
+    const [ receipes, setReceipes ] = useState({});
 
     { /* function to make a user write to their subdirectory in the database */ }
     const auth = getAuth()
@@ -48,21 +35,36 @@ const ReceipeDetailScreen = ({ route }) => {
     const currentReceipeID = route.params;
     const databasePath = userUID+'/receipes/'+currentReceipeID
 
+    console.log("ReceipeDetailScreen.js | DatabasePath = " + databasePath)
     
-    { /* working with the receipes data */}    
+    { /* working with the receipes data */}   
     useEffect(() => {
         return onValue(ref(db, databasePath), querySnapshot => {
             let data = querySnapshot.val() || {};
             let receipeData = {...data};
-            setReceipe(receipeData);
+            setReceipes(receipeData);
+
+            console.log('ReceipeDetailScreen.js | setReceipe = ', JSON.stringify(receipeData))
         })
-    }, [])
+    }, []) 
+
+    console.log("ReceipeDetailScreen.js | receipe = " + JSON.stringify(receipes))
 
     function deleteReceipe() {
         remove(ref(db, databasePath));
         navigation.navigate('ReceipesScreenNav');
     }
 
+
+    { /* function for the bottom modal sheets */ }
+    const sheetRef = useRef(null);
+    const [ isOpen, setIsOpen ] = useState(true);
+    const snapPoints = ["40%", "80%"]
+
+    const handleSnapPress = useCallback((index) => {
+        sheetRef.current?.snapToIndex('0');
+        setIsOpen(true);
+    }, []);
 
     return (
 
@@ -72,7 +74,7 @@ const ReceipeDetailScreen = ({ route }) => {
 
                 <View style={styles.headerWrapper}>
 
-                    <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.navigate('ReceipesScreenNav')}>
+                    <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
                         <Feather name="chevron-left" size={32} color="white" />
                     </TouchableOpacity>
 
@@ -82,43 +84,51 @@ const ReceipeDetailScreen = ({ route }) => {
                   
                 </View>
 
+                { /* Title */ }
                 <View style={styles.headerImage}>
-                    <Text style={styles.headerHeading}>{receipe.title}</Text>
-                    {console.log('Rezept Titel = ' + receipe.title)}
+                    <Text style={styles.headerHeading}>{receipes.title}</Text>
+                    {console.log("ReceipeDetailScreen.js | receipes.title = " + receipes.title)}
                 </View>
+
 
                 <View style={styles.mainReceipeContainer}>
 
                     <View style={styles.howTo}>
                         <Text style={styles.mediumHeading}>Zutaten:</Text>
 
-                        <Text>{receipe.ingredients} </Text>
+                        <Text>DEBUG ONLY: {receipes.ingredients} </Text>
+                        
+                        
 
-                        {console.log('Zutaten Array = ' + receipe.ingredients)}
-
-                        { /* adding a to-do list for the ingredients 
+                        { /* adding a to-do list for the ingredients */ }
                         <View style={styles.ingredientsWrapper}>
 
 
-                            {receipe.ingredients.length > 0 ? (
-                                receipe.ingredients.map(key => (
+                            {/* STILL 
+                            NEED 
+                            TO 
+                            FIX 
+                            THIS */}
+                            {receipes.ingredients.length > 0 ? (
+                                receipes.ingredients.map((key, value) => (
+                                console.log("Key = " + key + "Value = " + value),
                                 <Ingredients
                                     key={key}
-                                    ingredients={key}
-                                    //todoItem={todos[key]}
+                                    ingredients={value}
                                 />
                             ))
                             ) : (
-                            <Text>Keine Zutat vorhanden.</Text>
-                            )} 
+                            <Text>Keine Zutaten vorhanden.</Text>
+                            )}
 
-                        </View>*/ }
+
+                        </View>
                     </View>
 
                     <View style={styles.howTo}>
                         <Text style={styles.mediumHeading}>Anleitung:</Text>
 
-                        <Text>Anleitung: {receipe.howTo} </Text>
+                        <Text>Anleitung: {receipes.howTo} </Text>
                     </View>
                 </View>
                 
@@ -200,6 +210,9 @@ const styles = StyleSheet.create({
 
     howTo: {
         marginTop: 20,
+    },
+    ingredientsWrapper: { 
+        backgroundColor: 'green',
     },
 
 

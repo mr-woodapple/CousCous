@@ -90,7 +90,7 @@ const ToDoListScreen = () => {
                     />
                 ))
                 ) : (
-                <Text>Es steht nichts auf deinem Einkaufszettel. ^^</Text>
+                <Text>Es steht nichts auf deinem Einkaufszettel.</Text>
                 )}
             </ScrollView>
 

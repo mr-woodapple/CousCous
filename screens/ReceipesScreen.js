@@ -41,9 +41,11 @@ const HomeScreen = () => {
       let receipeItems = {...data};
       setReceipes(receipeItems);
 
-      console.log('ReceipeScreen | Keys = ', receipeKeys)
+      console.log('ReceipeScreen | setReceipes = ', receipeItems)
     })
   }, [])
+
+  console.log("ReceipeScreen.js | receipe = " + JSON.stringify(receipes))
 
   function addNewReceipe() {
     Keyboard.dismiss();
@@ -165,9 +167,11 @@ const HomeScreen = () => {
               { /* adding a to-do list for the ingredients */ }
               <View style={styles.ingredientsWrapper}>
                 {presentIngredients.length > 0 ? (
-                  presentIngredients.map(key => (
+
+                  presentIngredients.map((key, value) => (
+                    console.log("DEBUG presentIngredients = " + key + value),
                       <Ingredients
-                          key={key}
+                          key={value}
                           ingredients={key}
                           //todoItem={todos[key]}
                       />

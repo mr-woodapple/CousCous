@@ -37,7 +37,6 @@ const ToDoItem = ({todoItem: {title, done}, id}) => {
               fillColor='black'
               onPress={onCheck}
               value={doneState}/>
-          {console.log("ToDoItem = " + title)}
           <Text style={[styles.todoText, {opacity: doneState ? 0.2 : 1}]}>
               {title}
           </Text>

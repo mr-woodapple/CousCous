@@ -2,20 +2,33 @@
 //
 // Created 05.09.2022 by Jasper Holzapfel
 
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { Feather } from '@expo/vector-icons';
 
-const Ingredients = ({ ingredients }) => {
+const Ingredients = ({ key, ingredients }) => {
 
 
 
     return (
-        <View>
-            <Text>{ingredients}</Text>
+        <View style={styles.container}>
+            <Text>Zutat: {key} </Text>
+            <Text>Key: {ingredients} </Text>
+            {console.log("ingredients.js | Einzelne Zutat: " + key + " + aktueller key: " + ingredients)}
+            <TouchableOpacity>
+                <Feather name="plus" size={20} color="black" />
+            </TouchableOpacity>
+
         </View>
     )
 }
 
 export default Ingredients
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'red',
+        paddingVertical: 20,
+        margin: 20,
+    }
+})
