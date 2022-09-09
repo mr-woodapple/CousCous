@@ -9,8 +9,10 @@ const ReceipeItem = ({receipe: {title, howTo, ingredients}, id}) => {
   return (
     <View style={styles.receipeItem}>
       <Text style={styles.mainHeading}>{title}</Text>
-      <Text style={styles.subHeading}>{ingredients}</Text>
 
+
+      {/* add details such as duration and difficulty here */}
+      <Text style={styles.subHeading}>Dauer: 25 min, Schwierigkeit: Mittel</Text>
     </View>
   )
 }

@@ -95,7 +95,7 @@ const HomeScreen = () => {
 
       { /* header def */ }
       <View style={styles.headerWrapper}>
-        <Text style={styles.headerHeading}>Receipes</Text>
+        <Text style={styles.headerHeading}>Rezepte</Text>
 
         <View style={styles.headerRightButton}>
           <TouchableOpacity onPress={() => handleSnapPress(1)}>
@@ -166,25 +166,27 @@ const HomeScreen = () => {
                 {presentIngredients.length > 0 ? (
 
                   presentIngredients.map((key, value) => (
-                    console.log("DEBUG presentIngredients = " + key + value),
                       <Ingredients
                           key={value}
                           ingredients={key}
-                          //todoItem={todos[key]}
                       />
                   ))
                 ) : (
-                  <Text>Füge deine erste Zutat hinzu.</Text>
+                  <Text style={styles.text}>Keine Zutaten, füge deine erste Zutat hinzu.</Text>
                 )}
+                
+                <View style={styles.addIngredientWrapper}>
+                  <TextInput 
+                    placeholder='Zutat hinzufügen...'
+                    style={styles.text}
+                    onChangeText={text => {setPresentIngredient(text)}}
+                    onSubmitEditing={addIngredient} />
 
-                <TextInput 
-                  placeholder='Weitere Zutat?'
-                  onChangeText={text => {setPresentIngredient(text)}}>
-
-                </TextInput>
-                <TouchableOpacity onPress={() => addIngredient()}>
-                  <Feather name="plus" size={20} color="black" />
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={() => addIngredient()}>
+                    <Feather name="plus" size={20} color="black" />
+                  </TouchableOpacity>
+                </View>
+                
               </View>
               
 
@@ -199,10 +201,8 @@ const HomeScreen = () => {
                 }}/>
 
               {/* onPress calls the function */}
-              <TouchableOpacity onPress={() => addNewReceipe()}> 
-                <View style={styles.addButton}>
-                  <Text>Hinzufügen</Text>
-                </View> 
+              <TouchableOpacity style={styles.addButton} onPress={() => addNewReceipe()}> 
+                  <Text style={styles.mediumHeading}>Hinzufügen</Text>
               </TouchableOpacity>
               
 
@@ -226,9 +226,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#eaeaea',
   },
+
+  text: {
+    fontSize: 16
+  },
   mediumHeading: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 24,
     paddingVertical: 10,
 },
 
@@ -251,11 +255,22 @@ const styles = StyleSheet.create({
   // input stuff
   input: {
     marginTop: 20,
-    borderWidth: 2,
-    borderColor: 'black',
-    borderRadius: 10,
+    borderBottomColor: 'black',
+    borderBottomWidth: 2,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    fontSize: 16,
+  },
+  ingredientsWrapper: {
+    paddingVertical: 20,
+  },
+  addIngredientWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomColor: 'black',
+    borderBottomWidth: 2,
   },
   addButton: {
     marginTop: 20,
@@ -263,6 +278,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 15,
+    alignItems: 'center',
   },
 
   // bottom sheet

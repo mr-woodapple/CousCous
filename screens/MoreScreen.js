@@ -6,6 +6,9 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { getAuth, signOut } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
 
+import * as Application from 'expo-application';
+import * as Device from 'expo-device';
+
 import SingleRow from '../components/SingleRow';
 
 const MoreScreen = () => {
@@ -20,6 +23,10 @@ const MoreScreen = () => {
     setIsOpen(true);
   }, []);
 
+  const handleClosePress = () => {
+    sheetRef.current.close();
+}
+
 
   { /* functions for the logout */ }
   const navigation = useNavigation()
@@ -33,10 +40,6 @@ const MoreScreen = () => {
       .catch(error => alert(error.message))
   }
 
-  { /* get app version from app.json */ }
-  const pkg = require('../package.json');
-  const appVersion = pkg.version;
-
 
   return (
     <SafeAreaView
@@ -46,15 +49,14 @@ const MoreScreen = () => {
 
       { /* header def */ }
       <View style={styles.headerWrapper}>
-        <Text style={styles.headerHeading}>
-          Mehr
-        </Text>
+        <Text style={styles.headingLarge}>Mehr</Text>
 
+        { /* disabled because there's no use for it right now 
         <View style={styles.headerRightButton}>
           <TouchableOpacity onPress={() => handleSnapPress(0)}>
             <Feather name="more-vertical" size={24} color="black" />
           </TouchableOpacity>
-        </View>
+        </View>*/}
       </View>
 
 
@@ -67,9 +69,16 @@ const MoreScreen = () => {
         
         <View style={styles.appInfoRow}>
           { /* Question mark makes it an "optional value" */ }
+          <Text>These are information that you can use to send proper feedback to us. These information won't be saved anywhere, they're just on your phone!{'\n'}</Text>
+
           <Text>Logged in with: {auth.currentUser?.email}</Text>
           <Text>User ID: {auth.currentUser?.uid}</Text> 
-          <Text>App Version: {appVersion}</Text>
+          <Text>App Version: {Application.nativeApplicationVersion}{'\n'}</Text>
+          
+          <Text>Operating System: {Device.osName}</Text>
+          <Text>Device OS: {Device.osVersion}</Text>
+          <Text>Device Manufacturer: {Device.manufacturer}</Text>
+          <Text>Device Model: {Device.modelName}</Text>
           
         </View>
 
@@ -90,8 +99,16 @@ const MoreScreen = () => {
 
         <BottomSheetView style={styles.bottomSheet}>
 
+          <View style={styles.bottomSheetHeader}>
+            <Text style={styles.headingMedium}>Mehr</Text>
+
+            <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+              <Feather name="x" size={20} color="black" />
+            </TouchableOpacity> 
+          </View>
+
           <TouchableOpacity>
-            <Text>Test</Text>
+            <Text>Add content here</Text>
           </TouchableOpacity>
         </BottomSheetView>
         
@@ -110,6 +127,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#eaeaea'
   },
 
+  // headings
+  headingMedium: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    paddingVertical: 20,
+  },
+  headingLarge: {
+    fontWeight: 'bold',
+    fontSize: 36,
+    paddingVertical: 20,
+  },
+
+
   headerWrapper: {
       paddingHorizontal: 20,
       paddingVertical: 20,
@@ -117,10 +147,6 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       alignItems: 'center',
       widht: '100%',
-  },
-  headerHeading: {
-      fontWeight: 'bold',
-      fontSize: 36,
   },
   headerRightButton: {
       
@@ -144,10 +170,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   bottomSheetShadowVisible: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: '#00000080'
+      ...StyleSheet.absoluteFill,
+      backgroundColor: '#00000080'
   },
   bottomSheetShadowInvisible: {
-    // nothing to see here
-  }
+      // nothing to see here
+  },
+  bottomSheetHeader: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      alignItems: 'center',
+  },
+  bottomSheetCloseButton: {
+      backgroundColor: '#eaeaea',
+      height: 30,
+      width: 30,
+      alignItems: 'center',
+      borderRadius: 15,
+      paddingTop: 5,
+  },
 })

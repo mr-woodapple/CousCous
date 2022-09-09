@@ -23,6 +23,11 @@ const ToDoListScreen = () => {
         setIsOpen(true);
     }, []);
 
+    const handleClosePress = () => {
+        sheetRef.current.close();
+        Keyboard.dismiss()
+    }
+
 
     { /* functions to handle database stuff with the todo list */ }
     const [todos, setTodos] = useState({});
@@ -64,7 +69,7 @@ const ToDoListScreen = () => {
 
             { /* header def */ }
             <View style={styles.headerWrapper}>
-                <Text style={styles.headerHeading}>
+                <Text style={styles.headingLarge}>
                     Einkaufsliste
                 </Text>
 
@@ -90,7 +95,7 @@ const ToDoListScreen = () => {
                     />
                 ))
                 ) : (
-                <Text>Es steht nichts auf deinem Einkaufszettel.</Text>
+                <Text style={styles.text}>Es steht nichts auf deinem Einkaufszettel.</Text>
                 )}
             </ScrollView>
 
@@ -134,11 +139,19 @@ const ToDoListScreen = () => {
                 onClose={() => setIsOpen(false)}>
 
                 <BottomSheetView style={styles.bottomSheet}>
+
+                <View style={styles.bottomSheetHeader}>
+                    <Text style={styles.headingMedium}>Einkaufsliste</Text>
+
+                    <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+                        <Feather name="x" size={20} color="black" />
+                    </TouchableOpacity> 
+                </View>
+
                     <TouchableOpacity onPress={clearTodos}>
                         <DestructiveRow text={'Liste löschen'}></DestructiveRow>
                     </TouchableOpacity>
-                    
-                    <Text>Datenbankpfad = {databasePath}</Text>
+                    <Text style={styles.simpleInfoText}>Bitte beachte, dass diese Aktion nicht rückgängig gemacht werden kann!</Text>
 
                 </BottomSheetView>
                 
@@ -158,6 +171,26 @@ const styles = StyleSheet.create({
         backgroundColor: '#eaeaea'
     },
 
+    // headings
+    headingMedium: {
+        fontWeight: 'bold',
+        fontSize: 24,
+        paddingVertical: 20,
+    },
+    headingLarge: {
+        fontWeight: 'bold',
+        fontSize: 36,
+        paddingVertical: 20,
+    },
+
+    simpleInfoText: {
+        paddingVertical: 10,
+    },
+    text: {
+        fontSize: 16
+    },
+    
+
     headerWrapper: {
         paddingHorizontal: 20,
         paddingVertical: 20,
@@ -165,10 +198,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         widht: '100%',
-    },
-    headerHeading: {
-        fontWeight: 'bold',
-        fontSize: 36,
     },
     headerRightButton: {
         
@@ -202,6 +231,7 @@ const styles = StyleSheet.create({
     },
 
 
+    // bottom sheet
     bottomSheet: {
         paddingVertical: 20,
         paddingHorizontal: 30,
@@ -212,5 +242,18 @@ const styles = StyleSheet.create({
     },
     bottomSheetShadowInvisible: {
         // nothing to see here
-    }
+    },
+    bottomSheetHeader: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    bottomSheetCloseButton: {
+        backgroundColor: '#eaeaea',
+        height: 30,
+        width: 30,
+        alignItems: 'center',
+        borderRadius: 15,
+        paddingTop: 5,
+    },
 })

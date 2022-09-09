@@ -1,9 +1,9 @@
-// Receipes Detail Screen V2 to solve problems (I hope)
+// Rewritten receipe details screen, get's an id passed along as route.params
 //
 // Created 09.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, RefreshControlBase, ImageBackground, Dimensions } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, RefreshControlBase, Image, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -36,7 +36,7 @@ const HomeScreen = ({ route }) => {
 
 
   { /* background image */ }
-  const backgroundImage = {image};
+  const backgroundImage = image;
 
 
   { /* function to make a user write to their subdirectory in the database */ }
@@ -95,51 +95,54 @@ const HomeScreen = ({ route }) => {
   }
 
 
+  const window = Dimensions.get('window')
+  const imageDimensions = {
+  height: window.height,
+  width: window.width
+  }
+
   return (
 
-    <SafeAreaView 
-      style={styles.container}
-      contentInsetAdjustmentBehavior="automatic">
+    <SafeAreaView style={styles.container}>
 
-      { /* header def */ }
-      <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
-        
-        <View style={styles.menuBar}>
-          <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-            <Feather name="chevron-left" size={32} color="white" />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => handleSnapPress(0)} style={styles.headerIcon}>
-            <Feather name="more-vertical" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-
-        <View>
-          <Text style={styles.headerHeading}> {receipes.title} </Text>
-        </View>
-        
-
-      </ImageBackground>
       
 
-      { /* main scroll view def */ }
-      <ScrollView>
+      { /* back and more button */}
+      <View style={styles.headerMenu}>
 
-        <View >
-          <Text>{receipes.title}</Text>
-        </View>
+        <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
+          <Feather name="chevron-left" size={32} color="black" />
+        </TouchableOpacity>
 
-        {ingredientsKeys.length > 0 ? (
+        <TouchableOpacity onPress={() => handleSnapPress(0)} style={styles.headerIconMore}>
+          <Feather name="more-vertical" size={24} color="black" />
+        </TouchableOpacity>
+
+      </View>
+
+      <ScrollView style={styles.contentWrapper}>
+
+        <Text style={styles.headingLarge}>{receipes.title}</Text>
+
+        <Text style={styles.headingMedium}>Zutaten: </Text>
+
+        <View style={styles.ingredientsWrapper}>
+          {ingredientsKeys.length > 0 ? (
           ingredientsKeys.map(key => (
             
             <Ingredients
                 id={key}
                 ingredients={presentIngredients[key]}
             />
-          ))
-        ) : (
-          <Text>Keine Rezepte vorhanden.</Text>
-        )}
+            ))
+          ) : (
+            <Text style={styles.text}>Keine Zutaten vorhanden.</Text>
+          )}
+        </View>
+
+        <Text style={styles.headingMedium}>Zubereitung: </Text>
+        <Text style={styles.text}>{receipes.howTo}</Text>
+
       </ScrollView>
 
 
@@ -157,7 +160,7 @@ const HomeScreen = ({ route }) => {
         <BottomSheetView style={styles.bottomSheet}>
 
           <View style={styles.bottomSheetHeader}>
-            <Text style={styles.mediumHeading}>{receipes.title}</Text>
+            <Text style={styles.headingMedium}>{receipes.title}</Text>
 
             <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
               <Feather name="x" size={20} color="black" />
@@ -167,6 +170,7 @@ const HomeScreen = ({ route }) => {
           <TouchableOpacity onPress={deleteReceipe}>
             <DestructiveRow text={"Rezept löschen"} />
           </TouchableOpacity>
+          <Text style={styles.simpleInfoText}>Bitte beachte, dass diese Aktion nicht rückgängig gemacht werden kann!</Text>
           
           
         </BottomSheetView>
@@ -182,80 +186,73 @@ const HomeScreen = ({ route }) => {
 export default HomeScreen
 
 // get the window height
-const height = Dimensions.get('window').height;
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eaeaea',
+    backgroundColor: '#eaeaea'
   },
-  mediumHeading: {
-    fontWeight: 'bold',
-    fontSize: 20,
+
+  simpleInfoText: {
     paddingVertical: 10,
-},
+  },
+  text: {
+    fontSize: 16
+  },
 
-// header
-headerWrapper: {
-  paddingHorizontal: 20,
-  paddingVertical: 20,
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  widht: '100%',
-},
-backgroundImage: {
-  height: height * 0.6,
-  justifyContent: 'space-between',
-},
-headerHeading: {
-  fontWeight: 'bold',
-  fontSize: 36,
-},
-headerRightButton: {
-    
-},
+  // headings
+  headingMedium: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    paddingVertical: 20,
+  },
+  headingLarge: {
+    fontWeight: 'bold',
+    fontSize: 36,
+    paddingVertical: 20,
+  },
 
-// input stuff
-input: {
-  marginTop: 20,
-  borderWidth: 2,
-  borderColor: 'black',
-  borderRadius: 10,
-  paddingHorizontal: 10,
-  paddingVertical: 10,
-},
-addButton: {
-  marginTop: 20,
-  backgroundColor: '#add8e6',
-  paddingHorizontal: 10,
-  paddingVertical: 10,
-  borderRadius: 15,
-},
 
-// bottom sheet
-bottomSheet: {
-  paddingVertical: 20,
-  paddingHorizontal: 30,
-},
-bottomSheetShadowVisible: {
-  ...StyleSheet.absoluteFill,
-  backgroundColor: '#00000080'
-},
-bottomSheetShadowInvisible: {
-  // nothing to see here
-},
-bottomSheetHeader: {
-  justifyContent: 'space-between',
-  flexDirection: 'row',
-  alignItems: 'center',
-},
-bottomSheetCloseButton: {
-  backgroundColor: '#eaeaea',
-  height: 30,
-  width: 30,
-  alignItems: 'center',
-  borderRadius: 15,
-  paddingTop: 5,
-},
+  headerMenu: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+
+  // main content
+  contentWrapper: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+
+  // bottom sheet
+  bottomSheet: {
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+  },
+  bottomSheetShadowVisible: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: '#00000080'
+  },
+  bottomSheetShadowInvisible: {
+    // nothing to see here
+  },
+  bottomSheetHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 20,
+  },
+  bottomSheetCloseButton: {
+    backgroundColor: '#eaeaea',
+    height: 30,
+    width: 30,
+    alignItems: 'center',
+    borderRadius: 15,
+    paddingTop: 5,
+  },
+
 })
