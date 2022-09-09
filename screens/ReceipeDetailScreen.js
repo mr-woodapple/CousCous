@@ -33,18 +33,25 @@ const ReceipeDetailScreen = ({ route }) => {
     const userUID = auth.currentUser?.uid
 
     const currentReceipeID = route.params;
-    const databasePath = userUID+'/receipes/'+currentReceipeID
+    // removed id to test out a stackoverflow post
+    // const databasePath = userUID+'/receipes/'+currentReceipeID
+    const databasePath = userUID+'/receipes'
 
     console.log("ReceipeDetailScreen.js | DatabasePath = " + databasePath)
     
     { /* working with the receipes data */}   
     useEffect(() => {
+        console.log("ReceipeDetailScreen.js | => Entered useEffect")
         return onValue(ref(db, databasePath), querySnapshot => {
             let data = querySnapshot.val() || {};
             let receipeData = {...data};
-            setReceipes(receipeData);
-
-            console.log('ReceipeDetailScreen.js | setReceipe = ', JSON.stringify(receipeData))
+            
+            // test stackoverflow answer to filter the specific answer
+            const receipe = receipeData.find(elt => elt.id === currentReceipeID)
+            if (receipe !== "undefined") {
+                setReceipes(receipe)
+            }
+            console.log('ReceipeDetailScreen.js | setReceipe = ' + JSON.stringify(receipeData))
         })
     }, []) 
 
@@ -87,7 +94,7 @@ const ReceipeDetailScreen = ({ route }) => {
                 { /* Title */ }
                 <View style={styles.headerImage}>
                     <Text style={styles.headerHeading}>{receipes.title}</Text>
-                    {console.log("ReceipeDetailScreen.js | receipes.title = " + receipes.title)}
+                    {console.log("ReceipeDetailScreenV2.js | receipes.title = " + receipes.title)}
                 </View>
 
 

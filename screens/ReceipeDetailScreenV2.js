@@ -1,6 +1,6 @@
-// Receipes Screen
+// Receipes Detail Screen V2 to solve problems (I hope)
 //
-// Created 02.09.2022 by Jasper Holzapfel
+// Created 09.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, RefreshControlBase } from 'react-native'
@@ -17,7 +17,7 @@ import ReceipeItem from '../components/ReceipeItem';
 import Ingredients from '../components/Ingredients';
 
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
 
   const navigation = useNavigation();
 
@@ -25,15 +25,18 @@ const HomeScreen = () => {
   const [ receipes, setReceipes ] = useState({});
 
   const [ presentTitle, setPresentTitle ] = useState('');
-  const [ presentIngredients, setPresentIngredients ] = useState([]);
+  const [ presentIngredients, setPresentIngredients ] = useState({});
   const [ presentIngredient, setPresentIngredient ] = useState('');
   const [ presentHowTo, setPresentHowTo ] = useState('');
-  const receipeKeys = Object.keys(receipes)
+  const receipeKeys = Object.keys(receipes);
+  const ingredientsKeys = Object.keys(presentIngredients);
+
 
   { /* function to make a user write to their subdirectory in the database */ }
   const auth = getAuth()
   const userUID = auth.currentUser?.uid
-  const databasePath = userUID+'/receipes'
+  const databasePath = userUID+'/receipes/'+route.params;
+  const databasePathIngredients = userUID+'/receipes/'+route.params+'/ingredients';
 
   useEffect(() => {
     console.log("ReceipeScreen.js | => Entered useEffect")
@@ -42,32 +45,27 @@ const HomeScreen = () => {
       let receipeItems = {...data};
       setReceipes(receipeItems);
 
-      console.log('ReceipeScreen | setReceipes = ', receipeItems)
+      console.log('ReceipeDetailsScreenV2 | setReceipes = ', receipeItems)
+    }),
+    onValue(ref( db, databasePathIngredients), querySnapshot => {
+        let data = querySnapshot.val() || [];
+        let ingresItems = {...data};
+        setPresentIngredients(ingresItems);
+
+        console.log('ReceipeDetailsScreenV2 | setPresentIngredients = ', presentIngredients)
     })
   }, [])
 
-  console.log("ReceipeScreen.js | receipe = " + JSON.stringify(receipes))
+  console.log("ReceipeDetailsScreenV2 | receipe = " + JSON.stringify(receipes))
 
-  function addNewReceipe() {
-    Keyboard.dismiss();
-    console.log(presentTitle, presentHowTo, presentIngredients)
-    push(ref(db, databasePath), {
-      title: presentTitle,
-      howTo: presentHowTo,
-      ingredients: presentIngredients,
-    });
-    handleClosePress();
-    setPresentTitle('');
-    setPresentIngredients([]);
-    setPresentHowTo('');
-  }
+
+
 
   // update the ingredients array after each input
   function addIngredient() {
     Keyboard.dismiss();
     setPresentIngredients(presentIngredients => [...presentIngredients, presentIngredient]);
     setPresentIngredient('');
-
   }
 
 
@@ -99,7 +97,7 @@ const HomeScreen = () => {
 
       { /* header def */ }
       <View style={styles.headerWrapper}>
-        <Text style={styles.headerHeading}>Receipes</Text>
+        <Text style={styles.headerHeading}>{receipes.title}</Text>
 
         <View style={styles.headerRightButton}>
           <TouchableOpacity onPress={() => handleSnapPress(1)}>
@@ -111,20 +109,14 @@ const HomeScreen = () => {
 
       { /* main scroll view def */ }
       <ScrollView>
-        {receipeKeys.length > 0 ? (
-          receipeKeys.map(key => (
-            // links to the matching detail screen, passing along the key of the receipe
-            <TouchableOpacity
-              key = {key}
-              onPress={() => navigation.navigate('ReceipeDetailsScreenV2', key )} >
-
-              <ReceipeItem
-                key = {key}
-                id = {key}
-                receipe = {receipes[key]}
-              />
-              
-            </TouchableOpacity>
+        {console.log("presentIngredient: " + JSON.stringify(presentIngredients))}
+        {ingredientsKeys.length > 0 ? (
+          ingredientsKeys.map(key => (
+            
+            <Ingredients
+                id={key}
+                ingredients={presentIngredients[key]}
+            />
           ))
         ) : (
           <Text>Keine Rezepte vorhanden.</Text>
@@ -153,65 +145,6 @@ const HomeScreen = () => {
             </TouchableOpacity> 
           </View>
           
-
-          <ScrollView>
-            <KeyboardAvoidingView>
-              
-              <TextInput 
-                placeholder="Titel"
-                value={presentTitle}
-                style={styles.input}
-                onChangeText={text => {
-                  setPresentTitle(text);
-                }}/>
-
-              { /* adding a to-do list for the ingredients */ }
-              <View style={styles.ingredientsWrapper}>
-                {presentIngredients.length > 0 ? (
-
-                  presentIngredients.map((key, value) => (
-                    console.log("DEBUG presentIngredients = " + key + value),
-                      <Ingredients
-                          key={value}
-                          ingredients={key}
-                          //todoItem={todos[key]}
-                      />
-                  ))
-                ) : (
-                  <Text>Füge deine erste Zutat hinzu.</Text>
-                )}
-
-                <TextInput 
-                  placeholder='Weitere Zutat?'
-                  onChangeText={text => {setPresentIngredient(text)}}>
-
-                </TextInput>
-                <TouchableOpacity onPress={() => addIngredient()}>
-                  <Feather name="plus" size={20} color="black" />
-                </TouchableOpacity>
-              </View>
-              
-
-              <TextInput 
-                placeholder="Anleitung"
-                multiline={true}
-                numberOfLines={4}
-                value={presentHowTo}
-                style={styles.input}
-                onChangeText={text => {
-                  setPresentHowTo(text);
-                }}/>
-
-              {/* onPress calls the function */}
-              <TouchableOpacity onPress={() => addNewReceipe()}> 
-                <View style={styles.addButton}>
-                  <Text>Hinzufügen</Text>
-                </View> 
-              </TouchableOpacity>
-              
-
-            </KeyboardAvoidingView>
-          </ScrollView>
           
         </BottomSheetView>
         
