@@ -3,7 +3,7 @@
 // Created 02.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, RefreshControlBase } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, RefreshControlBase, ImageBackground } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -36,18 +36,14 @@ const HomeScreen = () => {
   const databasePath = userUID+'/receipes'
 
   useEffect(() => {
-    console.log("ReceipeScreen.js | => Entered useEffect")
     return onValue(ref(db, databasePath), querySnapshot => {
       let data = querySnapshot.val() || {};
       let receipeItems = {...data};
       setReceipes(receipeItems);
-
-      console.log('ReceipeScreen | setReceipes = ', receipeItems)
     })
   }, [])
 
-  console.log("ReceipeScreen.js | receipe = " + JSON.stringify(receipes))
-
+  // add new receipe
   function addNewReceipe() {
     Keyboard.dismiss();
     console.log(presentTitle, presentHowTo, presentIngredients)
@@ -116,7 +112,7 @@ const HomeScreen = () => {
             // links to the matching detail screen, passing along the key of the receipe
             <TouchableOpacity
               key = {key}
-              onPress={() => navigation.navigate('ReceipeDetailsScreenV2', key )} >
+              onPress={() => navigation.navigate('ReceipeDetailsScreen', key )} >
 
               <ReceipeItem
                 key = {key}

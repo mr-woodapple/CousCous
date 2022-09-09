@@ -12,9 +12,10 @@ const Ingredients = ({ ingredients, id }) => {
 
     return (
         <View style={styles.container}>
+            
             <Text>Zutat: {ingredients} </Text>
-            <Text>Key: {id} </Text>
-            {console.log("ingredients.js | Einzelne Zutat: " + id + " + aktueller key: " + ingredients)}
+            
+
             <TouchableOpacity>
                 <Feather name="plus" size={20} color="black" />
             </TouchableOpacity>

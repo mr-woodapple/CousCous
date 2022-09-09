@@ -1,238 +1,261 @@
-// Receipes Detail Screen
+// Receipes Detail Screen V2 to solve problems (I hope)
 //
-// Get's called from the ReceipesScreen, passing the id of the current receipe along which is then used on this screen
-// to get the firebase data at that location.
-//
-// Created 02.09.2022 by Jasper Holzapfel
+// Created 09.09.2022 by Jasper Holzapfel
 
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { ScrollView } from 'react-native-gesture-handler'
-import { ref, push, remove, onValue } from 'firebase/database';
-import { db } from '../firebase'
-import { getAuth } from 'firebase/auth'
+import React , { useState, useEffect, useRef, useCallback  } from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, RefreshControlBase, ImageBackground, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { getAuth } from 'firebase/auth'
+import { ref, push, remove, onValue } from 'firebase/database';
+import { db } from '../firebase'
+import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 
-
-import DestructiveRow from '../components/DestructiveRow';
 import Ingredients from '../components/Ingredients';
+import DestructiveRow from '../components/DestructiveRow';
+
+import image from '../assets/images/nordwood-themes-wtevVfGYwnM-unsplash.jpg';
 
 
+const HomeScreen = ({ route }) => {
 
-const ReceipeDetailScreen = ({ route }) => {
-
-    const navigation = useNavigation();
-
-    const [ receipes, setReceipes ] = useState({});
-
-    { /* function to make a user write to their subdirectory in the database */ }
-    const auth = getAuth()
-    const userUID = auth.currentUser?.uid
-
-    const currentReceipeID = route.params;
-    // removed id to test out a stackoverflow post
-    // const databasePath = userUID+'/receipes/'+currentReceipeID
-    const databasePath = userUID+'/receipes'
-
-    console.log("ReceipeDetailScreen.js | DatabasePath = " + databasePath)
-    
-    { /* working with the receipes data */}   
-    useEffect(() => {
-        console.log("ReceipeDetailScreen.js | => Entered useEffect")
-        return onValue(ref(db, databasePath), querySnapshot => {
-            let data = querySnapshot.val() || {};
-            let receipeData = {...data};
-            
-            // test stackoverflow answer to filter the specific answer
-            const receipe = receipeData.find(elt => elt.id === currentReceipeID)
-            if (receipe !== "undefined") {
-                setReceipes(receipe)
-            }
-            console.log('ReceipeDetailScreen.js | setReceipe = ' + JSON.stringify(receipeData))
-        })
-    }, []) 
-
-    console.log("ReceipeDetailScreen.js | receipe = " + JSON.stringify(receipes))
-
-    function deleteReceipe() {
-        remove(ref(db, databasePath));
-        navigation.navigate('ReceipesScreenNav');
-    }
+  const navigation = useNavigation();
 
 
-    { /* function for the bottom modal sheets */ }
-    const sheetRef = useRef(null);
-    const [ isOpen, setIsOpen ] = useState(true);
-    const snapPoints = ["40%", "80%"]
+  { /* functions to handle the receipe data stuff */ }
+  const [ receipes, setReceipes ] = useState({});
 
-    const handleSnapPress = useCallback((index) => {
-        sheetRef.current?.snapToIndex('0');
-        setIsOpen(true);
-    }, []);
-
-    return (
-
-        <SafeAreaView style={styles.container}>
-
-            <ScrollView>
-
-                <View style={styles.headerWrapper}>
-
-                    <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-                        <Feather name="chevron-left" size={32} color="white" />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => handleSnapPress(0)} style={styles.headerIcon}>
-                        <Feather name="more-vertical" size={24} color="white" />
-                    </TouchableOpacity>
-                  
-                </View>
-
-                { /* Title */ }
-                <View style={styles.headerImage}>
-                    <Text style={styles.headerHeading}>{receipes.title}</Text>
-                    {console.log("ReceipeDetailScreenV2.js | receipes.title = " + receipes.title)}
-                </View>
+  const [ presentTitle, setPresentTitle ] = useState('');
+  const [ presentIngredients, setPresentIngredients ] = useState({});
+  const [ presentIngredient, setPresentIngredient ] = useState('');
+  const [ presentHowTo, setPresentHowTo ] = useState('');
+  const receipeKeys = Object.keys(receipes);
+  const ingredientsKeys = Object.keys(presentIngredients);
 
 
-                <View style={styles.mainReceipeContainer}>
-
-                    <View style={styles.howTo}>
-                        <Text style={styles.mediumHeading}>Zutaten:</Text>
-
-                        <Text>DEBUG ONLY: {receipes.ingredients} </Text>
-                        
-                        
-
-                        { /* adding a to-do list for the ingredients */ }
-                        <View style={styles.ingredientsWrapper}>
+  { /* background image */ }
+  const backgroundImage = {image};
 
 
-                            {/* STILL 
-                            NEED 
-                            TO 
-                            FIX 
-                            THIS */}
-                            {receipes.ingredients.length > 0 ? (
-                                receipes.ingredients.map((key, value) => (
-                                console.log("Key = " + key + "Value = " + value),
-                                <Ingredients
-                                    key={key}
-                                    ingredients={value}
-                                />
-                            ))
-                            ) : (
-                            <Text>Keine Zutaten vorhanden.</Text>
-                            )}
+  { /* function to make a user write to their subdirectory in the database */ }
+  const auth = getAuth()
+  const userUID = auth.currentUser?.uid
+  const databasePath = userUID+'/receipes/'+route.params;
+  const databasePathIngredients = userUID+'/receipes/'+route.params+'/ingredients';
 
 
-                        </View>
-                    </View>
+  { /* updates "receipes" and "presentIngredients", so we can get their keys and use them to iterate over the objects */ }
+  useEffect(() => {
+    return onValue(ref(db, databasePath), querySnapshot => {
+      let data = querySnapshot.val() || {};
+      let receipeItems = {...data};
+      setReceipes(receipeItems);
+    }),
 
-                    <View style={styles.howTo}>
-                        <Text style={styles.mediumHeading}>Anleitung:</Text>
+    onValue(ref( db, databasePathIngredients), querySnapshot => {
+        let data = querySnapshot.val() || [];
+        let ingresItems = {...data};
+        setPresentIngredients(ingresItems);
+    })
+  }, [])
 
-                        <Text>Anleitung: {receipes.howTo} </Text>
-                    </View>
-                </View>
-                
+  // add ingredient
+  function addIngredient() {
+    Keyboard.dismiss();
+    setPresentIngredients(presentIngredients => [...presentIngredients, presentIngredient]);
+    setPresentIngredient('');
+  }
 
-            </ScrollView>
-
-            { /* shadow for bottom sheet */ }
-            <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View> 
-            
-
-            { /* bottom sheet */ }
-            <BottomSheet 
-                ref={sheetRef} 
-                snapPoints={snapPoints} 
-                enablePanDownToClose={true}
-                onClose={() => setIsOpen(false)}>
-
-                <BottomSheetView style={styles.bottomSheet}>
-
-                <TouchableOpacity onPress={deleteReceipe}>
-                    <DestructiveRow text={"Rezept löschen"} />
-                </TouchableOpacity>
-                </BottomSheetView>
-                
-            </BottomSheet>
-
-        </SafeAreaView>
-
-    )
+  // delete receipe and navigate back to previous screen
+  function deleteReceipe() {
+    remove(ref(db, databasePath));
+    navigation.navigate('ReceipesScreenNav');
 }
 
-export default ReceipeDetailScreen
+
+  { /* stuff for the bottom modal sheet */ }
+  const sheetRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(true);
+  const snapPoints = ["40%", "90%"]
+
+  const handleSnapPress = useCallback((index) => {
+    sheetRef.current?.snapToIndex(index);
+    setIsOpen(true);
+  }, []);
+
+  const handleSheetChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
+  const handleClosePress = () => {
+    sheetRef.current.close();
+    Keyboard.dismiss()
+  }
+
+
+  return (
+
+    <SafeAreaView 
+      style={styles.container}
+      contentInsetAdjustmentBehavior="automatic">
+
+      { /* header def */ }
+      <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+        
+        <View style={styles.menuBar}>
+          <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
+            <Feather name="chevron-left" size={32} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => handleSnapPress(0)} style={styles.headerIcon}>
+            <Feather name="more-vertical" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          <Text style={styles.headerHeading}> {receipes.title} </Text>
+        </View>
+        
+
+      </ImageBackground>
+      
+
+      { /* main scroll view def */ }
+      <ScrollView>
+
+        <View >
+          <Text>{receipes.title}</Text>
+        </View>
+
+        {ingredientsKeys.length > 0 ? (
+          ingredientsKeys.map(key => (
+            
+            <Ingredients
+                id={key}
+                ingredients={presentIngredients[key]}
+            />
+          ))
+        ) : (
+          <Text>Keine Rezepte vorhanden.</Text>
+        )}
+      </ScrollView>
+
+
+      { /* shadow for bottom sheet */ }
+      <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible } />
+
+
+      { /* bottom sheet add new receipe */ }
+      <BottomSheet 
+        ref={sheetRef} 
+        snapPoints={snapPoints} 
+        enablePanDownToClose={true}
+        onClose={() => setIsOpen(false)}>
+
+        <BottomSheetView style={styles.bottomSheet}>
+
+          <View style={styles.bottomSheetHeader}>
+            <Text style={styles.mediumHeading}>{receipes.title}</Text>
+
+            <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+              <Feather name="x" size={20} color="black" />
+            </TouchableOpacity> 
+          </View>
+
+          <TouchableOpacity onPress={deleteReceipe}>
+            <DestructiveRow text={"Rezept löschen"} />
+          </TouchableOpacity>
+          
+          
+        </BottomSheetView>
+        
+      </BottomSheet>
+
+
+    </SafeAreaView>
+
+  )
+}
+
+export default HomeScreen
+
+// get the window height
+const height = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#eaeaea'
-    },
-    mediumHeading: {
-        fontWeight: 'bold',
-        fontSize: 20,
-        paddingVertical: 10,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#eaeaea',
+  },
+  mediumHeading: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingVertical: 10,
+},
 
-    // header buttons
-    headerWrapper: {
-        flexDirection: 'row',
-        backgroundColor: '#add8e6',
-        paddingTop: 10,
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    headerIcon: {
-        padding: 20,
-    },
+// header
+headerWrapper: {
+  paddingHorizontal: 20,
+  paddingVertical: 20,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  widht: '100%',
+},
+backgroundImage: {
+  height: height * 0.6,
+  justifyContent: 'space-between',
+},
+headerHeading: {
+  fontWeight: 'bold',
+  fontSize: 36,
+},
+headerRightButton: {
+    
+},
 
-    // other header stuff
-    headerImage: {
-        alignItems: 'center',
-        backgroundColor: '#add8e6',
-        paddingBottom: 50,
-    },
-    headerHeading: {
-        fontWeight: 'bold',
-        fontSize: 24,
-        color: 'white',
-        paddingVertical: 20,
-    },
+// input stuff
+input: {
+  marginTop: 20,
+  borderWidth: 2,
+  borderColor: 'black',
+  borderRadius: 10,
+  paddingHorizontal: 10,
+  paddingVertical: 10,
+},
+addButton: {
+  marginTop: 20,
+  backgroundColor: '#add8e6',
+  paddingHorizontal: 10,
+  paddingVertical: 10,
+  borderRadius: 15,
+},
 
-    // main container for receipes
-    mainReceipeContainer: {
-        backgroundColor: '#eaeaea',
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-        marginTop: -30,
-    },
-
-    howTo: {
-        marginTop: 20,
-    },
-    ingredientsWrapper: { 
-        backgroundColor: 'green',
-    },
-
-
-    // bottom sheet
-    bottomSheet: {
-        paddingVertical: 20,
-        paddingHorizontal: 30,
-    },
-    bottomSheetShadowVisible: {
-        ...StyleSheet.absoluteFill,
-        backgroundColor: '#00000080'
-    },
-    bottomSheetShadowInvisible: {
-        // nothing to see here
-    }
+// bottom sheet
+bottomSheet: {
+  paddingVertical: 20,
+  paddingHorizontal: 30,
+},
+bottomSheetShadowVisible: {
+  ...StyleSheet.absoluteFill,
+  backgroundColor: '#00000080'
+},
+bottomSheetShadowInvisible: {
+  // nothing to see here
+},
+bottomSheetHeader: {
+  justifyContent: 'space-between',
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+bottomSheetCloseButton: {
+  backgroundColor: '#eaeaea',
+  height: 30,
+  width: 30,
+  alignItems: 'center',
+  borderRadius: 15,
+  paddingTop: 5,
+},
 })
