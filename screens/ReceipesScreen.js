@@ -12,6 +12,7 @@ import { ref, push, remove, onValue } from 'firebase/database';
 import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
+import { Portal } from '@gorhom/portal';
 
 import ReceipeItem from '../components/ReceipeItem';
 import Ingredients from '../components/Ingredients';
@@ -132,90 +133,93 @@ const HomeScreen = () => {
       <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
 
 
-      { /* bottom sheet add new receipe */ }
-      <BottomSheet 
-        // index -1 makes sure the bottom view is closed by default
-        index={-1}
-        ref={sheetRef} 
-        snapPoints={snapPoints} 
-        enablePanDownToClose={true}
-        onClose={() => setIsOpen(false)}
-        //initialSnap={-1}
-        >
+      { /* Portal allows us to display the bottom sheets over the tab bar -> see PortalProvider at the very root structure of the app */ }
+      <Portal>
+        { /* bottom sheet add new receipe */ }
+        <BottomSheet 
+          // index -1 makes sure the bottom view is closed by default
+          index={-1}
+          ref={sheetRef} 
+          snapPoints={snapPoints} 
+          enablePanDownToClose={true}
+          onClose={() => setIsOpen(false)}
+          //initialSnap={-1}
+          >
 
-        <BottomSheetView style={styles.bottomSheet}>
+          <BottomSheetView style={styles.bottomSheet}>
 
-          <View style={styles.bottomSheetHeader}>
-            <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
+            <View style={styles.bottomSheetHeader}>
+              <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
 
-            <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
-              <Feather name="x" size={20} color="black" />
-            </TouchableOpacity> 
-          </View>
-          
+              <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+                <Feather name="x" size={20} color="black" />
+              </TouchableOpacity> 
+            </View>
+            
 
-          <ScrollView>
-            <KeyboardAvoidingView>
-              
-              <TextInput 
-                placeholder="Titel"
-                value={presentTitle}
-                style={styles.input}
-                onChangeText={text => {
-                  setPresentTitle(text);
-                }}/>
-
-              { /* adding a to-do list for the ingredients */ }
-              <View style={styles.ingredientsWrapper}>
-                {presentIngredients.length > 0 ? (
-
-                  presentIngredients.map((key, value) => (
-                      <Ingredients
-                          key={value}
-                          ingredients={key}
-                      />
-                  ))
-                ) : (
-                  <Text style={styles.text}>Keine Zutaten, füge deine erste Zutat hinzu.</Text>
-                )}
+            <ScrollView>
+              <KeyboardAvoidingView>
                 
-                <View style={styles.addIngredientWrapper}>
-                  <TextInput 
-                    placeholder='Zutat hinzufügen...'
-                    style={styles.text}
-                    onChangeText={text => {setPresentIngredient(text)}}
-                    onSubmitEditing={addIngredient} />
+                <TextInput 
+                  placeholder="Titel"
+                  value={presentTitle}
+                  style={styles.input}
+                  onChangeText={text => {
+                    setPresentTitle(text);
+                  }}/>
 
-                  <TouchableOpacity onPress={() => addIngredient()}>
-                    <Feather name="plus" size={20} color="black" />
-                  </TouchableOpacity>
+                { /* adding a to-do list for the ingredients */ }
+                <View style={styles.ingredientsWrapper}>
+                  {presentIngredients.length > 0 ? (
+
+                    presentIngredients.map((key, value) => (
+                        <Ingredients
+                            key={value}
+                            ingredients={key}
+                        />
+                    ))
+                  ) : (
+                    <Text style={styles.text}>Keine Zutaten, füge deine erste Zutat hinzu.</Text>
+                  )}
+                  
+                  <View style={styles.addIngredientWrapper}>
+                    <TextInput 
+                      placeholder='Zutat hinzufügen...'
+                      style={styles.text}
+                      onChangeText={text => {setPresentIngredient(text)}}
+                      onSubmitEditing={addIngredient} />
+
+                    <TouchableOpacity onPress={() => addIngredient()}>
+                      <Feather name="plus" size={20} color="black" />
+                    </TouchableOpacity>
+                  </View>
+                  
                 </View>
                 
-              </View>
-              
 
-              <TextInput 
-                placeholder="Anleitung"
-                multiline={true}
-                numberOfLines={4}
-                value={presentHowTo}
-                style={styles.input}
-                onChangeText={text => {
-                  setPresentHowTo(text);
-                }}/>
+                <TextInput 
+                  placeholder="Anleitung"
+                  multiline={true}
+                  numberOfLines={4}
+                  value={presentHowTo}
+                  style={styles.input}
+                  onChangeText={text => {
+                    setPresentHowTo(text);
+                  }}/>
 
-              {/* onPress calls the function */}
-              <TouchableOpacity style={styles.addButton} onPress={() => addNewReceipe()}> 
-                  <Text style={styles.mediumHeading}>Hinzufügen</Text>
-              </TouchableOpacity>
-              
+                {/* onPress calls the function */}
+                <TouchableOpacity style={styles.addButton} onPress={() => addNewReceipe()}> 
+                    <Text style={styles.mediumHeading}>Hinzufügen</Text>
+                </TouchableOpacity>
+                
 
-            </KeyboardAvoidingView>
-          </ScrollView>
+              </KeyboardAvoidingView>
+            </ScrollView>
+            
+          </BottomSheetView>
           
-        </BottomSheetView>
-        
-      </BottomSheet>
+        </BottomSheet>
+      </Portal>
 
 
     </SafeAreaView>
@@ -289,6 +293,7 @@ const styles = StyleSheet.create({
   bottomSheet: {
     paddingVertical: 20,
     paddingHorizontal: 30,
+    flex: 1,
   },
   bottomSheetShadowVisible: {
     ...StyleSheet.absoluteFill,

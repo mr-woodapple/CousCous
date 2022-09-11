@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { getAuth, signOut } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
+import { Portal } from '@gorhom/portal';
 
 import * as Application from 'expo-application';
 import * as Device from 'expo-device';
@@ -89,31 +90,32 @@ const MoreScreen = () => {
       { /* shadow for bottom sheet */ }
       <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
       
+      <Portal>
+        { /* bottom sheet */ }
+        <BottomSheet 
+          index={-1}
+          ref={sheetRef} 
+          snapPoints={snapPoints} 
+          enablePanDownToClose={true}
+          onClose={() => setIsOpen(false)}>
 
-      { /* bottom sheet */ }
-      <BottomSheet 
-        index={-1}
-        ref={sheetRef} 
-        snapPoints={snapPoints} 
-        enablePanDownToClose={true}
-        onClose={() => setIsOpen(false)}>
+          <BottomSheetView style={styles.bottomSheet}>
 
-        <BottomSheetView style={styles.bottomSheet}>
+            <View style={styles.bottomSheetHeader}>
+              <Text style={styles.headingMedium}>Mehr</Text>
 
-          <View style={styles.bottomSheetHeader}>
-            <Text style={styles.headingMedium}>Mehr</Text>
+              <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+                <Feather name="x" size={20} color="black" />
+              </TouchableOpacity> 
+            </View>
 
-            <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
-              <Feather name="x" size={20} color="black" />
-            </TouchableOpacity> 
-          </View>
-
-          <TouchableOpacity>
-            <Text>Add content here</Text>
-          </TouchableOpacity>
-        </BottomSheetView>
-        
-      </BottomSheet>
+            <TouchableOpacity>
+              <Text>Add content here</Text>
+            </TouchableOpacity>
+          </BottomSheetView>
+          
+        </BottomSheet>
+      </Portal>
 
     </SafeAreaView>
   )

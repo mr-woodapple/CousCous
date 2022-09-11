@@ -12,6 +12,7 @@ import { ref, push, remove, onValue } from 'firebase/database';
 import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
+import { Portal } from '@gorhom/portal';
 
 import Ingredients from '../components/Ingredients';
 import DestructiveRow from '../components/DestructiveRow';
@@ -107,76 +108,78 @@ const HomeScreen = ({ route }) => {
 
       
 
-      { /* back and more button */}
-      <View style={styles.headerMenu}>
+        { /* back and more button */}
+        <View style={styles.headerMenu}>
 
-        <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-          <Feather name="chevron-left" size={32} color="black" />
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
+            <Feather name="chevron-left" size={32} color="black" />
+            </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleSnapPress(0)} style={styles.headerIconMore}>
-          <Feather name="more-vertical" size={24} color="black" />
-        </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleSnapPress(0)} style={styles.headerIconMore}>
+            <Feather name="more-vertical" size={24} color="black" />
+            </TouchableOpacity>
 
-      </View>
-
-      <ScrollView style={styles.contentWrapper}>
-
-        <Text style={styles.headingLarge}>{receipes.title}</Text>
-
-        <Text style={styles.headingMedium}>Zutaten: </Text>
-
-        <View style={styles.ingredientsWrapper}>
-          {ingredientsKeys.length > 0 ? (
-          ingredientsKeys.map(key => (
-            
-            <Ingredients
-                id={key}
-                ingredients={presentIngredients[key]}
-            />
-            ))
-          ) : (
-            <Text style={styles.text}>Keine Zutaten vorhanden.</Text>
-          )}
         </View>
 
-        <Text style={styles.headingMedium}>Zubereitung: </Text>
-        <Text style={styles.text}>{receipes.howTo}</Text>
+        <ScrollView style={styles.contentWrapper}>
 
-      </ScrollView>
+            <Text style={styles.headingLarge}>{receipes.title}</Text>
+
+            <Text style={styles.headingMedium}>Zutaten: </Text>
+
+            <View style={styles.ingredientsWrapper}>
+            {ingredientsKeys.length > 0 ? (
+            ingredientsKeys.map(key => (
+                
+                <Ingredients
+                    id={key}
+                    ingredients={presentIngredients[key]}
+                />
+                ))
+            ) : (
+                <Text style={styles.text}>Keine Zutaten vorhanden.</Text>
+            )}
+            </View>
+
+            <Text style={styles.headingMedium}>Zubereitung: </Text>
+            <Text style={styles.text}>{receipes.howTo}</Text>
+
+        </ScrollView>
 
 
-      { /* shadow for bottom sheet */ }
-      <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible } />
+        { /* shadow for bottom sheet */ }
+        <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible } />
 
+    
+        <Portal>
+            { /* bottom sheet add new receipe */ }
+            <BottomSheet 
+                index={-1}
+                ref={sheetRef} 
+                snapPoints={snapPoints} 
+                enablePanDownToClose={true}
+                onClose={() => setIsOpen(false)}>
 
-      { /* bottom sheet add new receipe */ }
-      <BottomSheet 
-        index={-1}
-        ref={sheetRef} 
-        snapPoints={snapPoints} 
-        enablePanDownToClose={true}
-        onClose={() => setIsOpen(false)}>
+                <BottomSheetView style={styles.bottomSheet}>
 
-        <BottomSheetView style={styles.bottomSheet}>
+                <View style={styles.bottomSheetHeader}>
+                    <Text style={styles.headingMedium}>{receipes.title}</Text>
 
-          <View style={styles.bottomSheetHeader}>
-            <Text style={styles.headingMedium}>{receipes.title}</Text>
+                    <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+                    <Feather name="x" size={20} color="black" />
+                    </TouchableOpacity> 
+                </View>
 
-            <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
-              <Feather name="x" size={20} color="black" />
-            </TouchableOpacity> 
-          </View>
-
-          <TouchableOpacity onPress={deleteReceipe}>
-            <DestructiveRow text={"Rezept löschen"} />
-          </TouchableOpacity>
-          <Text style={styles.simpleInfoText}>Bitte beachte, dass diese Aktion nicht rückgängig gemacht werden kann!</Text>
-          
-          
-        </BottomSheetView>
-        
-      </BottomSheet>
+                <TouchableOpacity onPress={deleteReceipe}>
+                    <DestructiveRow text={"Rezept löschen"} />
+                </TouchableOpacity>
+                <Text style={styles.simpleInfoText}>Bitte beachte, dass diese Aktion nicht rückgängig gemacht werden kann!</Text>
+                
+                
+                </BottomSheetView>
+                
+            </BottomSheet>
+        </Portal>
 
 
     </SafeAreaView>

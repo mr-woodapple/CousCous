@@ -6,8 +6,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { app } from './firebase';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+import 'react-native-gesture-handler';
+import { PortalProvider } from '@gorhom/portal';
 
 
 import LoginScreen from './screens/LoginScreen';
@@ -68,13 +69,15 @@ function MoreScreenNavigation() {
 { /* main navigator stack*/ }
 export default function App() {
   return (
+    <PortalProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
+          <Stack.Screen name="TabScreenNav" component={TabScreenNavigation} options={{ headerShown: false }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PortalProvider>
     
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
-        <Stack.Screen name="TabScreenNav" component={TabScreenNavigation} options={{ headerShown: false }} />
-      </Stack.Navigator>
-    </NavigationContainer>
 
   );
 }
