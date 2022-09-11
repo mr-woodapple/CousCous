@@ -15,7 +15,7 @@ const ToDoListScreen = () => {
 
     { /* functions the bottom modal sheets */ }
     const sheetRef = useRef(null);
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const snapPoints = ["40%", "80%"]
 
     const handleSnapPress = useCallback((index) => {
@@ -133,6 +133,7 @@ const ToDoListScreen = () => {
             
             { /* bottom sheet */ }
             <BottomSheet 
+                index={-1}
                 ref={sheetRef} 
                 snapPoints={snapPoints} 
                 enablePanDownToClose={true}

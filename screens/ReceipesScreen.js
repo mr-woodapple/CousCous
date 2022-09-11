@@ -69,7 +69,7 @@ const HomeScreen = () => {
 
   { /* functions the bottom modal sheets */ }
   const sheetRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const snapPoints = ["40%", "90%"]
 
   const handleSnapPress = useCallback((index) => {
@@ -134,10 +134,14 @@ const HomeScreen = () => {
 
       { /* bottom sheet add new receipe */ }
       <BottomSheet 
+        // index -1 makes sure the bottom view is closed by default
+        index={-1}
         ref={sheetRef} 
         snapPoints={snapPoints} 
         enablePanDownToClose={true}
-        onClose={() => setIsOpen(false)}>
+        onClose={() => setIsOpen(false)}
+        //initialSnap={-1}
+        >
 
         <BottomSheetView style={styles.bottomSheet}>
 

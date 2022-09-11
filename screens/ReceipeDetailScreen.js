@@ -77,7 +77,7 @@ const HomeScreen = ({ route }) => {
 
   { /* stuff for the bottom modal sheet */ }
   const sheetRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const snapPoints = ["40%", "90%"]
 
   const handleSnapPress = useCallback((index) => {
@@ -152,6 +152,7 @@ const HomeScreen = ({ route }) => {
 
       { /* bottom sheet add new receipe */ }
       <BottomSheet 
+        index={-1}
         ref={sheetRef} 
         snapPoints={snapPoints} 
         enablePanDownToClose={true}
