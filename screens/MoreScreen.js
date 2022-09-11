@@ -69,6 +69,14 @@ const MoreScreen = () => {
         </TouchableOpacity>
         
         <View style={styles.appInfoRow}>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 20 }}>
+            <Feather name={'info'} size={24} color="black" />
+
+            <Text style={{ fontSize: 18, paddingLeft: 20 }}>Information</Text>
+
+          </View>
+
           { /* Question mark makes it an "optional value" */ }
           <Text>These are information that you can use to send proper feedback to us. These information won't be saved anywhere, they're just on your phone!{'\n'}</Text>
 

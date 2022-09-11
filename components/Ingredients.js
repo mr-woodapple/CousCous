@@ -4,7 +4,7 @@
 
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { Feather } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth'
 import { db } from '../firebase'
 import { ref, push } from 'firebase/database'
@@ -32,7 +32,7 @@ const Ingredients = ({ ingredients, id }) => {
             <Text style={styles.text}>{ingredients} </Text>
             
             <TouchableOpacity onPress={() => addNewTodo()}>
-                <Feather name="plus-circle" size={20} color="black" />
+                <Entypo name="add-to-list" size={20} color="black" />
             </TouchableOpacity>
 
         </View>

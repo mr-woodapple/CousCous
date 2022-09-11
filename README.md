@@ -15,3 +15,4 @@ Build with Expo.
 - [ ] Move often used functions & values / colors / headings into seperate files
 - [ ] Add darkmode (& user selectable color-schemes?)
 - [ ] Add paywall (3 receipes free, only 10 to-do list items?)
+- [ ] Add Spotify like header bar for categories
