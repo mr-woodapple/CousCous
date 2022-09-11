@@ -30,7 +30,7 @@ app
 function TabScreenNavigation() {
   return(
     <Tab.Navigator screenOptions={{
-      tabBarStyle: { position: 'absolute', backgroundColor: '#fff', borderTopWidth: 0, elevation: 0, style: styles.tabBar },
+      tabBarStyle: { position: 'absolute', backgroundColor: '#eaeaea', borderTopWidth: 0, elevation: 0, style: styles.tabBar },
     }}>
       <Tab.Screen name="Rezepte" component={ReceipesScreenNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="book-open" size={24} color="black" />) }} />
       <Tab.Screen name="Einkaufsliste" component={ToDoListNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="list" size={24} color="black" />) }} />
@@ -89,9 +89,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#e8eaed',
-  },
-  tabBar: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
   }
 });

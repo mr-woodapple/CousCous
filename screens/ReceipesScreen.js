@@ -148,16 +148,17 @@ const HomeScreen = () => {
 
           <BottomSheetView style={styles.bottomSheet}>
 
-            <View style={styles.bottomSheetHeader}>
-              <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
-
-              <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
-                <Feather name="x" size={20} color="black" />
-              </TouchableOpacity> 
-            </View>
-            
-
             <ScrollView>
+
+              <View style={styles.bottomSheetHeader}>
+                <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
+
+                <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+                  <Feather name="x" size={20} color="black" />
+                </TouchableOpacity> 
+              </View>
+              
+
               <KeyboardAvoidingView>
                 
                 <TextInput 
@@ -214,8 +215,8 @@ const HomeScreen = () => {
                 
 
               </KeyboardAvoidingView>
-            </ScrollView>
             
+            </ScrollView>
           </BottomSheetView>
           
         </BottomSheet>
@@ -294,6 +295,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 30,
     flex: 1,
+    paddingBottom: 30,
   },
   bottomSheetShadowVisible: {
     ...StyleSheet.absoluteFill,

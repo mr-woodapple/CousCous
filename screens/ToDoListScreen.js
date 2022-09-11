@@ -5,6 +5,7 @@ import { db } from '../firebase'
 import { Feather } from '@expo/vector-icons'; 
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { getAuth } from 'firebase/auth'
+import { Portal } from '@gorhom/portal';
 
 
 import ToDoItem from '../components/ToDoItem'
@@ -131,32 +132,34 @@ const ToDoListScreen = () => {
             { /* shadow for bottom sheet */ }
             <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
             
-            { /* bottom sheet */ }
-            <BottomSheet 
-                index={-1}
-                ref={sheetRef} 
-                snapPoints={snapPoints} 
-                enablePanDownToClose={true}
-                onClose={() => setIsOpen(false)}>
+            <Portal>
+                { /* bottom sheet */ }
+                <BottomSheet 
+                    index={-1}
+                    ref={sheetRef} 
+                    snapPoints={snapPoints} 
+                    enablePanDownToClose={true}
+                    onClose={() => setIsOpen(false)}>
 
-                <BottomSheetView style={styles.bottomSheet}>
+                    <BottomSheetView style={styles.bottomSheet}>
 
-                <View style={styles.bottomSheetHeader}>
-                    <Text style={styles.headingMedium}>Einkaufsliste</Text>
+                    <View style={styles.bottomSheetHeader}>
+                        <Text style={styles.headingMedium}>Einkaufsliste</Text>
 
-                    <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
-                        <Feather name="x" size={20} color="black" />
-                    </TouchableOpacity> 
-                </View>
+                        <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+                            <Feather name="x" size={20} color="black" />
+                        </TouchableOpacity> 
+                    </View>
 
-                    <TouchableOpacity onPress={clearTodos}>
-                        <DestructiveRow text={'Liste löschen'}></DestructiveRow>
-                    </TouchableOpacity>
-                    <Text style={styles.simpleInfoText}>Bitte beachte, dass diese Aktion nicht rückgängig gemacht werden kann!</Text>
+                        <TouchableOpacity onPress={clearTodos}>
+                            <DestructiveRow text={'Liste löschen'}></DestructiveRow>
+                        </TouchableOpacity>
+                        <Text style={styles.simpleInfoText}>Bitte beachte, dass diese Aktion nicht rückgängig gemacht werden kann!</Text>
 
-                </BottomSheetView>
-                
-            </BottomSheet>
+                    </BottomSheetView>
+                    
+                </BottomSheet>
+            </Portal>
 
         </SafeAreaView>
 
