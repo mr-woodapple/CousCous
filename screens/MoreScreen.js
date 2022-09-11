@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
 
   headerWrapper: {
       paddingHorizontal: 20,
-      paddingVertical: 20,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
