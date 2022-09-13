@@ -23,13 +23,21 @@
       "buildNumber": "0.1.1"
     },
     "android": {
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.HolzapfelGrafik.HouseholdProject",
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7cfe7d3a-b575-4df1-bca2-14e3924a2f84"
+      }
     }
   }
 }

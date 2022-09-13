@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     tasksWrapper: {
         marginTop: 10,
         paddingHorizontal: 20,
+        marginBottom: 90,
     },
     writeTaskWrapper: {
         bottom: 75,
@@ -223,11 +224,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         width: 300,
         borderRadius: 15,
-        backgroundColor: 'white',
+        backgroundColor: '#add8e6',
     },
     addWrapper: {
         marginLeft: 10,
-        backgroundColor: 'white',
+        backgroundColor: '#add8e6',
         paddingVertical: 12,
         paddingHorizontal: 15,
         borderRadius: 15,
