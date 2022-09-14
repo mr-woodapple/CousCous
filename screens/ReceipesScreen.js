@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { getAuth } from 'firebase/auth'
+import { uuidv4 } from '@firebase/util';
 import { ref, push, remove, onValue } from 'firebase/database';
 import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
@@ -15,9 +16,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
 
 import ReceipeItem from '../components/ReceipeItem';
-import Ingredients from '../components/Ingredients';
-
-
+  
 const HomeScreen = () => {
 
   const navigation = useNavigation();
@@ -27,7 +26,7 @@ const HomeScreen = () => {
 
   const [ presentTitle, setPresentTitle ] = useState('');
   const [ presentIngredients, setPresentIngredients ] = useState([]);
-  const [ presentIngredient, setPresentIngredient ] = useState('');
+  const [ presentIngredient, setPresentIngredient ] = useState({});
   const [ presentHowTo, setPresentHowTo ] = useState('');
   const receipeKeys = Object.keys(receipes)
 
@@ -41,13 +40,13 @@ const HomeScreen = () => {
       let data = querySnapshot.val() || {};
       let receipeItems = {...data};
       setReceipes(receipeItems);
+      console.log('Receipes ', receipes)
     })
   }, [])
 
   // add new receipe
   function addNewReceipe() {
     Keyboard.dismiss();
-    console.log(presentTitle, presentHowTo, presentIngredients)
     push(ref(db, databasePath), {
       title: presentTitle,
       howTo: presentHowTo,
@@ -59,13 +58,32 @@ const HomeScreen = () => {
     setPresentHowTo('');
   }
 
-  // update the ingredients array after each input
+  // update the ingredients array after each input with ingredient object
   function addIngredient() {
-    Keyboard.dismiss();
-    setPresentIngredients(presentIngredients => [...presentIngredients, presentIngredient]);
-    setPresentIngredient('');
+    // create new object with id, title & measurements
+    let newIngredient = {
+      id: uuidv4(),
+      title: presentIngredient,
 
+      // TODO!
+      measurement: '200 tonnen',
+      
+    }
+    // add that created object to the array of existing objects, call setPresentIngredients
+    presentIngredients.push(newIngredient)
+    setPresentIngredients(presentIngredients)
+    // removes keyboard and sets input field to empty
+    Keyboard.dismiss();
+    setPresentIngredient('');
   }
+
+  // remove items by their key
+  function removeIngredient(id) {
+    setPresentIngredients(presentIngredients => presentIngredients.filter(
+      el => el.id !== id
+    ));
+  }
+
 
 
   { /* functions the bottom modal sheets */ }
@@ -76,7 +94,7 @@ const HomeScreen = () => {
   const handleSnapPress = useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
     setIsOpen(true);
-  }, []);
+  });
 
   const handleSheetChanges = useCallback((index) => {
     console.log('handleSheetChanges', index);
@@ -124,13 +142,13 @@ const HomeScreen = () => {
             </TouchableOpacity>
           ))
         ) : (
-          <Text>Keine Rezepte vorhanden.</Text>
+          <Text style={styles.text}>Keine Rezepte vorhanden.</Text>
         )}
       </ScrollView>
 
 
       { /* shadow for bottom sheet */ }
-      <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
+      <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible } />
 
 
       { /* Portal allows us to display the bottom sheets over the tab bar -> see PortalProvider at the very root structure of the app */ }
@@ -170,21 +188,32 @@ const HomeScreen = () => {
 
                 { /* adding a to-do list for the ingredients */ }
                 <View style={styles.ingredientsWrapper}>
+                  
+                  
                   {presentIngredients.length > 0 ? (
+                    presentIngredients.map((el, index) => (
 
-                    presentIngredients.map((key, value) => (
-                        <Ingredients
-                            key={value}
-                            ingredients={key}
-                        />
-                    ))
+                      <View style={styles.addIngredient} key={el.id}>
+                        <Text> {el.title} </Text>
+
+                        <TouchableOpacity onPress={() => removeIngredient(el.id)}>
+                          <Feather name="x" size={24} color="black" /> 
+                        </TouchableOpacity>
+                    </View>
+
+                  ))
                   ) : (
                     <Text style={styles.text}>Keine Zutaten, füge deine erste Zutat hinzu.</Text>
                   )}
                   
+
+
+
+
                   <View style={styles.addIngredientWrapper}>
                     <TextInput 
                       placeholder='Zutat hinzufügen...'
+                      value={presentIngredient}
                       style={styles.text}
                       onChangeText={text => {setPresentIngredient(text)}}
                       onSubmitEditing={addIngredient} />
@@ -260,6 +289,7 @@ const styles = StyleSheet.create({
       
   },
 
+
   // input stuff
   input: {
     marginTop: 20,
@@ -287,6 +317,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 15,
     alignItems: 'center',
+  },
+
+  addIngredient: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 10,
   },
 
   // bottom sheet

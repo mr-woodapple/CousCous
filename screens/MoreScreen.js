@@ -78,7 +78,7 @@ const MoreScreen = () => {
           </View>
 
           { /* Question mark makes it an "optional value" */ }
-          <Text>These are information that you can use to send proper feedback to us. These information won't be saved anywhere, they're just on your phone!{'\n'}</Text>
+          <Text>Diese Informationen können für Feedback nützlich sein. Sie werden nur lokal auf Ihrem Gerät gespeichert und niemals an unsere Server übertragen.{'\n'}</Text>
 
           <Text>Logged in with: {auth.currentUser?.email}</Text>
           <Text>User ID: {auth.currentUser?.uid}</Text> 

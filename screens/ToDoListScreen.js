@@ -45,6 +45,7 @@ const ToDoListScreen = () => {
             let data = querySnapShot.val() || {};
             let todoItems = {...data};
             setTodos(todoItems);
+            console.log('Current todos are: ', todoItems)
         });
     }, []);
 
@@ -224,11 +225,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         width: 300,
         borderRadius: 15,
-        backgroundColor: '#add8e6',
+        backgroundColor: 'white',
     },
     addWrapper: {
         marginLeft: 10,
-        backgroundColor: '#add8e6',
+        backgroundColor: 'white',
         paddingVertical: 12,
         paddingHorizontal: 15,
         borderRadius: 15,

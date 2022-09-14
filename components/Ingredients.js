@@ -10,7 +10,7 @@ import { db } from '../firebase'
 import { ref, push } from 'firebase/database'
 
 
-const Ingredients = ({ ingredients, id }) => {
+const Ingredients = ({ id, ingredient: {title, measurement} }) => {
 
 
     { /* stuff that allows to create a todo item from this list*/ }
@@ -21,7 +21,7 @@ const Ingredients = ({ ingredients, id }) => {
     function addNewTodo() {
         push(ref(db, databasePath), {
             done: false,
-            title: ingredients.toString(),
+            title: title.toString(),
         });
     }
 
@@ -29,7 +29,7 @@ const Ingredients = ({ ingredients, id }) => {
     return (
         <View style={styles.container}>
             
-            <Text style={styles.text}>{ingredients} </Text>
+            <Text style={styles.text}>{title} </Text>
             
             <TouchableOpacity onPress={() => addNewTodo()}>
                 <Entypo name="add-to-list" size={20} color="black" />

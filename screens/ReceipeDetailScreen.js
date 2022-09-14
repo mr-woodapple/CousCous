@@ -29,14 +29,15 @@ const HomeScreen = ({ route }) => {
   const [ receipes, setReceipes ] = useState({});
 
   const [ presentTitle, setPresentTitle ] = useState('');
-  const [ presentIngredients, setPresentIngredients ] = useState({});
-  const [ presentIngredient, setPresentIngredient ] = useState('');
+  const [ presentIngredients, setPresentIngredients ] = useState([]);
+  const [ presentIngredient, setPresentIngredient ] = useState({});
   const [ presentHowTo, setPresentHowTo ] = useState('');
+
   const receipeKeys = Object.keys(receipes);
-  const ingredientsKeys = Object.keys(presentIngredients);
+  const ingredientKeys = Object.keys(presentIngredients);
 
 
-  { /* background image */ }
+  { /* background image to be added at some point, add parallax scrolling effect here */ }
   const backgroundImage = image;
 
 
@@ -59,10 +60,11 @@ const HomeScreen = ({ route }) => {
         let data = querySnapshot.val() || [];
         let ingresItems = {...data};
         setPresentIngredients(ingresItems);
+        console.log('ingres present: ', ingresItems)
     })
   }, [])
 
-  // add ingredient
+  // add ingredient, DONT FORGET TO UPDATE THIS!
   function addIngredient() {
     Keyboard.dismiss();
     setPresentIngredients(presentIngredients => [...presentIngredients, presentIngredient]);
@@ -128,14 +130,17 @@ const HomeScreen = ({ route }) => {
             <Text style={styles.headingMedium}>Zutaten: </Text>
 
             <View style={styles.ingredientsWrapper}>
-            {ingredientsKeys.length > 0 ? (
-            ingredientsKeys.map(key => (
-                
+
+
+            {ingredientKeys.length > 0 ? (
+              ingredientKeys.map(key => (
+
                 <Ingredients
-                    id={key}
-                    ingredients={presentIngredients[key]}
+                  id={key.id}
+                  ingredient={presentIngredients[key]}
                 />
-                ))
+                
+              ))
             ) : (
                 <Text style={styles.text}>Keine Zutaten vorhanden.</Text>
             )}
