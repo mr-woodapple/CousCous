@@ -8,7 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { getAuth } from 'firebase/auth'
-import { ref, push, remove, onValue } from 'firebase/database';
+import { ref, push, remove, onValue, update } from 'firebase/database';
+import { uuidv4 } from '@firebase/util';
 import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
@@ -28,10 +29,10 @@ const HomeScreen = ({ route }) => {
   { /* functions to handle the receipe data stuff */ }
   const [ receipes, setReceipes ] = useState({});
 
-  const [ presentTitle, setPresentTitle ] = useState('');
+  const [ presentTitle, setPresentTitle ] = useState(receipes.title);
   const [ presentIngredients, setPresentIngredients ] = useState([]);
   const [ presentIngredient, setPresentIngredient ] = useState({});
-  const [ presentHowTo, setPresentHowTo ] = useState('');
+  const [ presentHowTo, setPresentHowTo ] = useState(receipes.howTo);
 
   const receipeKeys = Object.keys(receipes);
   const ingredientKeys = Object.keys(presentIngredients);
@@ -60,15 +61,15 @@ const HomeScreen = ({ route }) => {
         let data = querySnapshot.val() || [];
         let ingresItems = {...data};
         setPresentIngredients(ingresItems);
-        console.log('ingres present: ', ingresItems)
     })
-  }, [])
 
-  // add ingredient, DONT FORGET TO UPDATE THIS!
-  function addIngredient() {
-    Keyboard.dismiss();
-    setPresentIngredients(presentIngredients => [...presentIngredients, presentIngredient]);
-    setPresentIngredient('');
+  }, [presentTitle, presentHowTo])
+
+  function updateReceipe() {
+    update(ref(db, databasePath), {
+      title: presentTitle === undefined ? receipes.title : presentTitle,
+      howTo: presentHowTo === undefined ? receipes.howTo : presentHowTo
+    })
   }
 
   // delete receipe and navigate back to previous screen
@@ -88,20 +89,55 @@ const HomeScreen = ({ route }) => {
     setIsOpen(true);
   }, []);
 
-  const handleSheetChanges = useCallback((index) => {
-    console.log('handleSheetChanges', index);
-  }, []);
-
   const handleClosePress = () => {
     sheetRef.current.close();
     Keyboard.dismiss()
   }
 
+  { /* stuff for switching between edit and view mode */ }
+  const [isEditing, setIsEditing] = useState(false);
 
+  function handleIsEditingChanges() {
+    if (isEditing) {
+      updateReceipe();
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
+    }
+  }
+
+  // update the ingredients array after each input with ingredient object
+  function addIngredient() {
+    // create new object with id, title & measurements
+    let newIngredient = {
+      id: uuidv4(),
+      title: presentIngredient,
+
+      // TODO!
+      measurement: '200 tonnen',
+
+    }
+    // add that created object to the array of existing objects, call setPresentIngredients
+    presentIngredients.push(newIngredient)
+    setPresentIngredients(presentIngredients)
+    // removes keyboard and sets input field to empty
+    Keyboard.dismiss();
+    setPresentIngredient('');
+  }
+
+  // remove items by their key
+  function removeIngredient(id) {
+    setPresentIngredients(presentIngredients => presentIngredients.filter(
+      el => el.id !== id
+    ));
+  }
+  
+
+  { /* random stuff */ }
   const window = Dimensions.get('window')
   const imageDimensions = {
-  height: window.height,
-  width: window.width
+    height: window.height,
+    width: window.width
   }
 
   return (
@@ -113,41 +149,117 @@ const HomeScreen = ({ route }) => {
         { /* back and more button */}
         <View style={styles.headerMenu}>
 
-            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
+          <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
             <Feather name="chevron-left" size={32} color="black" />
+          </TouchableOpacity>
+
+          <View style={styles.headerMenuRight}>
+
+            <TouchableOpacity onPress={() => handleIsEditingChanges()}>
+              {isEditing === true ? (
+                <Feather name="save" size={24} color="black" />
+                ):(
+                <Feather name="edit" size={24} color="black" />
+              )}
+              
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => handleSnapPress(0)} style={styles.headerIconMore}>
-            <Feather name="more-vertical" size={24} color="black" />
+            <TouchableOpacity style={styles.headerIcon} onPress={() => handleSnapPress(0)}>
+              <Feather name="more-vertical" size={24} color="black" />
             </TouchableOpacity>
+          </View>
+          
 
         </View>
 
         <ScrollView style={styles.contentWrapper}>
 
-            <Text style={styles.headingLarge}>{receipes.title}</Text>
-
-            <Text style={styles.headingMedium}>Zutaten: </Text>
-
-            <View style={styles.ingredientsWrapper}>
-
-
-            {ingredientKeys.length > 0 ? (
-              ingredientKeys.map(key => (
-
-                <Ingredients
-                  id={key.id}
-                  ingredient={presentIngredients[key]}
-                />
-                
-              ))
-            ) : (
-                <Text style={styles.text}>Keine Zutaten vorhanden.</Text>
+            {/* Title */}
+            {!isEditing ? (
+              <Text style={styles.headingLarge}>{receipes.title}</Text>
+            ):(
+              <TextInput 
+                  placeholder='Titel'
+                  autoFocus={true}
+                  defaultValue={receipes.title}
+                  style={styles.headingLarge}
+                  onChangeText={text => {
+                    setPresentTitle(text);
+                    console.log('title text = ', text)
+                  }}/>
             )}
-            </View>
+            
 
+            {/* Ingredients */}
+            <Text style={styles.headingMedium}>Zutaten: </Text>
+              
+              {!isEditing ? (
+                <View style={styles.ingredientsWrapper}>
+                {ingredientKeys.length > 0 ? (
+                  ingredientKeys.map(key => (
+  
+                    <Ingredients
+                      id={key.id}
+                      ingredient={presentIngredients[key]}
+                    />
+                  ))
+                ) : (
+                    <Text style={styles.text}>Keine Zutaten vorhanden.</Text>
+                )}
+                </View>
+              ):(
+                <View style={styles.ingredientsWrapper}>
+                  
+
+                  {ingredientKeys.length > 0 ? (
+                    ingredientKeys.map(el => (
+          
+                      <View style={styles.addIngredient} key={el.id}>
+                        <Text> {el.title} </Text>
+
+                        <TouchableOpacity onPress={() => removeIngredient(el.id)}>
+                          <Feather name="x" size={24} color="black" /> 
+                        </TouchableOpacity>
+                    </View>
+
+                    ))
+                  ) : (
+                    <Text style={styles.text}>Keine Zutaten, füge deine erste Zutat hinzu.</Text>
+                  )}
+                  
+                  <View style={styles.addIngredientWrapper}>
+                    <TextInput 
+                      placeholder='Zutat hinzufügen...'
+                      value={presentIngredient}
+                      style={styles.text}
+                      onChangeText={text => {setPresentIngredient(text)}}
+                      onSubmitEditing={addIngredient} />
+
+                    <TouchableOpacity onPress={() => addIngredient()}>
+                      <Feather name="plus" size={20} color="black" />
+                    </TouchableOpacity>
+                  </View>
+                  
+                </View>
+              )}
+              
+
+            {/* How To */}
             <Text style={styles.headingMedium}>Zubereitung: </Text>
-            <Text style={styles.text}>{receipes.howTo}</Text>
+            
+            {!isEditing ? (
+              <Text style={styles.text}>{receipes.howTo}</Text>
+            ):(
+              <TextInput 
+                placeholder='Anleitung'
+                multiline={true}
+                defaultValue={receipes.howTo}
+                style={styles.text}
+                onChangeText={text => {
+                  setPresentHowTo(text);
+                }}/>
+            )}
+            
 
         </ScrollView>
 
@@ -227,8 +339,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
     paddingVertical: 20,
+  },
+  headerMenuRight: {
+    flexDirection: 'row',
+  },
+  headerIcon: {
+    paddingHorizontal: 20,
   },
 
   // main content

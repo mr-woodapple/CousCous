@@ -40,7 +40,6 @@ const HomeScreen = () => {
       let data = querySnapshot.val() || {};
       let receipeItems = {...data};
       setReceipes(receipeItems);
-      console.log('Receipes ', receipes)
     })
   }, [])
 
@@ -67,7 +66,7 @@ const HomeScreen = () => {
 
       // TODO!
       measurement: '200 tonnen',
-      
+
     }
     // add that created object to the array of existing objects, call setPresentIngredients
     presentIngredients.push(newIngredient)
@@ -189,9 +188,8 @@ const HomeScreen = () => {
                 { /* adding a to-do list for the ingredients */ }
                 <View style={styles.ingredientsWrapper}>
                   
-                  
                   {presentIngredients.length > 0 ? (
-                    presentIngredients.map((el, index) => (
+                    presentIngredients.map(el => (
 
                       <View style={styles.addIngredient} key={el.id}>
                         <Text> {el.title} </Text>
