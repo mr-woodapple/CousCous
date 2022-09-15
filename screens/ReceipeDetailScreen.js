@@ -108,18 +108,17 @@ const HomeScreen = ({ route }) => {
 
   // update the ingredients array after each input with ingredient object
   function addIngredient() {
-    // create new object with id, title & measurements
-    let newIngredient = {
+    // create new object with id, title & measurements    
+    const path = databasePath+'/ingredients'
+    push(ref (db, path), {
       id: uuidv4(),
       title: presentIngredient,
 
       // TODO!
       measurement: '200 tonnen',
 
-    }
-    // add that created object to the array of existing objects, call setPresentIngredients
-    presentIngredients.push(newIngredient)
-    setPresentIngredients(presentIngredients)
+    })
+
     // removes keyboard and sets input field to empty
     Keyboard.dismiss();
     setPresentIngredient('');
@@ -127,9 +126,9 @@ const HomeScreen = ({ route }) => {
 
   // remove items by their key
   function removeIngredient(id) {
-    setPresentIngredients(presentIngredients => presentIngredients.filter(
-      el => el.id !== id
-    ));
+    const databasePathIngredient = databasePath+'/ingredients/'+id
+    console.log(id, databasePathIngredient)
+    remove(ref(db, databasePathIngredient))
   }
   
 
@@ -209,15 +208,14 @@ const HomeScreen = ({ route }) => {
                 </View>
               ):(
                 <View style={styles.ingredientsWrapper}>
-                  
 
                   {ingredientKeys.length > 0 ? (
-                    ingredientKeys.map(el => (
-          
-                      <View style={styles.addIngredient} key={el.id}>
-                        <Text> {el.title} </Text>
+                    ingredientKeys.map(key => (
 
-                        <TouchableOpacity onPress={() => removeIngredient(el.id)}>
+                      <View style={styles.addIngredient} key={presentIngredients[key].id}>
+                        <Text> {presentIngredients[key].title} </Text>
+
+                        <TouchableOpacity onPress={() => removeIngredient(key)}>
                           <Feather name="x" size={24} color="black" /> 
                         </TouchableOpacity>
                     </View>
@@ -352,6 +350,21 @@ const styles = StyleSheet.create({
   contentWrapper: {
     paddingHorizontal: 20,
     paddingVertical: 20,
+  },
+
+  // add ingredients
+  addIngredient: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 10,
+  },
+  addIngredientWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomColor: 'black',
+    borderBottomWidth: 2,
   },
 
   // bottom sheet
