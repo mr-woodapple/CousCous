@@ -28,6 +28,11 @@ const HomeScreen = () => {
   const [ presentIngredients, setPresentIngredients ] = useState([]);
   const [ presentIngredient, setPresentIngredient ] = useState({});
   const [ presentHowTo, setPresentHowTo ] = useState('');
+  const [ duration, setDuration ] = useState('');
+  const [ difficulty, setDifficulty ] = useState('');
+  const [ category, setCategory ] = useState('')
+  const [ isFavorite, setFavorite ] = useState(false);
+  
   const receipeKeys = Object.keys(receipes)
 
   { /* function to make a user write to their subdirectory in the database */ }
@@ -50,6 +55,10 @@ const HomeScreen = () => {
       title: presentTitle,
       howTo: presentHowTo,
       ingredients: presentIngredients,
+      duration: duration,
+      difficulty: difficulty,
+      category: category,
+      isFavorite: isFavorite,
     });
     handleClosePress();
     setPresentTitle('');
@@ -72,7 +81,6 @@ const HomeScreen = () => {
     presentIngredients.push(newIngredient)
     setPresentIngredients(presentIngredients)
     // removes keyboard and sets input field to empty
-    Keyboard.dismiss();
     setPresentIngredient('');
   }
 
@@ -187,10 +195,8 @@ const HomeScreen = () => {
 
                 { /* adding a to-do list for the ingredients */ }
                 <View style={styles.ingredientsWrapper}>
-                  
                   {presentIngredients.length > 0 ? (
                     presentIngredients.map(el => (
-
                       <View style={styles.addIngredient} key={el.id}>
                         <Text> {el.title} </Text>
 
@@ -198,15 +204,10 @@ const HomeScreen = () => {
                           <Feather name="x" size={24} color="black" /> 
                         </TouchableOpacity>
                     </View>
-
                   ))
                   ) : (
                     <Text style={styles.text}>Keine Zutaten, füge deine erste Zutat hinzu.</Text>
                   )}
-                  
-
-
-
 
                   <View style={styles.addIngredientWrapper}>
                     <TextInput 
@@ -222,6 +223,30 @@ const HomeScreen = () => {
                   </View>
                   
                 </View>
+
+                <TextInput 
+                  placeholder="Zubereitungszeit"
+                  value={duration}
+                  style={styles.input}
+                  onChangeText={text => {
+                    setDuration(text);
+                  }}/>
+
+                <TextInput 
+                  placeholder="Schwierigkeit"
+                  value={difficulty}
+                  style={styles.input}
+                  onChangeText={text => {
+                    setDifficulty(text);
+                  }}/>
+                
+                <TextInput 
+                  placeholder="Kategorie"
+                  value={category}
+                  style={styles.input}
+                  onChangeText={text => {
+                    setCategory(text);
+                  }}/>
                 
 
                 <TextInput 

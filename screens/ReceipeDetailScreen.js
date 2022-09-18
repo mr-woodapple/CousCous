@@ -33,6 +33,10 @@ const HomeScreen = ({ route }) => {
   const [ presentIngredients, setPresentIngredients ] = useState([]);
   const [ presentIngredient, setPresentIngredient ] = useState({});
   const [ presentHowTo, setPresentHowTo ] = useState(receipes.howTo);
+  const [ duration, setDuration ] = useState(receipes.duration);
+  const [ difficulty, setDifficulty ] = useState(receipes.difficulty);
+  const [ category, setCategory ] = useState(receipes.category);
+  const [ isFavorite, setFavorite ] = useState(false);
 
   const receipeKeys = Object.keys(receipes);
   const ingredientKeys = Object.keys(presentIngredients);
@@ -63,12 +67,16 @@ const HomeScreen = ({ route }) => {
         setPresentIngredients(ingresItems);
     })
 
-  }, [presentTitle, presentHowTo])
+  }, [presentTitle, presentHowTo, duration, difficulty, category])
 
   function updateReceipe() {
     update(ref(db, databasePath), {
       title: presentTitle === undefined ? receipes.title : presentTitle,
-      howTo: presentHowTo === undefined ? receipes.howTo : presentHowTo
+      howTo: presentHowTo === undefined ? receipes.howTo : presentHowTo,
+      duration: duration === undefined ? receipes.duration : duration,
+      difficulty: difficulty === undefined ? receipes.difficulty : difficulty,
+      category: category === undefined ? receipes.category : category,
+      // somehow I don't need to update the ingredients here
     })
   }
 
@@ -118,9 +126,6 @@ const HomeScreen = ({ route }) => {
       measurement: '200 tonnen',
 
     })
-
-    // removes keyboard and sets input field to empty
-    Keyboard.dismiss();
     setPresentIngredient('');
   }
 
@@ -186,6 +191,51 @@ const HomeScreen = ({ route }) => {
                     setPresentTitle(text);
                     console.log('title text = ', text)
                   }}/>
+            )}
+
+            {/* Pills with duration, difficulty & category */}
+            {!isEditing ? (
+              <View style={styles.metadataPillsWrapper}>
+
+                <View style={styles.metadataPill}>
+                  <Feather name="clock" size={20} color="black" />
+                  <Text>   {receipes.duration}</Text>
+                </View>
+                <View style={styles.metadataPill}>
+                  <Feather name="zap" size={24} color="black" />
+                  <Text>   {receipes.difficulty}</Text>
+                </View>
+                <View style={styles.metadataPill}>
+                  <Feather name="tag" size={24} color="black" />
+                  <Text>   {receipes.category}</Text>
+                </View>
+
+              </View>
+            ):(     
+              <View>
+                <TextInput 
+                  placeholder='Zubereitungszeit'
+                  defaultValue={receipes.duration}
+                  style={styles.input}
+                  onChangeText={text => {
+                    setDuration(text);
+                  }}/>
+                  <TextInput 
+                  placeholder='Schwierigkeit'
+                  defaultValue={receipes.difficulty}
+                  style={styles.input}
+                  onChangeText={text => {
+                    setDifficulty(text);
+                  }}/>
+                  <TextInput 
+                  placeholder='Kategorie'
+                  defaultValue={receipes.category}
+                  style={styles.input}
+                  onChangeText={text => {
+                    setCategory(text);
+                  }}/>
+              </View>        
+              
             )}
             
 
@@ -350,6 +400,28 @@ const styles = StyleSheet.create({
   contentWrapper: {
     paddingHorizontal: 20,
     paddingVertical: 20,
+  },
+  input: {
+    marginTop: 20,
+    borderBottomColor: 'black',
+    borderBottomWidth: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    fontSize: 16,
+  },
+
+  // metadata pills below the heading
+  metadataPillsWrapper: {
+    flexDirection: 'row',
+  },
+  metadataPill: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginRight: 10,
   },
 
   // add ingredients

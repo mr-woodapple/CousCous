@@ -5,14 +5,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const ReceipeItem = ({receipe: {title, howTo, ingredients}, id}) => {
+const ReceipeItem = ({receipe: {title, howTo, diffculty, duration, category}, id}) => {
   return (
     <View style={styles.receipeItem}>
       <Text style={styles.mainHeading}>{title}</Text>
 
 
       {/* add details such as duration and difficulty here */}
-      <Text style={styles.subHeading}>Dauer: 25 min, Schwierigkeit: Mittel</Text>
+      <Text style={styles.subHeading}>Zubereitungszeit: {duration}, Schwierigkeit: {diffculty}, Kategorie: {category}</Text>
     </View>
   )
 }
