@@ -14,6 +14,8 @@ import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
+import { SlideModal }  from 'react-native-slide-modal';
+
 
 import ReceipeItem from '../components/ReceipeItem';
   
@@ -180,15 +182,19 @@ const HomeScreen = () => {
           <Text style={ Object.keys(activeItem) == 0  ? styles.activePillNavText : styles.pillNavText }>Alle</Text>
         </TouchableOpacity>
 
-        {categories.map((category, index) => (
-          <TouchableOpacity 
-            key={index} 
-            style={ activeItem === category ? styles.activePillNavItem : styles.pillNavItem}
-            onPress={() => changeActiveItem(category)}>
-
-            <Text style={ activeItem === category ? styles.activePillNavText : styles.pillNavText}>{category.name}</Text>
-          </TouchableOpacity>
-        ))}
+        {categories.length > 0 ? (
+          categories.map((category, index) => (
+            <TouchableOpacity 
+              key={index} 
+              style={ activeItem === category ? styles.activePillNavItem : styles.pillNavItem}
+              onPress={() => changeActiveItem(category)}>
+  
+              <Text style={ activeItem === category ? styles.activePillNavText : styles.pillNavText}>{category.name}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.text}>Erstelle deine erste Kategorie.</Text>
+        )}
           
       </ScrollView>
       
@@ -356,6 +362,22 @@ const HomeScreen = () => {
           
         </BottomSheet>
       </Portal>
+
+      <SlideModal
+        modalType="iOS Form Sheet"
+        // modalType="iOS Bottom Sheet"
+        modalVisible={isOpen}
+        modalContainer={
+          <>
+            <Text>Modal Content</Text>
+          </>
+        }
+        modalHeaderTitle="Header Title"
+        pressDone={() => setIsOpen(false)}
+        pressCancel={() => setIsOpen(false)}
+        darkMode={false}
+        doneDisabled={false}
+      />
 
 
     </SafeAreaView>

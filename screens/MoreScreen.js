@@ -17,7 +17,7 @@ const MoreScreen = () => {
   { /* functions the bottom modal sheets */ }
   const sheetRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const snapPoints = ["40%", "80%"]
+  const snapPoints = ["60%", "80%"]
 
   const handleSnapPress = useCallback((index) => {
     sheetRef.current?.snapToIndex('0');
@@ -52,44 +52,25 @@ const MoreScreen = () => {
       <View style={styles.headerWrapper}>
         <Text style={styles.headingLarge}>Mehr</Text>
 
-        { /* disabled because there's no use for it right now 
+        
         <View style={styles.headerRightButton}>
           <TouchableOpacity onPress={() => handleSnapPress(0)}>
             <Feather name="more-vertical" size={24} color="black" />
           </TouchableOpacity>
-        </View>*/}
+        </View>
       </View>
 
 
       { /* main scroll view def */ }
       <ScrollView style={styles.mainViewMore}>
 
+        <TouchableOpacity onPress={() => {}}>
+          <SingleRow text={'Kategorien verwalten'} icon={'edit'} navlink={true} /> 
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={handleSignOut}>
           <SingleRow text={'Abmelden'} icon={'log-out'} /> 
         </TouchableOpacity>
-        
-        <View style={styles.appInfoRow}>
-
-          <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 20 }}>
-            <Feather name={'info'} size={24} color="black" />
-
-            <Text style={{ fontSize: 18, paddingLeft: 20 }}>Information</Text>
-
-          </View>
-
-          { /* Question mark makes it an "optional value" */ }
-          <Text>Diese Informationen können für Feedback nützlich sein. Sie werden nur lokal auf Ihrem Gerät gespeichert und niemals an unsere Server übertragen.{'\n'}</Text>
-
-          <Text>Logged in with: {auth.currentUser?.email}</Text>
-          <Text>User ID: {auth.currentUser?.uid}</Text> 
-          <Text>App Version: {Application.nativeApplicationVersion}{'\n'}</Text>
-          
-          <Text>Operating System: {Device.osName}</Text>
-          <Text>Device OS: {Device.osVersion}</Text>
-          <Text>Device Manufacturer: {Device.manufacturer}</Text>
-          <Text>Device Model: {Device.modelName}</Text>
-          
-        </View>
 
       </ScrollView>
 
@@ -117,9 +98,27 @@ const MoreScreen = () => {
               </TouchableOpacity> 
             </View>
 
-            <TouchableOpacity>
-              <Text>Add content here</Text>
-            </TouchableOpacity>
+            <View style={styles.appInfoRow}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 20 }}>
+              <Feather name={'info'} size={24} color="black" />
+
+              <Text style={{ fontSize: 18, paddingLeft: 20 }}>Information</Text>
+
+            </View>
+              { /* Question mark makes it an "optional value" */ }
+              <Text>Diese Informationen können für Feedback nützlich sein. Sie werden nur lokal auf Ihrem Gerät gespeichert und niemals an unsere Server übertragen.{'\n'}</Text>
+
+              <Text>Logged in with: {auth.currentUser?.email}</Text>
+              <Text>User ID: {auth.currentUser?.uid}</Text> 
+              <Text>App Version: {Application.nativeApplicationVersion}{'\n'}</Text>
+              
+              <Text>Operating System: {Device.osName}</Text>
+              <Text>Device OS: {Device.osVersion}</Text>
+              <Text>Device Manufacturer: {Device.manufacturer}</Text>
+              <Text>Device Model: {Device.modelName}</Text>
+            </View>
+            
           </BottomSheetView>
           
         </BottomSheet>

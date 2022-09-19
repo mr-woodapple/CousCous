@@ -36,6 +36,7 @@ const HomeScreen = ({ route }) => {
   const [ duration, setDuration ] = useState(receipes.duration);
   const [ difficulty, setDifficulty ] = useState(receipes.difficulty);
   const [ category, setCategory ] = useState(receipes.category);
+  const [ categoryTitle, setCategoryTitle ] = useState('')
   const [ isFavorite, setFavorite ] = useState(false);
 
   const receipeKeys = Object.keys(receipes);
@@ -51,6 +52,7 @@ const HomeScreen = ({ route }) => {
   const userUID = auth.currentUser?.uid
   const databasePath = userUID+'/receipes/'+route.params;
   const databasePathIngredients = userUID+'/receipes/'+route.params+'/ingredients';
+  const databasePathCategory = userUID+'/receipes/'+route.params+'/category';
 
 
   { /* updates "receipes" and "presentIngredients", so we can get their keys and use them to iterate over the objects */ }
@@ -65,6 +67,13 @@ const HomeScreen = ({ route }) => {
         let data = querySnapshot.val() || [];
         let ingresItems = {...data};
         setPresentIngredients(ingresItems);
+    }),
+
+    // grab the title of the category to display it properly
+    onValue(ref(db, databasePathCategory), querySnapshot => {
+      let data = querySnapshot.val() || [];
+      let categoriesItems = {...data};
+      setCategoryTitle(categoriesItems.name);
     })
 
   }, [presentTitle, presentHowTo, duration, difficulty, category])
@@ -75,7 +84,7 @@ const HomeScreen = ({ route }) => {
       howTo: presentHowTo === undefined ? receipes.howTo : presentHowTo,
       duration: duration === undefined ? receipes.duration : duration,
       difficulty: difficulty === undefined ? receipes.difficulty : difficulty,
-      category: category === undefined ? receipes.category : category,
+      //category: category === undefined ? receipes.category : category,
       // somehow I don't need to update the ingredients here
     })
   }
@@ -207,7 +216,8 @@ const HomeScreen = ({ route }) => {
                 </View>
                 <View style={styles.metadataPill}>
                   <Feather name="tag" size={24} color="black" />
-                  <Text>   {receipes.category}</Text>
+                  {console.log('categories object: ', receipes.category, 'name : ', categoryTitle)}
+                  <Text>   {categoryTitle}</Text>
                 </View>
 
               </View>
@@ -248,6 +258,7 @@ const HomeScreen = ({ route }) => {
                   ingredientKeys.map(key => (
   
                     <Ingredients
+                      key={key.id}
                       id={key.id}
                       ingredient={presentIngredients[key]}
                     />

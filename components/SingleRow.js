@@ -12,10 +12,22 @@ const SingleRow = (props) => {
   return (
     <View style={styles.container}>
 
-      <View style={styles.icon}>
+      
+      <View style={styles.leftPart}>
         <Feather name={props.icon} size={24} color="black" />
+        <Text style={styles.text}>{props.text}</Text>
       </View>
-      <Text style={styles.text}>{props.text}</Text>
+      
+
+      {props.navlink ? (
+        <View style={styles.iconRight}>
+          <Feather name={'chevron-right'} size={24} color="black" />
+        </View>
+        ):(
+        // proper way of doing this?
+        <></>
+      )}
+      
 
     </View>
   )
@@ -32,10 +44,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between'
   },
-  icon: {
 
+  leftPart: {
+    flexDirection: 'row'
   },
+
   text: {
     paddingLeft: 20,
     fontSize: 18,
