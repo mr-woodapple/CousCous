@@ -3,7 +3,7 @@
 // Created 02.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground, Button } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -14,7 +14,6 @@ import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
-import { SlideModal }  from 'react-native-slide-modal';
 
 
 import ReceipeItem from '../components/ReceipeItem';
@@ -248,10 +247,12 @@ const HomeScreen = () => {
 
       { /* shadow for bottom sheet */ }
       <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible } />
-
+      
 
       { /* Portal allows us to display the bottom sheets over the tab bar -> see PortalProvider at the very root structure of the app */ }
       <Portal>
+
+      
         { /* bottom sheet add new receipe */ }
         <BottomSheet 
           // index -1 makes sure the bottom view is closed by default
@@ -362,23 +363,6 @@ const HomeScreen = () => {
           
         </BottomSheet>
       </Portal>
-
-      <SlideModal
-        modalType="iOS Form Sheet"
-        // modalType="iOS Bottom Sheet"
-        modalVisible={isOpen}
-        modalContainer={
-          <>
-            <Text>Modal Content</Text>
-          </>
-        }
-        modalHeaderTitle="Header Title"
-        pressDone={() => setIsOpen(false)}
-        pressCancel={() => setIsOpen(false)}
-        darkMode={false}
-        doneDisabled={false}
-      />
-
 
     </SafeAreaView>
 

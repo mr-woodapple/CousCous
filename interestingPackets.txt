@@ -13,6 +13,9 @@ https://github.com/WrathChaos/react-native-premium-table
 Animated tabbar: 
 https://github.com/gorhom/react-native-animated-tabbar
 
+Slide Modal (Apple slideover thing):
+https://www.npmjs.com/package/react-native-slide-modal
+
 
 
 Might become important to fix the "async-storage" warning:
