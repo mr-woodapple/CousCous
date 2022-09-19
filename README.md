@@ -5,7 +5,7 @@ Build with Expo.
 # To-do list:
 - [x] Implement receipes details screen
 - [x] Fix bottom sheet always coming up on first app start
-- [ ] Add duration and difficulty to receipes
+- [x] Add duration and difficulty to receipes
 - [ ] Add dimensions to ingredients
 - [ ] Add parralax functionality & image to detail screen
 - [ ] Implement sharing functionality for receipes and shopping list
@@ -16,3 +16,4 @@ Build with Expo.
 - [ ] Add darkmode (& user selectable color-schemes?)
 - [ ] Add paywall (3 receipes free, only 10 to-do list items?)
 - [ ] Add Spotify like header bar for categories
+- [ ] Add table view (with sidebar like spotify, select item above and then display receipes below)

@@ -32,7 +32,7 @@ const HomeScreen = () => {
   const [ difficulty, setDifficulty ] = useState('');
   const [ category, setCategory ] = useState('')
   const [ isFavorite, setFavorite ] = useState(false);
-  
+
   const receipeKeys = Object.keys(receipes)
 
   { /* function to make a user write to their subdirectory in the database */ }
@@ -112,12 +112,50 @@ const HomeScreen = () => {
     Keyboard.dismiss()
   }
 
+  // stuff for the pill nav filter
+  const [ activeItem, setActiveItem ] = useState({});
+
+  function changeActiveItem(category) {
+    if (category === activeItem) {
+      setActiveItem({})
+      console.log('reset category to all ', activeItem)
+    } else {
+      setActiveItem(category);
+      console.log('set active to: ', category)
+    }
+  }
+
+  // category list (temp, will be dynamic later)
+  const [ categories, setCategories ]  = useState([
+    {
+      id: uuidv4(),
+      name: 'Hauptspeise'
+    },
+    {
+      id: uuidv4(),
+      name: 'Vorspeise'
+    },
+    {
+      id: uuidv4(),
+      name: 'Salat'
+    },
+    {
+      id: uuidv4(),
+      name: 'Nachtisch'
+    },
+    {
+      id: uuidv4(),
+      name: 'Snack'
+    },
+  ])
+
 
   return (
 
     <SafeAreaView 
       style={styles.container}
       contentInsetAdjustmentBehavior="automatic">
+
 
       { /* header def */ }
       <View style={styles.headerWrapper}>
@@ -129,6 +167,31 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+
+      {/* pill tab nav filter thing */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillNavWrapper}>
+
+        {console.log('active item = ', activeItem)}
+
+        <TouchableOpacity 
+          style={ Object.keys(activeItem) == 0 ? styles.activePillNavItem : styles.pillNavItem}
+          onPress={() => changeActiveItem({})}>
+
+          <Text style={ Object.keys(activeItem) == 0  ? styles.activePillNavText : styles.pillNavText }>Alle</Text>
+        </TouchableOpacity>
+
+        {categories.map((category, index) => (
+          <TouchableOpacity 
+            key={index} 
+            style={ activeItem === category ? styles.activePillNavItem : styles.pillNavItem}
+            onPress={() => changeActiveItem(category)}>
+
+            <Text style={ activeItem === category ? styles.activePillNavText : styles.pillNavText}>{category.name}</Text>
+          </TouchableOpacity>
+        ))}
+          
+      </ScrollView>
       
 
       { /* main scroll view def */ }
@@ -167,9 +230,7 @@ const HomeScreen = () => {
           ref={sheetRef} 
           snapPoints={snapPoints} 
           enablePanDownToClose={true}
-          onClose={() => setIsOpen(false)}
-          //initialSnap={-1}
-          >
+          onClose={() => setIsOpen(false)}>
 
           <BottomSheetView style={styles.bottomSheet}>
 
@@ -309,9 +370,36 @@ const styles = StyleSheet.create({
       fontSize: 36,
   },
   headerRightButton: {
-      
+      // remove at some point?
   },
 
+  // header
+  pillNavWrapper: {
+    paddingHorizontal: 20,
+    maxHeight: 50, // needed to make the categories stay in a fixed spot?
+  },
+  pillNavItem: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginRight: 10,
+  },  
+  pillNavText: {
+    color: 'black'
+  },
+  activePillNavItem: {
+    backgroundColor: 'black',
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginRight: 10,
+  },
+  activePillNavText: {
+    color: 'white'
+  },
 
   // input stuff
   input: {
