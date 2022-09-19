@@ -30,7 +30,7 @@ const HomeScreen = () => {
   const [ presentHowTo, setPresentHowTo ] = useState('');
   const [ duration, setDuration ] = useState('');
   const [ difficulty, setDifficulty ] = useState('');
-  const [ category, setCategory ] = useState('')
+  const [ category, setCategory ] = useState({})
   const [ isFavorite, setFavorite ] = useState(false);
 
   const receipeKeys = Object.keys(receipes)
@@ -57,7 +57,7 @@ const HomeScreen = () => {
       ingredients: presentIngredients,
       duration: duration,
       difficulty: difficulty,
-      category: category,
+      category: {'id': uuidv4(), 'name': category},
       isFavorite: isFavorite,
     });
     handleClosePress();
@@ -128,11 +128,11 @@ const HomeScreen = () => {
   // category list (temp, will be dynamic later)
   const [ categories, setCategories ]  = useState([
     {
-      id: uuidv4(),
+      id: '014',
       name: 'Hauptspeise'
     },
     {
-      id: uuidv4(),
+      id: '013',
       name: 'Vorspeise'
     },
     {
@@ -145,7 +145,7 @@ const HomeScreen = () => {
     },
     {
       id: uuidv4(),
-      name: 'Snack'
+      name: 'Süßes'
     },
   ])
 
@@ -172,9 +172,8 @@ const HomeScreen = () => {
       {/* pill tab nav filter thing */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillNavWrapper}>
 
-        {console.log('active item = ', activeItem)}
-
         <TouchableOpacity 
+          // using Object.keys to see if the object is empty
           style={ Object.keys(activeItem) == 0 ? styles.activePillNavItem : styles.pillNavItem}
           onPress={() => changeActiveItem({})}>
 
@@ -197,8 +196,14 @@ const HomeScreen = () => {
       { /* main scroll view def */ }
       <ScrollView>
         {receipeKeys.length > 0 ? (
+          
+          
+
           receipeKeys.map(key => (
-            // links to the matching detail screen, passing along the key of the receipe
+
+            // check if filter applied, if 0 display all receipes
+            Object.keys(activeItem) == 0 ? (
+              // links to the matching detail screen, passing along the key of the receipe
             <TouchableOpacity
               key = {key}
               onPress={() => navigation.navigate('ReceipeDetailsScreen', key )} >
@@ -210,6 +215,24 @@ const HomeScreen = () => {
               />
               
             </TouchableOpacity>
+            ) : (
+              // check if receipes category id = selected category id, if so render the items
+              receipes[key].category.id == activeItem.id ? (
+                <TouchableOpacity
+                  key = {key}
+                  onPress={() => navigation.navigate('ReceipeDetailsScreen', key )} >
+
+                  <ReceipeItem
+                    key = {key}
+                    id = {key}
+                    receipe = {receipes[key]}
+                  />
+                  
+                </TouchableOpacity>
+              ) : (
+                <></>
+              ) 
+            )
           ))
         ) : (
           <Text style={styles.text}>Keine Rezepte vorhanden.</Text>
