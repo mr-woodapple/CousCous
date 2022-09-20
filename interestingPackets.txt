@@ -13,14 +13,19 @@ https://github.com/WrathChaos/react-native-premium-table
 Animated tabbar: 
 https://github.com/gorhom/react-native-animated-tabbar
 
-Slide Modal (Apple slideover thing):
-https://www.npmjs.com/package/react-native-slide-modal
-
 
 
 Might become important to fix the "async-storage" warning:
 https://stackoverflow.com/questions/71502662/react-native-firebase-undefined-is-not-an-object-evaluating-this-storage-setit
 
+Slide Modal (Apple slideover thing):
+https://www.npmjs.com/package/react-native-slide-modal
 
 Picker for dates & categories:
 https://github.com/lawnstarter/react-native-picker-select
+
+Picker for selecting images from the device: 
+https://github.com/rnmods/react-native-document-picker
+
+Time picker for selecting the minutes / hours a receipes needs:
+https://github.com/uraway/react-native-simple-time-picker

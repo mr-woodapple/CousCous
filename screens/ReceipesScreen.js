@@ -3,7 +3,7 @@
 // Created 02.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground, Button } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -14,6 +14,7 @@ import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
+import {Picker} from '@react-native-picker/picker';
 
 
 import ReceipeItem from '../components/ReceipeItem';
@@ -58,7 +59,7 @@ const HomeScreen = () => {
       ingredients: presentIngredients,
       duration: duration,
       difficulty: difficulty,
-      category: {'id': uuidv4(), 'name': category},
+      category: category,
       isFavorite: isFavorite,
     });
     handleClosePress();
@@ -126,6 +127,7 @@ const HomeScreen = () => {
     }
   }
 
+  { /* functions for the categories picker */ }
   // category list (temp, will be dynamic later)
   const [ categories, setCategories ]  = useState([
     {
@@ -148,8 +150,21 @@ const HomeScreen = () => {
       id: uuidv4(),
       name: 'Süßes'
     },
-  ])
+  ]);
 
+  // helper value to display the selected value in the picker
+  const [ displayCategory, setDisplayCategory ] = useState('');
+
+  function handleCategoryChange(category) {
+    // filter categories array for the specific id, then add it using setCategory
+    const data = categories.filter(x => x.id === category)
+    console.log('data = ', data)
+    // since filter returns an array but we need to set an object, we need to extract the object from the array
+    setCategory(data[0]);
+
+    // set's the value to display the selected value in the picker
+    setDisplayCategory(category)
+  }
 
   return (
 
@@ -251,8 +266,6 @@ const HomeScreen = () => {
 
       { /* Portal allows us to display the bottom sheets over the tab bar -> see PortalProvider at the very root structure of the app */ }
       <Portal>
-
-      
         { /* bottom sheet add new receipe */ }
         <BottomSheet 
           // index -1 makes sure the bottom view is closed by default
@@ -331,14 +344,31 @@ const HomeScreen = () => {
                     setDifficulty(text);
                   }}/>
                 
+                { /* deprecated, moved over to the picker below
                 <TextInput 
                   placeholder="Kategorie"
                   value={category}
                   style={styles.input}
                   onChangeText={text => {
                     setCategory(text);
-                  }}/>
-                
+                  }}/>*/}
+
+                {categories.length > 0 ? (
+                  <Picker
+                    selectedValue={displayCategory}
+                    style={{ height: 200}} // set proper styles.xxx prop
+                    onValueChange={(item, itemIndex) =>
+                      handleCategoryChange(item)
+                    }>
+                      { /* render a picker.item for each category*/}
+                      {categories.map((category, index) => (
+                        <Picker.Item label={category.name} value={category.id}/>
+                      ))}
+                  </Picker>    
+                ):(
+                  <Text>Füge deine erste Kategorie hinzu!</Text>
+                )}
+                        
 
                 <TextInput 
                   placeholder="Anleitung"
