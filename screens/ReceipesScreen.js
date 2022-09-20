@@ -14,7 +14,7 @@ import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
 
 import ReceipeItem from '../components/ReceipeItem';
@@ -337,20 +337,11 @@ const HomeScreen = () => {
                   onChangeText={text => {
                     setDifficulty(text);
                   }}/>
-                
-                { /* deprecated, moved over to the picker below
-                <TextInput 
-                  placeholder="Kategorie"
-                  value={category}
-                  style={styles.input}
-                  onChangeText={text => {
-                    setCategory(text);
-                  }}/>*/}
 
                 <View style={styles.addIngredientWrapper}>
                     <TextInput 
                       placeholder='Kategorie hinzufügen...'
-                      value={presentIngredient}
+                      value={presentCategory}
                       style={styles.text}
                       onChangeText={text => {setPresentCategory(text)}}
                       onSubmitEditing={addCategory} />

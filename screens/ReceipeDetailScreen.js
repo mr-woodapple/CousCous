@@ -14,6 +14,7 @@ import { db } from '../firebase'
 import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
+import { Picker } from '@react-native-picker/picker';
 
 import Ingredients from '../components/Ingredients';
 import DestructiveRow from '../components/DestructiveRow';
@@ -35,7 +36,6 @@ const HomeScreen = ({ route }) => {
   const [ presentHowTo, setPresentHowTo ] = useState(receipes.howTo);
   const [ duration, setDuration ] = useState(receipes.duration);
   const [ difficulty, setDifficulty ] = useState(receipes.difficulty);
-  const [ category, setCategory ] = useState(receipes.category);
   const [ categoryTitle, setCategoryTitle ] = useState('')
   const [ isFavorite, setFavorite ] = useState(false);
 
@@ -74,8 +74,13 @@ const HomeScreen = ({ route }) => {
       let data = querySnapshot.val() || [];
       let categoriesItems = {...data};
       setCategoryTitle(categoriesItems.name);
-    })
+    }),
 
+    onValue(ref(db, databasePathCategories), querySnapshot => {
+      let data = querySnapshot.val() || {};
+      let categoryItems = {...data};
+      setCategories(categoryItems);
+    })
   }, [presentTitle, presentHowTo, duration, difficulty, category])
 
   function updateReceipe() {
@@ -84,7 +89,7 @@ const HomeScreen = ({ route }) => {
       howTo: presentHowTo === undefined ? receipes.howTo : presentHowTo,
       duration: duration === undefined ? receipes.duration : duration,
       difficulty: difficulty === undefined ? receipes.difficulty : difficulty,
-      //category: category === undefined ? receipes.category : category,
+      category: category.length === undefined ? receipes.category : category,
       // somehow I don't need to update the ingredients here
     })
   }
@@ -109,6 +114,36 @@ const HomeScreen = ({ route }) => {
   const handleClosePress = () => {
     sheetRef.current.close();
     Keyboard.dismiss()
+  }
+
+  { /* functions for the categories picker */ }
+  // category list 
+  const [ categories, setCategories ]  = useState([]);
+  const [ category, setCategory ] = useState({}); // required??
+  const [ presentCategory, setPresentCategory ] = useState('')
+  const databasePathCategories = userUID+'/categories'
+
+  const categoryKeys = Object.keys(categories);
+
+  function addCategory() {
+
+    // TODO: check if category already existent
+
+    push(ref(db, databasePathCategories), {
+      id: presentCategory,
+      name: presentCategory
+    })
+    setPresentCategory('');
+  }
+
+  // helper value to display the selected value in the picker
+  const [ displayCategory, setDisplayCategory ] = useState(receipes.category);
+
+  // changes the active picker item and sets the correct category so we can add a receipe any time
+  function handleCategoryChange(category) {
+    setCategory(category);
+    // set's the value to display the selected value in the picker
+    setDisplayCategory(category)
   }
 
   { /* stuff for switching between edit and view mode */ }
@@ -235,13 +270,49 @@ const HomeScreen = ({ route }) => {
                   onChangeText={text => {
                     setDifficulty(text);
                   }}/>
+                  {/* deprecated, remove in the future
                   <TextInput 
                   placeholder='Kategorie'
                   defaultValue={receipes.category}
                   style={styles.input}
                   onChangeText={text => {
                     setCategory(text);
-                  }}/>
+                  }}/>*/}
+
+                  <View style={styles.addIngredientWrapper}>
+                    <TextInput 
+                      placeholder='Kategorie hinzufügen...'
+                      value={presentIngredient}
+                      style={styles.text}
+                      onChangeText={text => {setPresentCategory(text)}}
+                      onSubmitEditing={addCategory} />
+
+                    <TouchableOpacity onPress={() => addCategory()}>
+                      <Feather name="plus" size={20} color="black" />
+                    </TouchableOpacity>
+                  </View>
+
+                  {console.log('debug displayCategory = ', displayCategory)}
+
+                  {categoryKeys.length > 0 ? (
+                    <Picker
+                      selectedValue={displayCategory}
+                      style={{ height: 200}} // set proper styles.xxx prop
+                      onValueChange={(item, itemIndex) =>
+                        handleCategoryChange(item)
+                      }>
+                        { /* render a picker.item for each category*/}
+                        {categoryKeys.map(key => (
+                          <Picker.Item label={categories[key].name} value={categories[key].id}/>
+                        ))}
+                    </Picker>    
+                  ):(
+                    <View style={{alignItems: 'center', paddingTop: 20,}}>
+                      <Text style={styles.text}>Füge deine erste Kategorie hinzu!</Text>
+                    </View>
+                    
+                  )}
+
               </View>        
               
             )}
