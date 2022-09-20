@@ -141,7 +141,6 @@ const HomeScreen = ({ route }) => {
   // remove items by their key
   function removeIngredient(id) {
     const databasePathIngredient = databasePath+'/ingredients/'+id
-    console.log(id, databasePathIngredient)
     remove(ref(db, databasePathIngredient))
   }
   
@@ -216,8 +215,7 @@ const HomeScreen = ({ route }) => {
                 </View>
                 <View style={styles.metadataPill}>
                   <Feather name="tag" size={24} color="black" />
-                  {console.log('categories object: ', receipes.category, 'name : ', categoryTitle)}
-                  <Text>   {categoryTitle}</Text>
+                  <Text>   {receipes.category}</Text>
                 </View>
 
               </View>

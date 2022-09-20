@@ -10,7 +10,11 @@ import { Portal } from '@gorhom/portal';
 import * as Application from 'expo-application';
 import * as Device from 'expo-device';
 
+// components
 import SingleRow from '../components/SingleRow';
+
+// screens
+import EditCategories from './more-screens/EditCategories';
 
 const MoreScreen = () => {
 
@@ -64,7 +68,7 @@ const MoreScreen = () => {
       { /* main scroll view def */ }
       <ScrollView style={styles.mainViewMore}>
 
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditCategoriesScreen')}>
           <SingleRow text={'Kategorien verwalten'} icon={'edit'} navlink={true} /> 
         </TouchableOpacity>
 

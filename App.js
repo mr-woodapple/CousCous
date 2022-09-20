@@ -16,6 +16,7 @@ import ReceipesScreen from './screens/ReceipesScreen';
 import MoreScreen from './screens/MoreScreen';
 import ToDoListScreen from './screens/ToDoListScreen';
 import ReceipeDetailScreen from './screens/ReceipeDetailScreen';
+import EditCategories from './screens/more-screens/EditCategories';
 
 
 const Stack = createNativeStackNavigator();
@@ -62,6 +63,7 @@ function MoreScreenNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="More" component={MoreScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EditCategoriesScreen" component={EditCategories} options={{ headerShown: false }} />
     </Stack.Navigator>
   )
 }

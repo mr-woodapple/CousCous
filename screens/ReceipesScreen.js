@@ -32,7 +32,6 @@ const HomeScreen = () => {
   const [ presentHowTo, setPresentHowTo ] = useState('');
   const [ duration, setDuration ] = useState('');
   const [ difficulty, setDifficulty ] = useState('');
-  const [ category, setCategory ] = useState({})
   const [ isFavorite, setFavorite ] = useState(false);
 
   const receipeKeys = Object.keys(receipes)
@@ -47,6 +46,13 @@ const HomeScreen = () => {
       let data = querySnapshot.val() || {};
       let receipeItems = {...data};
       setReceipes(receipeItems);
+    }),
+
+    onValue(ref(db, databasePathCategories), querySnapshot => {
+      let data = querySnapshot.val() || {};
+      let categoryItems = {...data};
+      setCategories(categoryItems);
+
     })
   }, [])
 
@@ -128,40 +134,31 @@ const HomeScreen = () => {
   }
 
   { /* functions for the categories picker */ }
-  // category list (temp, will be dynamic later)
-  const [ categories, setCategories ]  = useState([
-    {
-      id: '014',
-      name: 'Hauptspeise'
-    },
-    {
-      id: '013',
-      name: 'Vorspeise'
-    },
-    {
-      id: uuidv4(),
-      name: 'Salat'
-    },
-    {
-      id: uuidv4(),
-      name: 'Nachtisch'
-    },
-    {
-      id: uuidv4(),
-      name: 'Süßes'
-    },
-  ]);
+  // category list 
+  const [ categories, setCategories ]  = useState([]);
+  const [ category, setCategory ] = useState({}); // required??
+  const [ presentCategory, setPresentCategory ] = useState('')
+  const databasePathCategories = userUID+'/categories'
+
+  const categoryKeys = Object.keys(categories);
+
+  function addCategory() {
+
+    // TODO: check if category already existent
+
+    push(ref(db, databasePathCategories), {
+      id: presentCategory,
+      name: presentCategory
+    })
+    setPresentCategory('');
+  }
 
   // helper value to display the selected value in the picker
   const [ displayCategory, setDisplayCategory ] = useState('');
 
+  // changes the active picker item and sets the correct category so we can add a receipe any time
   function handleCategoryChange(category) {
-    // filter categories array for the specific id, then add it using setCategory
-    const data = categories.filter(x => x.id === category)
-    console.log('data = ', data)
-    // since filter returns an array but we need to set an object, we need to extract the object from the array
-    setCategory(data[0]);
-
+    setCategory(category);
     // set's the value to display the selected value in the picker
     setDisplayCategory(category)
   }
@@ -196,14 +193,14 @@ const HomeScreen = () => {
           <Text style={ Object.keys(activeItem) == 0  ? styles.activePillNavText : styles.pillNavText }>Alle</Text>
         </TouchableOpacity>
 
-        {categories.length > 0 ? (
-          categories.map((category, index) => (
+        {categoryKeys.length > 0 ? (
+          categoryKeys.map((key) => (
             <TouchableOpacity 
-              key={index} 
-              style={ activeItem === category ? styles.activePillNavItem : styles.pillNavItem}
-              onPress={() => changeActiveItem(category)}>
+              key={key} 
+              style={ activeItem === categories[key] ? styles.activePillNavItem : styles.pillNavItem}
+              onPress={() => changeActiveItem(categories[key])}>
   
-              <Text style={ activeItem === category ? styles.activePillNavText : styles.pillNavText}>{category.name}</Text>
+              <Text style={ activeItem === categories[key] ? styles.activePillNavText : styles.pillNavText}>{categories[key].name}</Text>
             </TouchableOpacity>
           ))
         ) : (
@@ -216,9 +213,6 @@ const HomeScreen = () => {
       { /* main scroll view def */ }
       <ScrollView>
         {receipeKeys.length > 0 ? (
-          
-          
-
           receipeKeys.map(key => (
 
             // check if filter applied, if 0 display all receipes
@@ -237,7 +231,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
             ) : (
               // check if receipes category id = selected category id, if so render the items
-              receipes[key].category.id == activeItem.id ? (
+              receipes[key].category == activeItem.id ? (
                 <TouchableOpacity
                   key = {key}
                   onPress={() => navigation.navigate('ReceipeDetailsScreen', key )} >
@@ -250,7 +244,7 @@ const HomeScreen = () => {
                   
                 </TouchableOpacity>
               ) : (
-                <></>
+                <></> // proper way to do this??
               ) 
             )
           ))
@@ -353,7 +347,20 @@ const HomeScreen = () => {
                     setCategory(text);
                   }}/>*/}
 
-                {categories.length > 0 ? (
+                <View style={styles.addIngredientWrapper}>
+                    <TextInput 
+                      placeholder='Kategorie hinzufügen...'
+                      value={presentIngredient}
+                      style={styles.text}
+                      onChangeText={text => {setPresentCategory(text)}}
+                      onSubmitEditing={addCategory} />
+
+                    <TouchableOpacity onPress={() => addCategory()}>
+                      <Feather name="plus" size={20} color="black" />
+                    </TouchableOpacity>
+                  </View>
+
+                {categoryKeys.length > 0 ? (
                   <Picker
                     selectedValue={displayCategory}
                     style={{ height: 200}} // set proper styles.xxx prop
@@ -361,12 +368,15 @@ const HomeScreen = () => {
                       handleCategoryChange(item)
                     }>
                       { /* render a picker.item for each category*/}
-                      {categories.map((category, index) => (
-                        <Picker.Item label={category.name} value={category.id}/>
+                      {categoryKeys.map(key => (
+                        <Picker.Item label={categories[key].name} value={categories[key].id}/>
                       ))}
                   </Picker>    
                 ):(
-                  <Text>Füge deine erste Kategorie hinzu!</Text>
+                  <View style={{alignItems: 'center', paddingTop: 20,}}>
+                    <Text style={styles.text}>Füge deine erste Kategorie hinzu!</Text>
+                  </View>
+                  
                 )}
                         
 
@@ -408,7 +418,7 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontSize: 16
+    fontSize: 16,
   },
   mediumHeading: {
     fontWeight: 'bold',
