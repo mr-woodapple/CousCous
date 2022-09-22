@@ -1,4 +1,4 @@
-import React , { useState, useEffect, useRef, useCallback  } from 'react'
+import React, { useState, useEffect, useRef, useCallback  } from 'react'
 import { StyleSheet, Text, View, ScrollView, StatusBar, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Feather } from '@expo/vector-icons';
@@ -14,13 +14,13 @@ import * as Device from 'expo-device';
 import SingleRow from '../components/SingleRow';
 
 // screens
-import EditCategories from './more-screens/EditCategories';
+import SectionHeading from '../components/generic/SectionHeading';
 
 const MoreScreen = () => {
 
   { /* functions the bottom modal sheets */ }
   const sheetRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [ isOpen, setIsOpen ] = useState(false);
   const snapPoints = ["60%", "80%"]
 
   const handleSnapPress = useCallback((index) => {
@@ -68,9 +68,13 @@ const MoreScreen = () => {
       { /* main scroll view def */ }
       <ScrollView style={styles.mainViewMore}>
 
+        <SectionHeading heading={'Verwalten'}/>
+
         <TouchableOpacity onPress={() => navigation.navigate('EditCategoriesScreen')}>
           <SingleRow text={'Kategorien verwalten'} icon={'edit'} navlink={true} /> 
         </TouchableOpacity>
+
+        <SectionHeading heading={'Mehr'}/>
 
         <TouchableOpacity onPress={handleSignOut}>
           <SingleRow text={'Abmelden'} icon={'log-out'} /> 

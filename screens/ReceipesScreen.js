@@ -163,6 +163,7 @@ const HomeScreen = () => {
     setDisplayCategory(category)
   }
 
+  
   return (
 
     <SafeAreaView 

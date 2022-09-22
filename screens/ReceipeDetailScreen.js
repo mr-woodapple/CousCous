@@ -270,14 +270,6 @@ const HomeScreen = ({ route }) => {
                   onChangeText={text => {
                     setDifficulty(text);
                   }}/>
-                  {/* deprecated, remove in the future
-                  <TextInput 
-                  placeholder='Kategorie'
-                  defaultValue={receipes.category}
-                  style={styles.input}
-                  onChangeText={text => {
-                    setCategory(text);
-                  }}/>*/}
 
                   <View style={styles.addIngredientWrapper}>
                     <TextInput 
@@ -395,9 +387,8 @@ const HomeScreen = ({ route }) => {
         { /* shadow for bottom sheet */ }
         <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible } />
 
-    
         <Portal>
-            { /* bottom sheet add new receipe */ }
+            { /* bottom sheet receipe detail */ }
             <BottomSheet 
                 index={-1}
                 ref={sheetRef} 

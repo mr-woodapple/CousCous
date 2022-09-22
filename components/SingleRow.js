@@ -4,11 +4,13 @@
 
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-
 import { Feather } from '@expo/vector-icons'; 
 
 
+
+
 const SingleRow = (props) => {
+
   return (
     <View style={styles.container}>
 

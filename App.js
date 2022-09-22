@@ -7,10 +7,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { app } from './firebase';
 import { Feather } from '@expo/vector-icons';
-import 'react-native-gesture-handler';
 import { PortalProvider } from '@gorhom/portal';
 
-
+// screen
 import LoginScreen from './screens/LoginScreen';
 import ReceipesScreen from './screens/ReceipesScreen';
 import MoreScreen from './screens/MoreScreen';
@@ -18,7 +17,7 @@ import ToDoListScreen from './screens/ToDoListScreen';
 import ReceipeDetailScreen from './screens/ReceipeDetailScreen';
 import EditCategories from './screens/more-screens/EditCategories';
 
-
+// nagivator definitions
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -62,8 +61,8 @@ function ToDoListNavigation() {
 function MoreScreenNavigation() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="More" component={MoreScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="EditCategoriesScreen" component={EditCategories} options={{ headerShown: false }} />
+      <Stack.Screen name="More" component={MoreScreen} options={{ headerShown: false, title: 'Mehr' }} />
+      <Stack.Screen name="EditCategoriesScreen" component={EditCategories} options={{ headerShown: false, title: 'Kategorien' }} />
     </Stack.Navigator>
   )
 }
