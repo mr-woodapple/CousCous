@@ -3,7 +3,7 @@
 // Created 02.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -187,31 +187,33 @@ const HomeScreen = () => {
 
 
       {/* pill tab nav filter thing */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillNavWrapper}>
+      <View style={styles.pillNavWrapper}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillNavScrollView} contentContainerStyle={{paddingRight: 30}}>
 
-        <TouchableOpacity 
-          // using Object.keys to see if the object is empty
-          style={ Object.keys(activeItem) == 0 ? styles.activePillNavItem : styles.pillNavItem}
-          onPress={() => changeActiveItem({})}>
+          <TouchableOpacity 
+            // using Object.keys to see if the object is empty
+            style={ Object.keys(activeItem) == 0 ? styles.activePillNavItem : styles.pillNavItem}
+            onPress={() => changeActiveItem({})}>
 
-          <Text style={ Object.keys(activeItem) == 0  ? styles.activePillNavText : styles.pillNavText }>Alle</Text>
-        </TouchableOpacity>
+            <Text style={ Object.keys(activeItem) == 0  ? styles.activePillNavText : styles.pillNavText }>Alle</Text>
+          </TouchableOpacity>
 
-        {categoryKeys.length > 0 ? (
-          categoryKeys.map((key) => (
-            <TouchableOpacity 
-              key={key} 
-              style={ activeItem === categories[key] ? styles.activePillNavItem : styles.pillNavItem}
-              onPress={() => changeActiveItem(categories[key])}>
-  
-              <Text style={ activeItem === categories[key] ? styles.activePillNavText : styles.pillNavText}>{categories[key].name}</Text>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <Text style={styles.text}>Erstelle deine erste Kategorie.</Text>
-        )}
-          
-      </ScrollView>
+          {categoryKeys.length > 0 ? (
+            categoryKeys.map((key) => (
+              <TouchableOpacity 
+                key={key} 
+                style={ activeItem === categories[key] ? styles.activePillNavItem : styles.pillNavItem}
+                onPress={() => changeActiveItem(categories[key])}>
+    
+                <Text style={ activeItem === categories[key] ? styles.activePillNavText : styles.pillNavText}>{categories[key].name}</Text>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text style={styles.text}>Erstelle deine erste Kategorie.</Text>
+          )}
+            
+        </ScrollView>
+      </View>
       
 
       { /* main scroll view def */ }
@@ -440,19 +442,20 @@ const styles = StyleSheet.create({
 
   // header
   pillNavWrapper: {
-    paddingHorizontal: 20,
-    height: 60, // needed to make the categories stay in a fixed spot?
+    paddingVertical: 10,
+  },
+  pillNavScrollView: {
+    paddingLeft: 20,
   },
   pillNavItem: {
     backgroundColor: 'white',
     borderRadius: 20,
-    height: 40,
     justifyContent: 'center',
-    paddingHorizontal: 20,
     marginRight: 10,
   },  
   pillNavText: {
-    color: 'black'
+    color: 'black',
+    paddingHorizontal: 20,
   },
   activePillNavItem: {
     backgroundColor: 'black',
