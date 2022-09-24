@@ -70,7 +70,7 @@ const EditCategories = () => {
       </View>
 
       { /* general content */}
-      <ScrollView style={genericStyles.contentWrapper}>
+      <ScrollView style={genericStyles.contentWrapper} contentContainerStyle={{ paddingBottom: 50 }}>
 
         <Text style={genericStyles.headingLarge}>Kategorien</Text>
 

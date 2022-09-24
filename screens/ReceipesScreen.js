@@ -188,7 +188,7 @@ const HomeScreen = () => {
 
       {/* pill tab nav filter thing */}
       <View style={styles.pillNavWrapper}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillNavScrollView} contentContainerStyle={{paddingRight: 30}}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillNavScrollView} contentContainerStyle={{ paddingRight: 30 }}>
 
           <TouchableOpacity 
             // using Object.keys to see if the object is empty
@@ -217,7 +217,7 @@ const HomeScreen = () => {
       
 
       { /* main scroll view def */ }
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
         {receipeKeys.length > 0 ? (
           receipeKeys.map(key => (
 
@@ -412,7 +412,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eaeaea',
-    marginBottom: 50,
   },
 
   text: {
