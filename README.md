@@ -1,6 +1,6 @@
 # HouseholdProject
 Simple app build in React Native to create (and share) a shopping list & receipes in a family or with friends.
-Build with Expo.
+Build with React Native (Expo).
 
 # To-do list:
 - [x] Implement receipes details screen
@@ -16,4 +16,4 @@ Build with Expo.
 - [ ] Move often used functions & values / colors / headings into seperate files
 - [ ] Add darkmode (& user selectable color-schemes?)
 - [ ] Add paywall (3 receipes free, only 10 to-do list items?)
-- [ ] Add table view (with sidebar like spotify, select item above and then display receipes below)
+- [ ] Add tablet view (with sidebar like spotify, select item above and then display receipes below)

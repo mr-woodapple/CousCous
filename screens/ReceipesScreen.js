@@ -163,12 +163,15 @@ const HomeScreen = () => {
     setDisplayCategory(category)
   }
 
-  
+
   return (
 
     <SafeAreaView 
       style={styles.container}
       contentInsetAdjustmentBehavior="automatic">
+
+      {/* for android only */}
+      <StatusBar backgroundColor="#eaeaea" />
 
 
       { /* header def */ }
@@ -407,6 +410,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eaeaea',
+    marginBottom: 50,
   },
 
   text: {
@@ -437,7 +441,7 @@ const styles = StyleSheet.create({
   // header
   pillNavWrapper: {
     paddingHorizontal: 20,
-    maxHeight: 50, // needed to make the categories stay in a fixed spot?
+    height: 60, // needed to make the categories stay in a fixed spot?
   },
   pillNavItem: {
     backgroundColor: 'white',

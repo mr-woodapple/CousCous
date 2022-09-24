@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     tasksWrapper: {
         marginTop: 10,
         paddingHorizontal: 20,
-        marginBottom: 90,
+        marginBottom: 90
     },
     writeTaskWrapper: {
         bottom: 75,
