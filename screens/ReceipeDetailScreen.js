@@ -6,7 +6,7 @@ import React , { useState, useEffect, useRef, useCallback  } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, RefreshControlBase, Image, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { getAuth } from 'firebase/auth'
 import { ref, push, remove, onValue, update } from 'firebase/database';
 import { uuidv4 } from '@firebase/util';
@@ -115,6 +115,12 @@ const HomeScreen = ({ route }) => {
     sheetRef.current.close();
     Keyboard.dismiss()
   }
+
+  const renderBackdrop = useCallback(
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    props => <BottomSheetBackdrop disappearsOnIndex={-1} appearsOnIndex={0} {...props} />,
+    [],
+  );
 
   { /* functions for the categories picker */ }
   // category list 
@@ -384,19 +390,17 @@ const HomeScreen = ({ route }) => {
         </ScrollView>
 
 
-        { /* shadow for bottom sheet */ }
-        <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible } />
-
         <Portal>
             { /* bottom sheet receipe detail */ }
             <BottomSheet 
+                backdropComponent={renderBackdrop}
                 index={-1}
                 ref={sheetRef} 
                 snapPoints={snapPoints} 
                 enablePanDownToClose={true}
                 onClose={() => setIsOpen(false)}>
 
-                <BottomSheetView style={styles.bottomSheet}>
+                <BottomSheetView style={styles.bottomSheetView}>
 
                 <View style={styles.bottomSheetHeader}>
                     <Text style={styles.headingMedium}>{receipes.title}</Text>
@@ -511,16 +515,9 @@ const styles = StyleSheet.create({
   },
 
   // bottom sheet
-  bottomSheet: {
+  bottomSheetView: {
     paddingVertical: 20,
     paddingHorizontal: 30,
-  },
-  bottomSheetShadowVisible: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: '#00000080'
-  },
-  bottomSheetShadowInvisible: {
-    // nothing to see here
   },
   bottomSheetHeader: {
     justifyContent: 'space-between',

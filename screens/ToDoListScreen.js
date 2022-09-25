@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, TextInput, Ke
 import { ref, onValue, push, remove } from 'firebase/database'
 import { db } from '../firebase'
 import { Feather } from '@expo/vector-icons'; 
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { getAuth } from 'firebase/auth'
 import { Portal } from '@gorhom/portal';
 
@@ -28,6 +28,12 @@ const ToDoListScreen = () => {
         sheetRef.current.close();
         Keyboard.dismiss()
     }
+
+    const renderBackdrop = useCallback(
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        props => <BottomSheetBackdrop disappearsOnIndex={-1} appearsOnIndex={0} {...props} />,
+        [],
+    );
 
 
     { /* functions to handle database stuff with the todo list */ }
@@ -129,21 +135,19 @@ const ToDoListScreen = () => {
 
                 
             </KeyboardAvoidingView>
-             
 
-            { /* shadow for bottom sheet */ }
-            <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
             
             <Portal>
                 { /* bottom sheet */ }
                 <BottomSheet 
+                    backdropComponent={renderBackdrop}
                     index={-1}
                     ref={sheetRef} 
                     snapPoints={snapPoints} 
                     enablePanDownToClose={true}
                     onClose={() => setIsOpen(false)}>
 
-                    <BottomSheetView style={styles.bottomSheet}>
+                    <BottomSheetView style={styles.bottomSheetView}>
 
                     <View style={styles.bottomSheetHeader}>
                         <Text style={styles.headingMedium}>Einkaufsliste</Text>
@@ -238,16 +242,9 @@ const styles = StyleSheet.create({
 
 
     // bottom sheet
-    bottomSheet: {
+    bottomSheetView: {
         paddingVertical: 20,
         paddingHorizontal: 30,
-    },
-    bottomSheetShadowVisible: {
-        ...StyleSheet.absoluteFill,
-        backgroundColor: '#00000080'
-    },
-    bottomSheetShadowInvisible: {
-        // nothing to see here
     },
     bottomSheetHeader: {
         justifyContent: 'space-between',

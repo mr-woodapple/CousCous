@@ -75,7 +75,7 @@ const EditCategories = () => {
         <Text style={genericStyles.headingLarge}>Kategorien</Text>
 
         <SectionHeading heading='Kategorie erstellen'/>
-        <View style={styles.categoryRowWrapper}>
+        <View style={[ styles.categoryRow, styles.categoryRowWrapper]}>
           <TextInput
             placeholder='Name der Kategorie eingeben'
             value={presentCategory}
@@ -88,24 +88,29 @@ const EditCategories = () => {
           </TouchableOpacity>
         </View>
 
-       <SectionHeading heading='Vorhandene Kategorien'/>
-        {categoryKeys.length > 0 ? (
-          categoryKeys.map(key => (
-            console.log('category name: ', categories[key].name),
-            <View style={styles.categoryRowWrapper}>
-              <Text>{categories[key].name}</Text>
+        <SectionHeading heading='Vorhandene Kategorien'/>
 
-              <View style={styles.categoryRowRight}>
-                <TouchableOpacity onPress={()=> deleteCategory(key)}>
-                  <Feather name="trash" size={18} color="black" />
-                </TouchableOpacity>
+        <View style={styles.categoryRowWrapper}>
+          {categoryKeys.length > 0 ? (
+            categoryKeys.map(key => (
+              console.log('category name: ', categories[key].name),
+              <View style={styles.categoryRow}>
+                <Text>{categories[key].name}</Text>
+
+                <View style={styles.categoryRowRight}>
+                  <TouchableOpacity onPress={()=> deleteCategory(key)}>
+                    <Feather name="trash" size={18} color="black" />
+                  </TouchableOpacity>
+                </View>
+                
               </View>
-              
-            </View>
-          ))
-        ) : (
-          <Text> Keine Kategorien vorhanden. Du kannst neue über das "+" Symbol oben rechts erstellen. </Text>
-        )}
+            ))
+          ) : (
+            <Text> Keine Kategorien vorhanden. Du kannst neue über das "+" Symbol oben rechts erstellen. </Text>
+          )}
+        </View>
+
+        
 
       </ScrollView>
 
@@ -122,12 +127,14 @@ const styles = StyleSheet.create({
   },
 
   categoryRowWrapper: {
+    marginTop: 10,
+  },
+  categoryRow: {
+    marginVertical: 5,
     backgroundColor: 'white',
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 15,
-    marginTop: 10,
-    marginBottom: 10,
     flexDirection: 'row', 
     justifyContent: 'space-between'
   },

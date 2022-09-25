@@ -6,7 +6,7 @@ import React , { useState, useEffect, useRef, useCallback  } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView, BottomSheetTextInput, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { getAuth } from 'firebase/auth'
 import { uuidv4 } from '@firebase/util';
 import { ref, push, remove, onValue } from 'firebase/database';
@@ -120,6 +120,12 @@ const HomeScreen = () => {
     Keyboard.dismiss()
   }
 
+  const renderBackdrop = useCallback(
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    props => <BottomSheetBackdrop disappearsOnIndex={-1} appearsOnIndex={0} {...props} />,
+    [],
+  );
+
   // stuff for the pill nav filter
   const [ activeItem, setActiveItem ] = useState({});
 
@@ -199,7 +205,7 @@ const HomeScreen = () => {
           </TouchableOpacity>
 
           {categoryKeys.length > 0 ? (
-            categoryKeys.map((key) => (
+            categoryKeys.map(key => (
               <TouchableOpacity 
                 key={key} 
                 style={ activeItem === categories[key] ? styles.activePillNavItem : styles.pillNavItem}
@@ -258,24 +264,20 @@ const HomeScreen = () => {
           <Text style={styles.text}>Keine Rezepte vorhanden.</Text>
         )}
       </ScrollView>
-
-
-      { /* shadow for bottom sheet */ }
-      <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible } />
       
 
       { /* Portal allows us to display the bottom sheets over the tab bar -> see PortalProvider at the very root structure of the app */ }
       <Portal>
         { /* bottom sheet add new receipe */ }
         <BottomSheet 
-          // index -1 makes sure the bottom view is closed by default
-          index={-1}
+          backdropComponent={renderBackdrop}
+          index={-1} // index -1 makes sure the bottom view is closed by default
           ref={sheetRef} 
           snapPoints={snapPoints} 
           enablePanDownToClose={true}
           onClose={() => setIsOpen(false)}>
 
-          <BottomSheetView style={styles.bottomSheet}>
+          <BottomSheetView style={styles.bottomSheetView}>
 
             <View style={styles.bottomSheetHeader}>
               <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
@@ -375,9 +377,8 @@ const HomeScreen = () => {
                   </View>
                   
                 )}
-                        
 
-                <TextInput 
+                <BottomSheetTextInput
                   placeholder="Anleitung"
                   multiline={true}
                   numberOfLines={4}
@@ -385,7 +386,7 @@ const HomeScreen = () => {
                   style={styles.input}
                   onChangeText={text => {
                     setPresentHowTo(text);
-                  }}/>
+                  }} />
 
                 {/* onPress calls the function */}
                 <TouchableOpacity style={styles.addButton} onPress={() => addNewReceipe()}> 
@@ -504,18 +505,11 @@ const styles = StyleSheet.create({
   },
 
   // bottom sheet
-  bottomSheet: {
+  bottomSheetView: {
     paddingVertical: 20,
     paddingHorizontal: 30,
     flex: 1,
     paddingBottom: 20,
-  },
-  bottomSheetShadowVisible: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: '#00000080'
-  },
-  bottomSheetShadowInvisible: {
-    // nothing to see here
   },
   bottomSheetHeader: {
     justifyContent: 'space-between',

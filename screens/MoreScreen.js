@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef, useCallback  } from 'react'
 import { StyleSheet, Text, View, ScrollView, StatusBar, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Feather } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { getAuth, signOut } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
+import { expo } from '../app.json';
 
-import * as Application from 'expo-application';
 import * as Device from 'expo-device';
 
 // components
@@ -24,13 +24,19 @@ const MoreScreen = () => {
   const snapPoints = ["60%", "80%"]
 
   const handleSnapPress = useCallback((index) => {
-    sheetRef.current?.snapToIndex('0');
+    sheetRef.current?.snapToIndex(index);
     setIsOpen(true);
   }, []);
 
   const handleClosePress = () => {
     sheetRef.current.close();
-}
+  }
+
+  const renderBackdrop = useCallback(
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    props => <BottomSheetBackdrop disappearsOnIndex={-1} appearsOnIndex={0} {...props} />,
+    [],
+  );
 
 
   { /* functions for the logout */ }
@@ -82,21 +88,18 @@ const MoreScreen = () => {
 
       </ScrollView>
 
-
-
-      { /* shadow for bottom sheet */ }
-      <View style={ isOpen ? styles.bottomSheetShadowVisible : styles.bottomSheetShadowInvisible }></View>
       
       <Portal>
         { /* bottom sheet */ }
         <BottomSheet 
+          backdropComponent={renderBackdrop}
           index={-1}
           ref={sheetRef} 
           snapPoints={snapPoints} 
           enablePanDownToClose={true}
           onClose={() => setIsOpen(false)}>
 
-          <BottomSheetView style={styles.bottomSheet}>
+          <BottomSheetView style={styles.bottomSheetView}>
 
             <View style={styles.bottomSheetHeader}>
               <Text style={styles.headingMedium}>Mehr</Text>
@@ -119,7 +122,7 @@ const MoreScreen = () => {
 
               <Text>Logged in with: {auth.currentUser?.email}</Text>
               <Text>User ID: {auth.currentUser?.uid}</Text> 
-              <Text>App Version: {Application.nativeApplicationVersion}{'\n'}</Text>
+              <Text>App Version: { expo.version }{'\n'}</Text>
               
               <Text>Operating System: {Device.osName}</Text>
               <Text>Device OS: {Device.osVersion}</Text>
@@ -182,16 +185,9 @@ const styles = StyleSheet.create({
   },
 
   // bottom sheet
-  bottomSheet: {
+  bottomSheetView: {
     paddingVertical: 20,
     paddingHorizontal: 30,
-  },
-  bottomSheetShadowVisible: {
-      ...StyleSheet.absoluteFill,
-      backgroundColor: '#00000080'
-  },
-  bottomSheetShadowInvisible: {
-      // nothing to see here
   },
   bottomSheetHeader: {
       justifyContent: 'space-between',
