@@ -325,7 +325,7 @@ const HomeScreen = ({ route }) => {
                   ingredientKeys.map(key => (
   
                     <Ingredients
-                      key={key.id}
+                      key={key}
                       id={key.id}
                       ingredient={presentIngredients[key]}
                     />

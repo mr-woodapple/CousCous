@@ -94,7 +94,9 @@ const EditCategories = () => {
           {categoryKeys.length > 0 ? (
             categoryKeys.map(key => (
               console.log('category name: ', categories[key].name),
-              <View style={styles.categoryRow}>
+              <View 
+                style={styles.categoryRow}
+                key={key}>
                 <Text>{categories[key].name}</Text>
 
                 <View style={styles.categoryRowRight}>

@@ -104,7 +104,7 @@ const HomeScreen = () => {
   { /* functions the bottom modal sheets */ }
   const sheetRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const snapPoints = ["40%", "90%"]
+  const snapPoints = ["40%", "85%"]
 
   const handleSnapPress = useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
@@ -368,7 +368,7 @@ const HomeScreen = () => {
                     }>
                       { /* render a picker.item for each category*/}
                       {categoryKeys.map(key => (
-                        <Picker.Item label={categories[key].name} value={categories[key].id}/>
+                        <Picker.Item label={categories[key].name} value={categories[key].id} key={key}/>
                       ))}
                   </Picker>    
                 ):(

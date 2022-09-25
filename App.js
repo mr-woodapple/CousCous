@@ -30,11 +30,11 @@ app
 function TabScreenNavigation() {
   return(
     <Tab.Navigator screenOptions={{
-      tabBarStyle: { position: 'absolute', backgroundColor: '#eaeaea', borderTopWidth: 0, elevation: 0, style: styles.tabBar },
+      tabBarStyle: { position: 'absolute', backgroundColor: '#eaeaea', borderTopWidth: 0, elevation: 0 },
     }}>
-      <Tab.Screen name="Rezepte" component={ReceipesScreenNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="book-open" size={24} color="black" />) }} />
-      <Tab.Screen name="Einkaufsliste" component={ToDoListNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="list" size={24} color="black" />) }} />
-      <Tab.Screen name="Mehr" component={MoreScreenNavigation} options={{ headerShown: false, tabBarIcon: () => (<Feather name="more-horizontal" size={24} color="black" />) }} />
+      <Tab.Screen name="Rezepte" component={ReceipesScreenNavigation} options={{ headerShown: false, tabBarIcon: ({ color }) => (<Feather name="book-open" size={24} color={color} />) }} />
+      <Tab.Screen name="Einkaufsliste" component={ToDoListNavigation} options={{ headerShown: false, tabBarIcon: ({ color }) => (<Feather name="list" size={24} color={color} />) }} />
+      <Tab.Screen name="Mehr" component={MoreScreenNavigation} options={{ headerShown: false, tabBarIcon: ({ color }) => (<Feather name="more-horizontal" size={24} color={color} />) }} />
     </Tab.Navigator>
   )
 }
@@ -89,6 +89,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#e8eaed',
   }
 });
