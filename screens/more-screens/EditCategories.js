@@ -1,3 +1,7 @@
+// View to remove / add new categories
+//
+// Created 20.09.2022 by Jasper Holzapfel
+
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { ref, push, remove, onValue } from 'firebase/database';

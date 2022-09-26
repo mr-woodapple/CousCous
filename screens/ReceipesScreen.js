@@ -3,7 +3,7 @@
 // Created 02.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground, FlatList } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetTextInput, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -102,21 +102,32 @@ const HomeScreen = () => {
 
 
   { /* functions the bottom modal sheets */ }
-  const sheetRef = useRef(null);
+  // refs
+  const addReceipeSheetRef = useRef(null);
+  const setCategorySheetRef = useRef(null);
+
   const [isOpen, setIsOpen] = useState(false);
   const snapPoints = ["40%", "85%"]
 
+  // open sheets
   const handleSnapPress = useCallback((index) => {
-    sheetRef.current?.snapToIndex(index);
+    addReceipeSheetRef.current?.snapToIndex(index);
+    setIsOpen(true);
+  });
+  const handleOpenCategorySheet = useCallback((index) => {
+    setCategorySheetRef.current?.snapToIndex(index);
     setIsOpen(true);
   });
 
-  const handleSheetChanges = useCallback((index) => {
-    console.log('handleSheetChanges', index);
-  }, []);
 
-  const handleClosePress = () => {
-    sheetRef.current.close();
+
+  // close sheets
+  const addReceipeCloseSheet = () => {
+    addReceipeSheetRef.current.close();
+    Keyboard.dismiss()
+  }
+  const setCategoryCloseSheet = () => {
+    setCategorySheetRef.current.close();
     Keyboard.dismiss()
   }
 
@@ -268,11 +279,12 @@ const HomeScreen = () => {
 
       { /* Portal allows us to display the bottom sheets over the tab bar -> see PortalProvider at the very root structure of the app */ }
       <Portal>
+
         { /* bottom sheet add new receipe */ }
         <BottomSheet 
           backdropComponent={renderBackdrop}
           index={-1} // index -1 makes sure the bottom view is closed by default
-          ref={sheetRef} 
+          ref={addReceipeSheetRef} 
           snapPoints={snapPoints} 
           enablePanDownToClose={true}
           onClose={() => setIsOpen(false)}>
@@ -282,12 +294,19 @@ const HomeScreen = () => {
             <View style={styles.bottomSheetHeader}>
               <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
 
-              <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={handleClosePress}>
+              <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={addReceipeCloseSheet}>
                 <Feather name="x" size={20} color="black" />
               </TouchableOpacity> 
             </View>
 
-            <ScrollView>           
+            <ScrollView>     
+
+
+
+              <TouchableOpacity style={styles.addButton} onPress={() => handleOpenCategorySheet(0)}> 
+                  <Text style={styles.mediumHeading}>Trigger new sheet</Text>
+              </TouchableOpacity>    
+    
 
               <KeyboardAvoidingView>
                 
@@ -399,6 +418,28 @@ const HomeScreen = () => {
             </ScrollView>
           </BottomSheetView>
           
+        </BottomSheet>
+
+        { /* setup for bottom sheets to easily update values*/}
+        <BottomSheet
+          style={styles.detachedBottomSheetWrapper}
+          backdropComponent={renderBackdrop}
+          index={-1} // index -1 makes sure the bottom view is closed by default
+          ref={setCategorySheetRef} 
+          snapPoints={snapPoints} 
+          enablePanDownToClose={true}
+          onClose={() => setIsOpen(false)}>
+          
+          <BottomSheetView style={styles.bottomSheetView}>
+            <View style={styles.bottomSheetHeader}>
+              <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
+
+              <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={setCategoryCloseSheet}>
+                <Feather name="x" size={20} color="black" />
+              </TouchableOpacity> 
+            </View>
+          </BottomSheetView>
+
         </BottomSheet>
       </Portal>
 
@@ -523,5 +564,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 15,
     paddingTop: 5,
+  },
+
+  // detached bottom sheets
+  detachedBottomSheetWrapper: {
+
   },
 })

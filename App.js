@@ -16,6 +16,7 @@ import MoreScreen from './screens/MoreScreen';
 import ToDoListScreen from './screens/ToDoListScreen';
 import ReceipeDetailScreen from './screens/ReceipeDetailScreen';
 import EditCategories from './screens/more-screens/EditCategories';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // nagivator definitions
 const Stack = createNativeStackNavigator();
@@ -67,6 +68,7 @@ function MoreScreenNavigation() {
   )
 }
 
+
 { /* main navigator stack*/ }
 export default function App() {
   return (
@@ -78,8 +80,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </PortalProvider>
-    
-
   );
 }
 

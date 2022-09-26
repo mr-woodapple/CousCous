@@ -488,6 +488,7 @@ const styles = StyleSheet.create({
   // metadata pills below the heading
   metadataPillsWrapper: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   metadataPill: {
     backgroundColor: 'white',
@@ -497,6 +498,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     marginRight: 10,
+    marginTop: 10,
   },
 
   // add ingredients
