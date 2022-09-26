@@ -68,7 +68,7 @@ const HomeScreen = () => {
       category: category,
       isFavorite: isFavorite,
     });
-    handleClosePress();
+    addReceipeCloseSheet();
     setPresentTitle('');
     setPresentIngredients([]);
     setPresentHowTo('');
@@ -104,18 +104,29 @@ const HomeScreen = () => {
   { /* functions the bottom modal sheets */ }
   // refs
   const addReceipeSheetRef = useRef(null);
+  const setDurationSheetRef = useRef(null);
   const setCategorySheetRef = useRef(null);
+  const setDifficultySheetRef = useRef(null);
+
 
   const [isOpen, setIsOpen] = useState(false);
-  const snapPoints = ["40%", "85%"]
+  const snapPoints = ["40%", "80%"]
 
   // open sheets
   const handleSnapPress = useCallback((index) => {
     addReceipeSheetRef.current?.snapToIndex(index);
     setIsOpen(true);
   });
+  const handleOpenDurationSheet = useCallback((index) => {
+    setDurationSheetRef.current?.snapToIndex(index);
+    setIsOpen(true);
+  });
   const handleOpenCategorySheet = useCallback((index) => {
     setCategorySheetRef.current?.snapToIndex(index);
+    setIsOpen(true);
+  });
+  const handleOpenDifficultySheet = useCallback((index) => {
+    setDifficultySheetRef.current?.snapToIndex(index);
     setIsOpen(true);
   });
 
@@ -124,15 +135,23 @@ const HomeScreen = () => {
   // close sheets
   const addReceipeCloseSheet = () => {
     addReceipeSheetRef.current.close();
-    Keyboard.dismiss()
+    Keyboard.dismiss();
+    // TODO: clear all values
+  }
+  const setDurationCloseSheet = () => {
+    setDurationSheetRef.current.close();
+    Keyboard.dismiss();
   }
   const setCategoryCloseSheet = () => {
     setCategorySheetRef.current.close();
-    Keyboard.dismiss()
+    Keyboard.dismiss();
+  }
+  const setDifficultyCloseSheet = () => {
+    setDifficultySheetRef.current.close();
+    Keyboard.dismiss();
   }
 
   const renderBackdrop = useCallback(
-    // eslint-disable-next-line react/jsx-props-no-spreading
     props => <BottomSheetBackdrop disappearsOnIndex={-1} appearsOnIndex={0} {...props} />,
     [],
   );
@@ -153,10 +172,10 @@ const HomeScreen = () => {
   { /* functions for the categories picker */ }
   // category list 
   const [ categories, setCategories ]  = useState([]);
-  const [ category, setCategory ] = useState({}); // required??
+  const [ category, setCategory ] = useState({});
   const [ presentCategory, setPresentCategory ] = useState('')
   const databasePathCategories = userUID+'/categories'
-
+  
   const categoryKeys = Object.keys(categories);
 
   function addCategory() {
@@ -300,16 +319,38 @@ const HomeScreen = () => {
             </View>
 
             <ScrollView>     
+              {/* pill shaped buttons to trigger the matching bottom sheet */}
+              <View style={styles.metadataPillsWrapper}>
 
+                <TouchableOpacity 
+                  style={styles.metadataPill} 
+                  onPress={() => handleOpenDurationSheet(0)}>
+                    
+                  <Feather name="clock" size={20} color="black" />
+                  <Text style={styles.metadataPillTitle}>Dauer: {duration}</Text>
+                </TouchableOpacity>
 
+                <TouchableOpacity 
+                  style={styles.metadataPill} 
+                  onPress={() => handleOpenCategorySheet(0)}>
+                    
+                  <Feather name="zap" size={20} color="black" />
+                  <Text style={styles.metadataPillTitle}>Kategorie: {displayCategory}</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity style={styles.addButton} onPress={() => handleOpenCategorySheet(0)}> 
-                  <Text style={styles.mediumHeading}>Trigger new sheet</Text>
-              </TouchableOpacity>    
-    
+                <TouchableOpacity 
+                  style={styles.metadataPill} 
+                  onPress={() => handleOpenDifficultySheet(0)}>
+                    
+                  <Feather name="tag" size={20} color="black" />
+                  <Text style={styles.metadataPillTitle}>Schwierigkeit: {difficulty}</Text>
+                </TouchableOpacity>
 
+              </View>
+
+              {/* */}
               <KeyboardAvoidingView>
-                
+              
                 <TextInput 
                   placeholder="Titel"
                   value={presentTitle}
@@ -346,56 +387,7 @@ const HomeScreen = () => {
                       <Feather name="plus" size={20} color="black" />
                     </TouchableOpacity>
                   </View>
-                  
                 </View>
-
-                <TextInput 
-                  placeholder="Zubereitungszeit"
-                  value={duration}
-                  style={styles.input}
-                  onChangeText={text => {
-                    setDuration(text);
-                  }}/>
-
-                <TextInput 
-                  placeholder="Schwierigkeit"
-                  value={difficulty}
-                  style={styles.input}
-                  onChangeText={text => {
-                    setDifficulty(text);
-                  }}/>
-
-                <View style={styles.addIngredientWrapper}>
-                    <TextInput 
-                      placeholder='Kategorie hinzufügen...'
-                      value={presentCategory}
-                      style={styles.text}
-                      onChangeText={text => {setPresentCategory(text)}}
-                      onSubmitEditing={addCategory} />
-
-                    <TouchableOpacity onPress={() => addCategory()}>
-                      <Feather name="plus" size={20} color="black" />
-                    </TouchableOpacity>
-                  </View>
-
-                {categoryKeys.length > 0 ? (
-                  <Picker
-                    selectedValue={displayCategory}
-                    style={{ height: 200}} // set proper styles.xxx prop
-                    onValueChange={(item, itemIndex) =>
-                      handleCategoryChange(item)
-                    }>
-                      { /* render a picker.item for each category*/}
-                      {categoryKeys.map(key => (
-                        <Picker.Item label={categories[key].name} value={categories[key].id} key={key}/>
-                      ))}
-                  </Picker>    
-                ):(
-                  <View style={{alignItems: 'center', paddingTop: 20,}}>
-                    <Text style={styles.text}>Füge deine erste Kategorie hinzu!</Text>
-                  </View>
-                  
-                )}
 
                 <BottomSheetTextInput
                   placeholder="Anleitung"
@@ -420,7 +412,37 @@ const HomeScreen = () => {
           
         </BottomSheet>
 
-        { /* setup for bottom sheets to easily update values*/}
+        { /* bottom sheet for changing the duration */}
+        <BottomSheet
+          style={styles.detachedBottomSheetWrapper}
+          backdropComponent={renderBackdrop}
+          index={-1} // index -1 makes sure the bottom view is closed by default
+          ref={setDurationSheetRef} 
+          snapPoints={snapPoints} 
+          enablePanDownToClose={true}
+          onClose={() => setIsOpen(false)}>
+
+          <BottomSheetView style={styles.bottomSheetView}>
+            <View style={styles.bottomSheetHeader}>
+              <Text style={styles.mediumHeading}>Zubereitungszeit wählen</Text>
+
+              <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={setDurationCloseSheet}>
+                <Feather name="save" size={20} color="black" />
+              </TouchableOpacity> 
+            </View>
+
+            <BottomSheetTextInput 
+              placeholder="Zubereitungszeit"
+              value={duration}
+              style={styles.input}
+              onChangeText={text => {
+                setDuration(text);
+              }}/>
+          </BottomSheetView>
+        </BottomSheet>
+
+
+        { /* bottom sheet for changing the category */}
         <BottomSheet
           style={styles.detachedBottomSheetWrapper}
           backdropComponent={renderBackdrop}
@@ -432,15 +454,79 @@ const HomeScreen = () => {
           
           <BottomSheetView style={styles.bottomSheetView}>
             <View style={styles.bottomSheetHeader}>
-              <Text style={styles.mediumHeading}>Rezept hinzufügen</Text>
+              <Text style={styles.mediumHeading}>Kategorie wählen</Text>
 
               <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={setCategoryCloseSheet}>
-                <Feather name="x" size={20} color="black" />
+                <Feather name="save" size={20} color="black" />
               </TouchableOpacity> 
             </View>
-          </BottomSheetView>
 
+            <View>
+              <View style={styles.addIngredientWrapper}>
+                <TextInput 
+                  placeholder='Kategorie hinzufügen...'
+                  value={presentCategory}
+                  style={styles.text}
+                  onChangeText={text => {setPresentCategory(text)}}
+                  onSubmitEditing={addCategory} />
+
+                <TouchableOpacity onPress={() => addCategory()}>
+                  <Feather name="plus" size={20} color="black" />
+                </TouchableOpacity>
+              </View>
+
+              {categoryKeys.length > 0 ? (
+                <Picker
+                  selectedValue={displayCategory}
+                  style={{ height: 200}} // set proper styles.xxx prop
+                  onValueChange={(item, itemIndex) =>
+                    handleCategoryChange(item)
+                  }>
+                    { /* render a picker.item for each category*/}
+                    {categoryKeys.map(key => (
+                      <Picker.Item label={categories[key].name} value={categories[key].id} key={key}/>
+                    ))}
+                </Picker>    
+              ):(
+                <View style={{alignItems: 'center', paddingTop: 20,}}>
+                  <Text style={styles.text}>Füge deine erste Kategorie hinzu!</Text>
+                </View>
+               )}
+            </View>
+          </BottomSheetView>
         </BottomSheet>
+
+
+        { /* bottom sheet for changing the difficulty */}
+        <BottomSheet
+          backdropComponent={renderBackdrop}
+          index={-1} // index -1 makes sure the bottom view is closed by default
+          ref={setDifficultySheetRef} 
+          snapPoints={snapPoints} 
+          enablePanDownToClose={true}
+          onClose={() => setIsOpen(false)}>
+
+          <BottomSheetView style={styles.bottomSheetView}>
+            <View style={styles.bottomSheetHeader}>
+              <Text style={styles.mediumHeading}>Schwierigkeit wählen</Text>
+
+              <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={setDifficultyCloseSheet}>
+                <Feather name="save" size={20} color="black" />
+              </TouchableOpacity> 
+            </View>
+
+            <BottomSheetTextInput 
+              placeholder="Schwierigkeit"
+              value={difficulty}
+              style={styles.input}
+              onChangeText={text => {
+                setDifficulty(text);
+              }}/>
+          </BottomSheetView>
+        </BottomSheet>
+
+
+
       </Portal>
 
     </SafeAreaView>
@@ -566,8 +652,22 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
 
-  // detached bottom sheets
-  detachedBottomSheetWrapper: {
-
+  // metadata pills for adding receipes
+  metadataPillsWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  metadataPill: {
+    backgroundColor: '#add8e6',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    marginTop: 10,
+  },
+  metadataPillTitle: {
+    marginLeft: 10,
   },
 })
