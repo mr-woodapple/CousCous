@@ -30,7 +30,6 @@ const ToDoListScreen = () => {
     }
 
     const renderBackdrop = useCallback(
-        // eslint-disable-next-line react/jsx-props-no-spreading
         props => <BottomSheetBackdrop disappearsOnIndex={-1} appearsOnIndex={0} {...props} />,
         [],
     );

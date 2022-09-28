@@ -17,10 +17,12 @@ import { Portal } from '@gorhom/portal';
 import { Picker } from '@react-native-picker/picker';
 import { TimePicker } from 'react-native-simple-time-picker';
 
-
+// components
 import Ingredients from '../components/Ingredients';
 import DestructiveRow from '../components/DestructiveRow';
 
+// data
+import difficultyData from '../assets/data/difficultiesData';
 import image from '../assets/images/nordwood-themes-wtevVfGYwnM-unsplash.jpg';
 
 
@@ -118,8 +120,50 @@ const HomeScreen = ({ route }) => {
     Keyboard.dismiss()
   }
 
+  { /* functions the bottom modal sheets */ }
+  // refs
+  const addReceipeSheetRef = useRef(null);
+  const setDurationSheetRef = useRef(null);
+  const setCategorySheetRef = useRef(null);
+  const setDifficultySheetRef = useRef(null);
+
+
+  // open sheets
+  const handleOpenDurationSheet = useCallback((index) => {
+    setDurationSheetRef.current?.snapToIndex(index);
+    setIsOpen(true);
+  });
+  const handleOpenCategorySheet = useCallback((index) => {
+    setCategorySheetRef.current?.snapToIndex(index);
+    setIsOpen(true);
+  });
+  const handleOpenDifficultySheet = useCallback((index) => {
+    setDifficultySheetRef.current?.snapToIndex(index);
+    setIsOpen(true);
+  });
+
+
+
+  // close sheets
+  const addReceipeCloseSheet = () => {
+    addReceipeSheetRef.current.close();
+    Keyboard.dismiss();
+    // TODO: clear all values
+  }
+  const setDurationCloseSheet = () => {
+    setDurationSheetRef.current.close();
+    Keyboard.dismiss();
+  }
+  const setCategoryCloseSheet = () => {
+    setCategorySheetRef.current.close();
+    Keyboard.dismiss();
+  }
+  const setDifficultyCloseSheet = () => {
+    setDifficultySheetRef.current.close();
+    Keyboard.dismiss();
+  }
+
   const renderBackdrop = useCallback(
-    // eslint-disable-next-line react/jsx-props-no-spreading
     props => <BottomSheetBackdrop disappearsOnIndex={-1} appearsOnIndex={0} {...props} />,
     [],
   );
@@ -154,6 +198,7 @@ const HomeScreen = ({ route }) => {
     setDisplayCategory(category)
   }
 
+
   { /* functions for the difficulty picker */ }
   const [ displayDifficulty, setDisplayDifficulty ] = useState('')
 
@@ -171,6 +216,7 @@ const HomeScreen = ({ route }) => {
     setMinutes(value.minutes)
     setDuration(value)
   }
+
 
   { /* stuff for switching between edit and view mode */ }
   const [isEditing, setIsEditing] = useState(false);
@@ -245,7 +291,7 @@ const HomeScreen = ({ route }) => {
 
         </View>
 
-        <ScrollView style={styles.contentWrapper}>
+        <ScrollView style={styles.contentWrapper} contentContainerStyle={{ paddingBottom: 100 }}>
 
             {/* Title */}
             {!isEditing ? (
@@ -271,17 +317,37 @@ const HomeScreen = ({ route }) => {
                   <Text>   {receipes?.duration?.hours} Stunden, {receipes?.duration?.minutes} Minuten</Text>
                 </View>
                 <View style={styles.metadataPill}>
-                  <Feather name="zap" size={24} color="black" />
-                  <Text>   {receipes.difficulty}</Text>
-                </View>
-                <View style={styles.metadataPill}>
                   <Feather name="tag" size={24} color="black" />
                   <Text>   {receipes.category}</Text>
+                </View>
+                <View style={styles.metadataPill}>
+                  <Feather name="zap" size={24} color="black" />
+                  <Text>   {receipes.difficulty}</Text>
                 </View>
 
               </View>
             ):(     
               <View>
+
+                {/* pills implementation for updating duration, difficulty & category */}
+                <View style={styles.metadataPillsWrapper}>
+
+                  <TouchableOpacity style={styles.metadataPill} onPress={() => handleOpenDurationSheet(0)}>
+                    <Feather name="clock" size={20} color="black" />
+                    <Text>   {hours} Stunden, {minutes} Minuten</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.metadataPill} onPress={() => handleOpenCategorySheet(0)}>
+                    <Feather name="tag" size={24} color="black" />
+                    <Text>   {receipes.category}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.metadataPill} onPress={() => handleOpenDifficultySheet(0)}>
+                    <Feather name="zap" size={24} color="black" />
+                    <Text>   {displayDifficulty}</Text>
+                  </TouchableOpacity>
+                  
+                </View>
+
+
                 {/* deprecated 
                 <TextInput 
                   placeholder='Zubereitungszeit'
@@ -289,59 +355,16 @@ const HomeScreen = ({ route }) => {
                   style={styles.input}
                   onChangeText={text => {
                     setDuration(text);
-                  }}/>*/}
+                  }}/>
                   <TimePicker 
                     value={{ hours, minutes }} 
                     hoursUnit="Std"
                     minutesUnit="Min"
                     onChange={timePickerHandleChange}
-                  />
-
-
-                  <TextInput 
-                  placeholder='Schwierigkeit'
-                  defaultValue={receipes.difficulty}
-                  style={styles.input}
-                  onChangeText={text => {
-                    setDifficulty(text);
-                  }}/>
-
-                  <View style={styles.addIngredientWrapper}>
-                    <TextInput 
-                      placeholder='Kategorie hinzufügen...'
-                      value={presentIngredient}
-                      style={styles.text}
-                      onChangeText={text => {setPresentCategory(text)}}
-                      onSubmitEditing={addCategory} />
-
-                    <TouchableOpacity onPress={() => addCategory()}>
-                      <Feather name="plus" size={20} color="black" />
-                    </TouchableOpacity>
-                  </View>
-
-                  {console.log('debug displayCategory = ', displayCategory)}
-
-                  {categoryKeys.length > 0 ? (
-                    <Picker
-                      selectedValue={displayCategory}
-                      style={{ height: 200}} // set proper styles.xxx prop
-                      onValueChange={(item, itemIndex) =>
-                        handleCategoryChange(item)
-                      }>
-                        { /* render a picker.item for each category*/}
-                        {categoryKeys.map(key => (
-                          <Picker.Item label={categories[key].name} value={categories[key].id}/>
-                        ))}
-                    </Picker>    
-                  ):(
-                    <View style={{alignItems: 'center', paddingTop: 20,}}>
-                      <Text style={styles.text}>Füge deine erste Kategorie hinzu!</Text>
-                    </View>
-                    
-                  )}
-
+                  />*/}
+ 
+                  
               </View>        
-              
             )}
             
 
@@ -448,6 +471,125 @@ const HomeScreen = ({ route }) => {
                 </BottomSheetView>
                 
             </BottomSheet>
+
+            { /* bottom sheet for changing the duration */}
+            <BottomSheet
+              style={styles.detachedBottomSheetWrapper}
+              backdropComponent={renderBackdrop}
+              index={-1} // index -1 makes sure the bottom view is closed by default
+              ref={setDurationSheetRef} 
+              snapPoints={snapPoints} 
+              enablePanDownToClose={true}
+              onClose={() => setIsOpen(false)}>
+
+              <BottomSheetView style={styles.bottomSheetView}>
+                <View style={styles.bottomSheetHeader}>
+                  <Text style={styles.mediumHeading}>Zubereitungszeit wählen</Text>
+
+                  <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={setDurationCloseSheet}>
+                    <Feather name="save" size={20} color="black" />
+                  </TouchableOpacity> 
+                </View>
+
+                <TimePicker 
+                  value={{ hours, minutes }} 
+                  hoursUnit="Std"
+                  minutesUnit="Min"
+                  onChange={timePickerHandleChange}
+                  />
+
+              </BottomSheetView>
+            </BottomSheet>
+
+            { /* bottom sheet for changing the category */}
+            <BottomSheet
+              style={styles.detachedBottomSheetWrapper}
+              backdropComponent={renderBackdrop}
+              index={-1} // index -1 makes sure the bottom view is closed by default
+              ref={setCategorySheetRef} 
+              snapPoints={snapPoints} 
+              enablePanDownToClose={true}
+              onClose={() => setIsOpen(false)}>
+              
+              <BottomSheetView style={styles.bottomSheetView}>
+                <View style={styles.bottomSheetHeader}>
+                  <Text style={styles.mediumHeading}>Kategorie wählen</Text>
+
+                  <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={setCategoryCloseSheet}>
+                    <Feather name="save" size={20} color="black" />
+                  </TouchableOpacity> 
+                </View>
+
+                <View>
+                  <View style={styles.addIngredientWrapper}>
+                    <TextInput 
+                      placeholder='Kategorie hinzufügen...'
+                      value={presentCategory}
+                      style={styles.text}
+                      onChangeText={text => {setPresentCategory(text)}}
+                      onSubmitEditing={addCategory} />
+
+                    <TouchableOpacity onPress={() => addCategory()}>
+                      <Feather name="plus" size={20} color="black" />
+                    </TouchableOpacity>
+                  </View>
+
+                  {categoryKeys.length > 0 ? (
+                    <Picker
+                      selectedValue={displayCategory}
+                      style={{ height: 200}} // set proper styles.xxx prop
+                      onValueChange={(item, itemIndex) =>
+                        handleCategoryChange(item)
+                      }>
+                        { /* render a picker.item for each category*/}
+                        {categoryKeys.map(key => (
+                          <Picker.Item label={categories[key].name} value={categories[key].id} key={key}/>
+                        ))}
+                    </Picker>    
+                  ):(
+                    <View style={{alignItems: 'center', paddingTop: 20,}}>
+                      <Text style={styles.text}>Füge deine erste Kategorie hinzu!</Text>
+                    </View>
+                  )}
+                </View>
+              </BottomSheetView>
+            </BottomSheet>
+
+
+
+            { /* bottom sheet for changing the difficulty */}
+            <BottomSheet
+              backdropComponent={renderBackdrop}
+              index={-1} // index -1 makes sure the bottom view is closed by default
+              ref={setDifficultySheetRef} 
+              snapPoints={snapPoints} 
+              enablePanDownToClose={true}
+              onClose={() => setIsOpen(false)}>
+
+              <BottomSheetView style={styles.bottomSheetView}>
+                <View style={styles.bottomSheetHeader}>
+                  <Text style={styles.mediumHeading}>Schwierigkeit wählen</Text>
+
+                  <TouchableOpacity style={styles.bottomSheetCloseButton} onPress={setDifficultyCloseSheet}>
+                    <Feather name="save" size={20} color="black" />
+                  </TouchableOpacity> 
+                </View>
+
+                <Picker
+                  selectedValue={displayDifficulty}
+                  style={{ height: 200}} // set proper styles.xxx prop
+                  onValueChange={(item, itemIndex) =>
+                    handleDifficultyChange(item)
+                  }>
+                    { /* render a picker.item for each category*/}
+                    {difficultyData.map(key => (
+                      <Picker.Item label={key.name} value={key.name} key={key.id}/>
+                    ))}
+                </Picker>    
+              </BottomSheetView>
+            </BottomSheet>
+
+
         </Portal>
 
 
