@@ -13,6 +13,9 @@ https://github.com/WrathChaos/react-native-premium-table
 Animated tabbar: 
 https://github.com/gorhom/react-native-animated-tabbar
 
+Skeleton loader animation:
+https://www.npmjs.com/package/react-native-skeleton-content
+
 
 
 Might become important to fix the "async-storage" warning:

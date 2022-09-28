@@ -15,6 +15,8 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
 import { Picker } from '@react-native-picker/picker';
+import { TimePicker } from 'react-native-simple-time-picker';
+
 
 import Ingredients from '../components/Ingredients';
 import DestructiveRow from '../components/DestructiveRow';
@@ -152,6 +154,24 @@ const HomeScreen = ({ route }) => {
     setDisplayCategory(category)
   }
 
+  { /* functions for the difficulty picker */ }
+  const [ displayDifficulty, setDisplayDifficulty ] = useState('')
+
+  function handleDifficultyChange(difficulty) {
+    setDifficulty(difficulty);
+    setDisplayDifficulty(difficulty);
+  }
+
+  {/* functions for the time picker */}
+  const [ hours, setHours ] = useState(0);
+  const [ minutes, setMinutes ] = useState(0);
+
+  function timePickerHandleChange( value ) {
+    setHours(value.hours)
+    setMinutes(value.minutes)
+    setDuration(value)
+  }
+
   { /* stuff for switching between edit and view mode */ }
   const [isEditing, setIsEditing] = useState(false);
 
@@ -248,7 +268,7 @@ const HomeScreen = ({ route }) => {
 
                 <View style={styles.metadataPill}>
                   <Feather name="clock" size={20} color="black" />
-                  <Text>   {receipes.duration}</Text>
+                  <Text>   {receipes?.duration?.hours} Stunden, {receipes?.duration?.minutes} Minuten</Text>
                 </View>
                 <View style={styles.metadataPill}>
                   <Feather name="zap" size={24} color="black" />
@@ -262,13 +282,22 @@ const HomeScreen = ({ route }) => {
               </View>
             ):(     
               <View>
+                {/* deprecated 
                 <TextInput 
                   placeholder='Zubereitungszeit'
                   defaultValue={receipes.duration}
                   style={styles.input}
                   onChangeText={text => {
                     setDuration(text);
-                  }}/>
+                  }}/>*/}
+                  <TimePicker 
+                    value={{ hours, minutes }} 
+                    hoursUnit="Std"
+                    minutesUnit="Min"
+                    onChange={timePickerHandleChange}
+                  />
+
+
                   <TextInput 
                   placeholder='Schwierigkeit'
                   defaultValue={receipes.difficulty}

@@ -15,9 +15,13 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
 import { Picker } from '@react-native-picker/picker';
+import { TimePicker } from 'react-native-simple-time-picker';
 
-
+// items
 import ReceipeItem from '../components/ReceipeItem';
+
+// data
+import difficultyData from '../assets/data/difficultiesData';
   
 const HomeScreen = () => {
 
@@ -30,7 +34,7 @@ const HomeScreen = () => {
   const [ presentIngredients, setPresentIngredients ] = useState([]);
   const [ presentIngredient, setPresentIngredient ] = useState({});
   const [ presentHowTo, setPresentHowTo ] = useState('');
-  const [ duration, setDuration ] = useState('');
+  const [ duration, setDuration ] = useState({});
   const [ difficulty, setDifficulty ] = useState('');
   const [ isFavorite, setFavorite ] = useState(false);
 
@@ -175,7 +179,7 @@ const HomeScreen = () => {
   const [ category, setCategory ] = useState({});
   const [ presentCategory, setPresentCategory ] = useState('')
   const databasePathCategories = userUID+'/categories'
-  
+
   const categoryKeys = Object.keys(categories);
 
   function addCategory() {
@@ -199,6 +203,23 @@ const HomeScreen = () => {
     setDisplayCategory(category)
   }
 
+  { /* functions for the difficulty picker */ }
+  const [ displayDifficulty, setDisplayDifficulty ] = useState('')
+
+  function handleDifficultyChange(difficulty) {
+    setDifficulty(difficulty);
+    setDisplayDifficulty(difficulty);
+  }
+
+  {/* functions for the time picker */}
+  const [ hours, setHours ] = useState(0);
+  const [ minutes, setMinutes ] = useState(0);
+
+  function timePickerHandleChange( value ) {
+    setHours(value.hours)
+    setMinutes(value.minutes)
+    setDuration(value)
+  }
 
   return (
 
@@ -208,7 +229,6 @@ const HomeScreen = () => {
 
       {/* for android only */}
       <StatusBar backgroundColor="#eaeaea" />
-
 
       { /* header def */ }
       <View style={styles.headerWrapper}>
@@ -327,7 +347,7 @@ const HomeScreen = () => {
                   onPress={() => handleOpenDurationSheet(0)}>
                     
                   <Feather name="clock" size={20} color="black" />
-                  <Text style={styles.metadataPillTitle}>Dauer: {duration}</Text>
+                  <Text style={styles.metadataPillTitle}>Dauer: { duration.hours } Stunden, { duration.minutes } Minuten</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity 
@@ -431,13 +451,13 @@ const HomeScreen = () => {
               </TouchableOpacity> 
             </View>
 
-            <BottomSheetTextInput 
-              placeholder="Zubereitungszeit"
-              value={duration}
-              style={styles.input}
-              onChangeText={text => {
-                setDuration(text);
-              }}/>
+            <TimePicker 
+              value={{ hours, minutes }} 
+              hoursUnit="Std"
+              minutesUnit="Min"
+              onChange={timePickerHandleChange}
+              />
+
           </BottomSheetView>
         </BottomSheet>
 
@@ -515,13 +535,17 @@ const HomeScreen = () => {
               </TouchableOpacity> 
             </View>
 
-            <BottomSheetTextInput 
-              placeholder="Schwierigkeit"
-              value={difficulty}
-              style={styles.input}
-              onChangeText={text => {
-                setDifficulty(text);
-              }}/>
+            <Picker
+              selectedValue={displayDifficulty}
+              style={{ height: 200}} // set proper styles.xxx prop
+              onValueChange={(item, itemIndex) =>
+                handleDifficultyChange(item)
+              }>
+                { /* render a picker.item for each category*/}
+                {difficultyData.map(key => (
+                  <Picker.Item label={key.name} value={key.name} key={key.id}/>
+                ))}
+            </Picker>    
           </BottomSheetView>
         </BottomSheet>
 
