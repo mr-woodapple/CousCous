@@ -24,11 +24,16 @@ https://stackoverflow.com/questions/71502662/react-native-firebase-undefined-is-
 Slide Modal (Apple slideover thing):
 https://www.npmjs.com/package/react-native-slide-modal
 
-Picker for dates & categories:
-https://github.com/lawnstarter/react-native-picker-select
-
 Picker for selecting images from the device: 
 https://github.com/rnmods/react-native-document-picker
 
+
+
+
+
+// ALREADY USED IN THIS APP
 Time picker for selecting the minutes / hours a receipes needs:
 https://github.com/uraway/react-native-simple-time-picker
+
+Picker for dates & categories:
+https://github.com/lawnstarter/react-native-picker-select
