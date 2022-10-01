@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
+
+// styles
+import { genericStyles } from '../assets/styles/GenericStyles'
 
 
 const LoginScreen = () => {
 
+    const navigation = useNavigation()
+
+    const [ isSignIn, setIsSignIn ] = useState(true)
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
+    const [ passwordRepeat, setPasswordRepeat ] = useState('')
     const auth = getAuth()
 
-    const navigation = useNavigation()
+
+   
 
     { /* Runs when the component mounts, switches screen if user = signed in , unsubscribe takes care of abandoning the listener when we switch screens*/ }
     useEffect(() => {
@@ -26,12 +34,17 @@ const LoginScreen = () => {
 
     { /* Function to handle firebase actions (signup / login) */ }
     const handleSignUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
+        if ( password === passwordRepeat ) {
+            createUserWithEmailAndPassword(auth, email, password)
             .then(userCredential => {
                 const user = userCredential.user;
                 console.log('Registered with: ', user.email);
             })
             .catch(error => alert(error.message))
+        } else {
+            alert('Die Passwörter stimmen nicht überein, bitte versuche es erneut!')
+        }
+        
     }
 
     const handleLogin = () => {
@@ -44,38 +57,120 @@ const LoginScreen = () => {
     }
 
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
+        // main container
+        <View style={styles.container}>
 
-        <View style={styles.inputContainer}>
-            <TextInput
-                placeholder="Email"
-                value={email}
-                onChangeText={text => setEmail(text)}
-                style={styles.input} />
+            {/* show different view depending on if the user wants to sign in or sign up */}
+            { isSignIn ? (
+                <SafeAreaView style={styles.loginStyles}>
 
-            <TextInput
-                placeholder="Password"
-                value={password}
-                onChangeText={text => setPassword(text)}
-                style={styles.input} 
-                secureTextEntry /> 
+                    <KeyboardAvoidingView behavior='padding'>
+
+                    <Text style={genericStyles.headingLarge}>Willkommen zurück!</Text>
+                    <Text style={[ genericStyles.headingMedium, { marginTop: -30 } ]}>Melde dich mit deinem Konto an.</Text>
+
+
+
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputRow}>
+                            <Text style={styles.inputHintText}>E-Mail Adresse</Text>
+                            <TextInput
+                                keyboardType='email-address'
+                                autoCapitalize='none'
+                                placeholder="E-Mail"
+                                value={email}
+                                onChangeText={text => setEmail(text)}
+                                style={styles.input} />
+                        </View>
+                        
+                        <View style={styles.inputRow}>
+                            <Text  style={styles.inputHintText}>Passwort</Text>
+                            <TextInput
+                                placeholder="Password"
+                                value={password}
+                                onChangeText={text => setPassword(text)}
+                                style={styles.input} 
+                                secureTextEntry />
+                        </View>
+                    </View>
+
+                    <TouchableOpacity onPress={() => handleLogin()} style={styles.buttonLogin}>
+                        <Text style={styles.buttonLoginText}>Einloggen</Text>
+                    </TouchableOpacity>
+
+                    {/* switch to register screen */}
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text>Noch kein Konto?</Text>
+                        <TouchableOpacity 
+                            onPress={() => setIsSignIn(false)} 
+                            style={{ paddingLeft: 10,  }}>
+                            <Text style={{ textDecorationLine: 'underline' }}>Registrieren</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    </KeyboardAvoidingView>
+                </SafeAreaView>
+            ):(
+                <SafeAreaView style={styles.loginStyles}>
+
+                    <KeyboardAvoidingView behavior="padding">
+
+                    <Text style={genericStyles.headingLarge}>Willkommen!</Text>
+                    <Text style={[ genericStyles.headingMedium, { marginTop: -30 } ]}>Registriere dich, um anzufangen.</Text>
+
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputRow}>
+                            <Text style={styles.inputHintText}>E-Mail Adresse</Text>
+                            <TextInput
+                                placeholder="E-Mail"
+                                autoCapitalize='none'
+                                keyboardType='email-address'
+                                value={email}
+                                onChangeText={text => setEmail(text)}
+                                style={styles.input} />
+                        </View>
+                        
+                        <View style={styles.inputRow}>
+                            <Text style={styles.inputHintText}>Passwort</Text>
+                            <TextInput
+                                placeholder="Password"
+                                value={password}
+                                onChangeText={text => setPassword(text)}
+                                style={styles.input} 
+                                secureTextEntry />
+                        </View>
+                        <View style={styles.inputRow}>
+                            <Text  style={styles.inputHintText}>Passwort wiederholen</Text>
+                            <TextInput
+                                placeholder="Password wiederholen"
+                                value={passwordRepeat}
+                                onChangeText={text => setPasswordRepeat(text)}
+                                style={styles.input} 
+                                secureTextEntry />
+                        </View>
+                        
+                    </View>
+
+                    <TouchableOpacity onPress={() => handleSignUp()} style={styles.buttonLogin}>
+                        <Text style={styles.buttonLoginText}>Registrieren</Text>
+                    </TouchableOpacity>
+
+
+                    {/* switch to login screen */}
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text>Du hast bereits ein Konto?</Text>
+                        <TouchableOpacity 
+                            onPress={() => setIsSignIn(true)} 
+                            style={{ paddingLeft: 10,  }}>
+                            <Text style={{ textDecorationLine: 'underline' }}>Anmelden</Text>
+                        </TouchableOpacity>
+                    </View>
+                    </KeyboardAvoidingView>
+                </SafeAreaView>
+            )}
+
         </View>
-
-        <View style={styles.buttonContainer}>
-            <TouchableOpacity 
-                onPress={handleLogin} 
-                style={styles.button}>
-                <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-                onPress={handleSignUp} 
-                style={[styles.button, styles.buttonOutline]}>
-                <Text style={styles.buttonOutlineText}>Register</Text>
-            </TouchableOpacity>
-        </View>
-
-        </KeyboardAvoidingView>
+       
     )
 }
 
@@ -83,20 +178,59 @@ export default LoginScreen
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
     },
-    inputContainer:{
-        width: '80%',
+
+
+    loginStyles: {
+        marginHorizontal: 20,
+        justifyContent: 'center',
+        flex: 1,
+        backgroundColor: 'white'
     },
-    input:{
-        backgroundColor: 'white',
-        paddingHorizontal: 15,
+    
+    inputContainer: {
+
+    },
+    inputRow: {
+        backgroundColor: '#add8e620',
         paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginVertical: 5,
         borderRadius: 10,
-        marginTop: 5,
+        borderColor: '#add8e680',
+        borderWidth: 0.5,
     },
+    inputHintText:{
+        color: 'gray',
+        textTransform: 'uppercase',
+        fontSize: 10,
+        marginBottom: 5,
+    },
+    input: {
+        paddingVertical: 5,
+    },
+    buttonLogin: {
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        marginVertical: 20,
+        borderRadius: 10,
+        backgroundColor: 'black'
+    },
+    buttonLoginText: {
+        color: 'white'
+    },
+
+
+
+
+
+
+
     buttonContainer:{
         width: '60%',
         justifyContent: 'center',

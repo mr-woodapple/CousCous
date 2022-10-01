@@ -17,6 +17,9 @@ import { Portal } from '@gorhom/portal';
 import { Picker } from '@react-native-picker/picker';
 import { TimePicker } from 'react-native-simple-time-picker';
 
+import { getStorage, getDownloadURL, ref as sRef } from "firebase/storage";
+
+
 // components
 import Ingredients from '../components/Ingredients';
 import DestructiveRow from '../components/DestructiveRow';
@@ -250,7 +253,19 @@ const HomeScreen = ({ route }) => {
     const databasePathIngredient = databasePath+'/ingredients/'+id
     remove(ref(db, databasePathIngredient))
   }
+
+
+  // functions to download media from Firebase storage
+  const [ imageURL, setImageURL ] = useState('');
+  const storage = getStorage();
+  const imageRef = sRef(storage, 'userx/receipeX/Class_37_Lightning.jpeg');
   
+  getDownloadURL (imageRef)
+    .then((url) => {setImageURL(url)})
+    .catch((error) => {console.log(error)})
+
+
+
 
   { /* random stuff */ }
   const window = Dimensions.get('window')
@@ -287,11 +302,19 @@ const HomeScreen = ({ route }) => {
               <Feather name="more-vertical" size={24} color="black" />
             </TouchableOpacity>
           </View>
-          
 
         </View>
 
         <ScrollView style={styles.contentWrapper} contentContainerStyle={{ paddingBottom: 100 }}>
+
+
+            {/* header image */}
+            <Image 
+              style={styles.debug}
+              source={{ 
+                uri: imageURL
+              }}/>
+          
 
             {/* Title */}
             {!isEditing ? (
@@ -707,4 +730,9 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
 
+
+  debug: {
+    backgroundColor: 'red',
+    minHeight: 200,
+  }
 })
