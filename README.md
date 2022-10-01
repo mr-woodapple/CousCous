@@ -17,3 +17,4 @@ Build with React Native (Expo).
 - [ ] Add darkmode (& user selectable color-schemes?)
 - [ ] Add paywall (3 receipes free, only 10 to-do list items?)
 - [ ] Add tablet view (with sidebar like spotify, select item above and then display receipes below)
+- [ ] Rebuild to work offline as standard and only create account if wanted -> use async?

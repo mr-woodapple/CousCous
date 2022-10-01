@@ -16,6 +16,8 @@ import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
 import { Picker } from '@react-native-picker/picker';
 import { TimePicker } from 'react-native-simple-time-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 // items
 import ReceipeItem from '../components/ReceipeItem';
@@ -58,7 +60,66 @@ const HomeScreen = () => {
       setCategories(categoryItems);
 
     })
+
+    // works, but need to make sure that we don't erase the data in the local storage
+    // getReceipeData(),
   }, [])
+
+
+
+
+
+  // code for storing data locally to AsyncStorage for offline use => necessary? Might switch to Firestore anyway
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+        if (user) {
+            saveReceipeData();
+        }
+    })
+
+    return unsubscribe
+  }, [])
+
+  const saveReceipeData = async () => {
+    try {
+      console.log('saveReceipeData called')
+      const jsonValue = JSON.stringify(receipes)
+      AsyncStorage.setItem('receipeData', jsonValue)
+      console.log('saved receipeData: ', jsonValue)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getReceipeData = async() => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('receipeData')
+      //return jsonValue != null ? JSON.parse(jsonValue) : null;
+      const data = JSON.parse(jsonValue);
+      setReceipes(data);
+      console.log('loaded data from Async: ', data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  {/* pseudo code for offline functionality
+
+    if user online == true {
+      get firebase data
+      compare firebase data to async data
+    } else {
+      await data from asnyc storage
+    }
+
+  */}
+
+  // end of code section using Async for offline access
+
+
+
+
+
 
   // add new receipe
   function addNewReceipe() {
@@ -166,10 +227,8 @@ const HomeScreen = () => {
   function changeActiveItem(category) {
     if (category === activeItem) {
       setActiveItem({})
-      console.log('reset category to all ', activeItem)
     } else {
       setActiveItem(category);
-      console.log('set active to: ', category)
     }
   }
 
@@ -279,7 +338,7 @@ const HomeScreen = () => {
 
             // check if filter applied, if 0 display all receipes
             Object.keys(activeItem) == 0 ? (
-              // links to the matching detail screen, passing along the key of the receipe
+            // links to the matching detail screen, passing along the key of the receipe
             <TouchableOpacity
               key = {key}
               onPress={() => navigation.navigate('ReceipeDetailsScreen', key )} >
@@ -306,7 +365,8 @@ const HomeScreen = () => {
                   
                 </TouchableOpacity>
               ) : (
-                <></> // proper way to do this??
+                // TODO: Update this to show "no receipe in this category"
+                <Text key = {key}></Text> // proper way to do this??
               ) 
             )
           ))
