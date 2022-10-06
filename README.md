@@ -10,7 +10,7 @@ Build with React Native (Expo).
 - [ ] Add dimensions to ingredients
 - [ ] Add parralax functionality & image to detail screen
 - [ ] Implement sharing functionality for receipes and shopping list
-- [ ] Style login screen
+- [x] Style login screen
 - [ ] Implement login animation if the user has saved his credentials (covering the login screen)
 - [ ] Implement loading animation for receipes & shopping list -> stop when items have loaded
 - [ ] Move often used functions & values / colors / headings into seperate files
