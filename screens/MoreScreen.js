@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, View, ScrollView, StatusBar, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -51,6 +51,8 @@ const MoreScreen = () => {
       .catch(error => alert(error.message))
   }
 
+  { /* messing around with activity state */ }
+  const [ isLoading, setIsLoading ] = useState(false)
 
   return (
     <SafeAreaView
@@ -111,12 +113,12 @@ const MoreScreen = () => {
 
             <View style={styles.appInfoRow}>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 20 }}>
-              <Feather name={'info'} size={24} color="black" />
+              <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 20 }}>
+                <Feather name={'info'} size={24} color="black" />
 
-              <Text style={{ fontSize: 18, paddingLeft: 20 }}>Information</Text>
+                <Text style={{ fontSize: 18, paddingLeft: 20 }}>Information</Text>
 
-            </View>
+              </View>
               { /* Question mark makes it an "optional value" */ }
               <Text>Diese Informationen können für Feedback nützlich sein. Sie werden nur lokal auf Ihrem Gerät gespeichert und niemals an unsere Server übertragen.{'\n'}</Text>
 
@@ -129,6 +131,17 @@ const MoreScreen = () => {
               <Text>Device Manufacturer: {Device.manufacturer}</Text>
               <Text>Device Model: {Device.modelName}</Text>
             </View>
+
+            {/* activity indicator experiments, is successfull ^^ */}
+            {isLoading ? (
+              <View style={styles.preloader}>
+                <ActivityIndicator size="large" color="#9E9E9E"/>
+              </View>
+            ):(
+              <TouchableOpacity onPress={() => setIsLoading(true)}>
+                <Text>Don't click me!</Text>
+              </TouchableOpacity>
+            )}
             
           </BottomSheetView>
           
