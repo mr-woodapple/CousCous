@@ -23,7 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ReceipeItem from '../components/ReceipeItem';
 
 // data
-import difficultyData from '../assets/data/difficultiesData';
+import difficultyData from '../assets/data/difficultyData';
   
 const HomeScreen = () => {
 
@@ -65,10 +65,6 @@ const HomeScreen = () => {
     // getReceipeData(),
   }, [])
 
-
-
-
-
   // code for storing data locally to AsyncStorage for offline use => necessary? Might switch to Firestore anyway
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -82,10 +78,10 @@ const HomeScreen = () => {
 
   const saveReceipeData = async () => {
     try {
-      console.log('saveReceipeData called')
+      //console.log('saveReceipeData called')
       const jsonValue = JSON.stringify(receipes)
       AsyncStorage.setItem('receipeData', jsonValue)
-      console.log('saved receipeData: ', jsonValue)
+      //console.log('saved receipeData: ', jsonValue)
     } catch (error) {
       console.log(error)
     }
@@ -97,7 +93,7 @@ const HomeScreen = () => {
       //return jsonValue != null ? JSON.parse(jsonValue) : null;
       const data = JSON.parse(jsonValue);
       setReceipes(data);
-      console.log('loaded data from Async: ', data)
+      //console.log('loaded data from Async: ', data)
     } catch (error) {
       console.log(error)
     }
@@ -265,8 +261,8 @@ const HomeScreen = () => {
   { /* functions for the difficulty picker */ }
   const [ displayDifficulty, setDisplayDifficulty ] = useState('')
 
-  function handleDifficultyChange(difficulty) {
-    setDifficulty(difficulty);
+  function handleDifficultyChange(difficulty, index) {
+    setDifficulty(difficultyData[index]);
     setDisplayDifficulty(difficulty);
   }
 
@@ -423,7 +419,7 @@ const HomeScreen = () => {
                   onPress={() => handleOpenDifficultySheet(0)}>
                     
                   <Feather name="tag" size={20} color="black" />
-                  <Text style={styles.metadataPillTitle}>Schwierigkeit: {difficulty}</Text>
+                  <Text style={styles.metadataPillTitle}>Schwierigkeit: {displayDifficulty}</Text>
                 </TouchableOpacity>
 
               </View>
@@ -599,11 +595,12 @@ const HomeScreen = () => {
               selectedValue={displayDifficulty}
               style={{ height: 200}} // set proper styles.xxx prop
               onValueChange={(item, itemIndex) =>
-                handleDifficultyChange(item)
+                handleDifficultyChange(item, itemIndex)
               }>
                 { /* render a picker.item for each category*/}
                 {difficultyData.map(key => (
-                  <Picker.Item label={key.name} value={key.name} key={key.id}/>
+                  <Picker.Item label={key.name} value={key.name} key={key}/>
+                  //console.log('key: ', key)
                 ))}
             </Picker>    
           </BottomSheetView>

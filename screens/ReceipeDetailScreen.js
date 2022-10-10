@@ -25,7 +25,7 @@ import Ingredients from '../components/Ingredients';
 import DestructiveRow from '../components/DestructiveRow';
 
 // data
-import difficultyData from '../assets/data/difficultiesData';
+import difficultyData from '../assets/data/difficultyData';
 import image from '../assets/images/nordwood-themes-wtevVfGYwnM-unsplash.jpg';
 
 
@@ -88,6 +88,7 @@ const HomeScreen = ({ route }) => {
       let categoryItems = {...data};
       setCategories(categoryItems);
     })
+
   }, [presentTitle, presentHowTo, duration, difficulty, category])
 
   function updateReceipe() {
@@ -203,10 +204,10 @@ const HomeScreen = ({ route }) => {
 
 
   { /* functions for the difficulty picker */ }
-  const [ displayDifficulty, setDisplayDifficulty ] = useState('')
+  const [ displayDifficulty, setDisplayDifficulty ] = useState('Schwierigkeit')
 
-  function handleDifficultyChange(difficulty) {
-    setDifficulty(difficulty);
+  function handleDifficultyChange(difficulty, index) {
+    setDifficulty(difficultyData[index]);
     setDisplayDifficulty(difficulty);
   }
 
@@ -345,7 +346,7 @@ const HomeScreen = ({ route }) => {
                 </View>
                 <View style={styles.metadataPill}>
                   <Feather name="zap" size={24} color="black" />
-                  <Text>   {receipes.difficulty}</Text>
+                  <Text>   {receipes?.difficulty?.name}</Text>
                 </View>
 
               </View>
@@ -369,23 +370,6 @@ const HomeScreen = ({ route }) => {
                   </TouchableOpacity>
                   
                 </View>
-
-
-                {/* deprecated 
-                <TextInput 
-                  placeholder='Zubereitungszeit'
-                  defaultValue={receipes.duration}
-                  style={styles.input}
-                  onChangeText={text => {
-                    setDuration(text);
-                  }}/>
-                  <TimePicker 
-                    value={{ hours, minutes }} 
-                    hoursUnit="Std"
-                    minutesUnit="Min"
-                    onChange={timePickerHandleChange}
-                  />*/}
- 
                   
               </View>        
             )}
@@ -602,7 +586,7 @@ const HomeScreen = ({ route }) => {
                   selectedValue={displayDifficulty}
                   style={{ height: 200}} // set proper styles.xxx prop
                   onValueChange={(item, itemIndex) =>
-                    handleDifficultyChange(item)
+                    handleDifficultyChange(item, itemIndex)
                   }>
                     { /* render a picker.item for each category*/}
                     {difficultyData.map(key => (

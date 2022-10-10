@@ -12,7 +12,7 @@ const ReceipeItem = ({receipe: {title, howTo, difficulty, duration, category}, i
 
 
       {/* add details such as duration and difficulty here */}
-      <Text style={styles.subHeading}>Zubereitungszeit: {duration.hours} Std. {duration.minutes} Min., Schwierigkeit: {difficulty}</Text>
+      <Text style={styles.subHeading}>Zubereitungszeit: {duration.hours} Std. {duration.minutes} Min., Schwierigkeit: {difficulty.name}</Text>
     </View>
   )
 }
