@@ -255,7 +255,7 @@ const HomeScreen = ({ route }) => {
     remove(ref(db, databasePathIngredient))
   }
 
-
+  { /* not properly implemented yet
   // functions to download media from Firebase storage
   const [ imageURL, setImageURL ] = useState('');
   const storage = getStorage();
@@ -263,7 +263,7 @@ const HomeScreen = ({ route }) => {
   
   getDownloadURL (imageRef)
     .then((url) => {setImageURL(url)})
-    .catch((error) => {console.log(error)})
+    .catch((error) => {console.log(error)})*/}
 
 
 
@@ -309,12 +309,12 @@ const HomeScreen = ({ route }) => {
         <ScrollView style={styles.contentWrapper} contentContainerStyle={{ paddingBottom: 100 }}>
 
 
-            {/* header image */}
+            {/* header image, not properly implemented yet
             <Image 
               style={styles.debug}
               source={{ 
                 uri: imageURL
-              }}/>
+              }}/>*/}
           
 
             {/* Title */}

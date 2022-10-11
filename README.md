@@ -8,13 +8,14 @@ Build with React Native (Expo).
 - [x] Add Spotify like header bar for categories
 - [x] Add duration and difficulty to receipes
 - [ ] Add dimensions to ingredients
+- [ ] Add "nothing here" illustrations to receipes, categories & shopping list
+- [ ] Implement login animation if the user has saved his credentials (covering the login screen)
+- [ ] Add paywall (3 receipes free, only 10 to-do list items?)
 - [ ] Add parralax functionality & image to detail screen
 - [ ] Implement sharing functionality for receipes and shopping list
 - [x] Style login screen
-- [ ] Implement login animation if the user has saved his credentials (covering the login screen)
 - [ ] Implement loading animation for receipes & shopping list -> stop when items have loaded
 - [ ] Move often used functions & values / colors / headings into seperate files
 - [ ] Add darkmode (& user selectable color-schemes?)
-- [ ] Add paywall (3 receipes free, only 10 to-do list items?)
 - [ ] Add tablet view (with sidebar like spotify, select item above and then display receipes below)
-- [ ] Rebuild to work offline as standard and only create account if wanted -> use async?
+- [ ] Rebuild to work offline as standard and only create account if wanted -> use async? LOW PRIORITY
