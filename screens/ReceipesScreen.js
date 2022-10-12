@@ -3,7 +3,7 @@
 // Created 02.09.2022 by Jasper Holzapfel
 
 import React , { useState, useEffect, useRef, useCallback  } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Keyboard, KeyboardAvoidingView, ImageBackground, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetTextInput, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -320,7 +320,13 @@ const HomeScreen = () => {
               </TouchableOpacity>
             ))
           ) : (
-            <Text style={styles.text}>Erstelle deine erste Kategorie.</Text>
+            <View style={styles.nothingHereCategoriesContainer}>
+              <Image 
+              style={styles.nothingHereCategoriesImage}
+              source={require('../assets/images/CousCous_NoCategoriesYet-v2.png')}
+            />
+            </View>
+            
           )}
             
         </ScrollView>
@@ -367,7 +373,13 @@ const HomeScreen = () => {
             )
           ))
         ) : (
-          <Text style={styles.text}>Keine Rezepte vorhanden.</Text>
+          
+          <View style={styles.nothingHereContainer}>
+            <Image 
+              style={styles.nothingHereImage}
+              source={require('../assets/images/CousCous_NoReceipesYet-PNG-v1.png')}
+            />
+          </View>
         )}
       </ScrollView>
       
@@ -751,4 +763,24 @@ const styles = StyleSheet.create({
   metadataPillTitle: {
     marginLeft: 10,
   },
+
+  // no receipes container
+  nothingHereContainer: {
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  nothingHereImage: {
+    resizeMode: 'contain',
+    height: 500,
+  },
+
+  nothingHereCategoriesContainer: {
+    // a bit too hacky I think
+    marginLeft: -350,
+  },
+  nothingHereCategoriesImage: {
+    resizeMode: 'contain',
+    height: 40,
+  },
+
 })

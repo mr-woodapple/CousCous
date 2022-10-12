@@ -310,6 +310,7 @@ const HomeScreen = ({ route }) => {
 
 
             {/* header image, not properly implemented yet
+            => see here: https://reactnative.dev/docs/image#defaultsource
             <Image 
               style={styles.debug}
               source={{ 
