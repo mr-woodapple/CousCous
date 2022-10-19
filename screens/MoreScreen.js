@@ -13,8 +13,12 @@ import * as Device from 'expo-device';
 // components
 import SingleRow from '../components/SingleRow';
 
+// core tech
+import Monetization from '../components/core/Monetization';
+
 // screens
 import SectionHeading from '../components/generic/SectionHeading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MoreScreen = () => {
 
@@ -86,6 +90,45 @@ const MoreScreen = () => {
 
         <TouchableOpacity onPress={handleSignOut}>
           <SingleRow text={'Abmelden'} icon={'log-out'} /> 
+        </TouchableOpacity>
+
+
+        
+        <SectionHeading heading={'Pro Version'}/>
+
+        <TouchableOpacity onPress={() => Monetization.I.restoreUpgrade() }>
+          <SingleRow text={'restore purchases'} icon={'gift'} navLink={false} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => Monetization.I.buyUpgrade() }>
+          <SingleRow text={'buy upgrade'} icon={'gift'} navLink={false} />
+        </TouchableOpacity>
+
+
+        {/* these are just for debug, REMOVE IN APP VERSION */}
+        <SectionHeading heading={'Debug'}/>
+        { Monetization.I.hasUpgraded() ? (
+            <Text>Ist aktiv</Text>
+          ):(
+            <Text>Ist nicht aktiv</Text>
+          ) 
+        }
+
+        {/*
+          AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (error, stores) => {
+              stores.map((result, i, store) => {
+                console.log({ [store[i][0]]: store[i][1] });
+                return true;
+              });
+            });
+          })
+        */}
+
+        <TouchableOpacity onPress={() => Monetization.I.setToUpgraded() }>
+          <SingleRow text={'add "hasUpgraded" to Async'} icon={'code'} navLink={false} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => Monetization.I.setToNotUpgraded() }>
+          <SingleRow text={'remove "hasUpgraded" from Async'} icon={'code'} navLink={false} />
         </TouchableOpacity>
 
       </ScrollView>
