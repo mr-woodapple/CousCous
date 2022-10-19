@@ -38,6 +38,9 @@
       "eas": {
         "projectId": "7cfe7d3a-b575-4df1-bca2-14e3924a2f84"
       }
+    },
+    "expo-yarn-workspaces": {
+      "symlinks": ["expo-constants"]
     }
   }
 }
