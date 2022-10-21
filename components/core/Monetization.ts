@@ -74,9 +74,14 @@ export default class Monetization {
         if (Constants.appOwnership === "expo") return false;
 
         try {
+            await InAppPurchases.connectAsync();
+
             await InAppPurchases.getProductsAsync([item]);
 
-            InAppPurchases.purchaseItemAsync(item);
+            console.log('item = ', item)
+            console.log(InAppPurchases.getProductsAsync([item]));
+
+            InAppPurchases.purchaseItemAsync(item).then((_) => {});
 
             return await new Promise((resolve, reject) => {
                 InAppPurchases.setPurchaseListener(async (result) => {
@@ -111,7 +116,9 @@ export default class Monetization {
     }
 
     buyUpgrade = () =>
-        Monetization.buy("proversion", false, () => AsyncStorage.setItem('hasUpgraded', JSON.stringify(true)));
+    Monetization.buy("proversion", false, () =>
+      AsyncStorage.setItem(`hasUpgraded`, JSON.stringify(true))
+    );
 
         
     

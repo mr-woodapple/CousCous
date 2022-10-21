@@ -3,7 +3,9 @@ import { StyleSheet, Text, View, ScrollView, ActivityIndicator, TouchableOpacity
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { getAuth, signOut } from 'firebase/auth'
+import { getAuth, signOut, deleteUser } from 'firebase/auth'
+import { ref, remove } from 'firebase/database';
+import { db } from '../firebase'
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
 import { expo } from '../app.json';
@@ -43,9 +45,12 @@ const MoreScreen = () => {
   );
 
 
-  { /* functions for the logout */ }
+  { /* functions for logout & deleting the user */ }
   const navigation = useNavigation()
   const auth = getAuth()
+  const user = auth.currentUser;
+  const userUID = auth.currentUser?.uid
+
 
   const handleSignOut = () => {
     signOut(auth)
@@ -53,6 +58,16 @@ const MoreScreen = () => {
         navigation.replace("Login")
       })
       .catch(error => alert(error.message))
+  }
+
+  // delete the user account, remove all receipes & go back to the login screen
+  // TODO: Include method to reauthenticate user, as this is sometimes required
+  const handleUserAccountDelete =  () => {
+    remove(ref(db, userUID))
+    deleteUser(user).then(() => {
+      console.log('user deleted')
+      navigation.replace("Login")
+    }).catch((error) => alert(error.message))
   }
 
   { /* messing around with activity state */ }
@@ -91,20 +106,24 @@ const MoreScreen = () => {
         <TouchableOpacity onPress={handleSignOut}>
           <SingleRow text={'Abmelden'} icon={'log-out'} /> 
         </TouchableOpacity>
+        
+        <TouchableOpacity onPress={handleUserAccountDelete }>
+          <SingleRow text={'Nutzeraccount löschen'} icon={'trash'} navLink={false} />
+        </TouchableOpacity>
 
 
         
         <SectionHeading heading={'Pro Version'}/>
 
         <TouchableOpacity onPress={() => Monetization.I.restoreUpgrade() }>
-          <SingleRow text={'restore purchases'} icon={'gift'} navLink={false} />
+          <SingleRow text={'Einkäufe wiederherstellen'} icon={'refresh-cw'} navLink={false} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Monetization.I.buyUpgrade() }>
-          <SingleRow text={'buy upgrade'} icon={'gift'} navLink={false} />
+          <SingleRow text={'Pro Version kaufen'} icon={'shopping-bag'} navLink={false} />
         </TouchableOpacity>
 
 
-        {/* these are just for debug, REMOVE IN APP VERSION */}
+        {/* these are just for debug, REMOVE IN APP VERSION 
         <SectionHeading heading={'Debug'}/>
         { Monetization.I.hasUpgraded() ? (
             <Text>Ist aktiv</Text>
@@ -113,7 +132,7 @@ const MoreScreen = () => {
           ) 
         }
 
-        {/*
+        
           AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (error, stores) => {
               stores.map((result, i, store) => {
@@ -122,14 +141,14 @@ const MoreScreen = () => {
               });
             });
           })
-        */}
+        
 
         <TouchableOpacity onPress={() => Monetization.I.setToUpgraded() }>
           <SingleRow text={'add "hasUpgraded" to Async'} icon={'code'} navLink={false} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Monetization.I.setToNotUpgraded() }>
           <SingleRow text={'remove "hasUpgraded" from Async'} icon={'code'} navLink={false} />
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
 
       </ScrollView>
 
@@ -175,7 +194,8 @@ const MoreScreen = () => {
               <Text>Device Model: {Device.modelName}</Text>
             </View>
 
-            {/* activity indicator experiments, is successfull ^^ */}
+
+            {/* activity indicator experiments, is successfull ^^ 
             {isLoading ? (
               <View style={styles.preloader}>
                 <ActivityIndicator size="large" color="#9E9E9E"/>
@@ -184,7 +204,7 @@ const MoreScreen = () => {
               <TouchableOpacity onPress={() => setIsLoading(true)}>
                 <Text>Don't click me!</Text>
               </TouchableOpacity>
-            )}
+            )}*/}
             
           </BottomSheetView>
           

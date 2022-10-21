@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "HouseholdProject",
-    "slug": "HouseholdProject",
-    "version": "0.1.5",
+    "name": "CousCous",
+    "slug": "CousCous",
+    "version": "0.1.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.HolzapfelGrafik.HouseholdProject",
-      "buildNumber": "0.1.5"
+      "buildNumber": "0.1.6"
     },
     "android": {
       "versionCode": 7,
