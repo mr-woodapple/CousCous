@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "CousCous",
-    "slug": "CousCous",
+    "slug": "HouseholdProject",
     "version": "0.1.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.HolzapfelGrafik.HouseholdProject",
+      "bundleIdentifier": "com.HolzapfelGrafik.CousCous",
       "buildNumber": "0.1.6"
     },
     "android": {
@@ -28,7 +28,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.HolzapfelGrafik.HouseholdProject",
+      "package": "com.HolzapfelGrafik.CousCous",
       "permissions": []
     },
     "web": {

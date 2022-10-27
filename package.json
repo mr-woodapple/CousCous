@@ -1,6 +1,6 @@
 {
-  "name": "householdproject",
-  "version": "0.1.4",
+  "name": "couscous",
+  "version": "0.1.6",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
