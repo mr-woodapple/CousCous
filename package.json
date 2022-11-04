@@ -1,6 +1,6 @@
 {
   "name": "couscous",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",

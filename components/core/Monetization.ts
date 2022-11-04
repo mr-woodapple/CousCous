@@ -31,7 +31,6 @@ export default class Monetization {
 
     // check if the pro version has been bought
     async hasUpgraded(): Promise<boolean> {
-        console.log('hasUpgraded called')
         return JSON.parse(
             (await AsyncStorage.getItem('hasUpgraded')) as string
         ) as boolean;

@@ -40,6 +40,7 @@ const EditCategories = () => {
 
   const categoryKeys = Object.keys(categories);
 
+  // checks if category name = empty, creates a new category otherwise
   function addCategory() {
 
     if (presentCategory === "") {

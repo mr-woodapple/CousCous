@@ -18,11 +18,14 @@ import SingleRow from '../components/SingleRow';
 
 // core tech
 import Monetization from '../components/core/Monetization';
+import { buyUpgrade, hasUpgraded } from '../components/core/Mmonetization';
 
 // screens
 import SectionHeading from '../components/generic/SectionHeading';
 
+
 const MoreScreen = () => {
+
 
   { /* functions the bottom modal sheets */ }
   const sheetRef = useRef(null);
@@ -62,7 +65,7 @@ const MoreScreen = () => {
 
   // delete the user account, remove all receipes & go back to the login screen
   // TODO: Include method to reauthenticate user, as this is sometimes required
-  const handleUserAccountDelete =  () => {
+  const handleUserAccountDelete = () => {
     remove(ref(db, userUID))
     deleteUser(user).then(() => {
       console.log('user deleted')
@@ -127,22 +130,19 @@ const MoreScreen = () => {
         <SectionHeading heading={'Debug'}/>
         
 
-        { Monetization.I.hasUpgraded() ? (
+        { hasUpgraded() === true ? (
           <Text>Pro Modus ist aktiv</Text>
         ):(
           <Text>Pro Modus ist nicht aktiv</Text>
-        )}
-
-        <TouchableOpacity onPress={console.log(AsyncStorage.getItem('hasUpgraded'))}>
-          <SingleRow text={'read async storage'} icon={'code'} navLink={false} />
-        </TouchableOpacity>        
+        )}   
         
-        <TouchableOpacity onPress={() => Monetization.I.setToUpgraded() }>
-          <SingleRow text={'add "hasUpgraded" to Async'} icon={'code'} navLink={false} />
+        <TouchableOpacity onPress={() => buyUpgrade()}>
+          <SingleRow text={'setHasUpgraded'} icon={'code'} navLink={false} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Monetization.I.setToNotUpgraded() }>
-          <SingleRow text={'remove "hasUpgraded" from Async'} icon={'code'} navLink={false} />
+        <TouchableOpacity onPress={() => hasUpgraded()}>
+          <SingleRow text={'hasUpgraded?'} icon={'code'} navLink={false} />
         </TouchableOpacity>
+
 
       </ScrollView>
 
