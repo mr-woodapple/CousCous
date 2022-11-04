@@ -55,12 +55,16 @@ const ToDoListScreen = () => {
     }, []);
 
     function addNewTodo() {
-        Keyboard.dismiss();
-        push(ref(db, databasePath), {
-            done: false,
-            title: presentTodo,
-        });
-        setPresentTodo('');
+        if (presentTodo === "") {
+            alert("Etwas leeres hinzufügen macht keinen Sinn, bitte gib etwas ein. :)")
+        } else {
+            Keyboard.dismiss();
+            push(ref(db, databasePath), {
+                done: false,
+                title: presentTodo,
+            });
+            setPresentTodo('');
+        }
     }
 
     function clearTodos() {

@@ -119,20 +119,24 @@ const HomeScreen = () => {
 
   // add new receipe
   function addNewReceipe() {
-    Keyboard.dismiss();
-    push(ref(db, databasePath), {
-      title: presentTitle,
-      howTo: presentHowTo,
-      ingredients: presentIngredients,
-      duration: duration,
-      difficulty: difficulty,
-      category: category,
-      isFavorite: isFavorite,
-    });
-    addReceipeCloseSheet();
-    setPresentTitle('');
-    setPresentIngredients([]);
-    setPresentHowTo('');
+    if (presentTitle === "") {
+      alert("Der Title darf nicht leer sein!")
+    } else {
+      Keyboard.dismiss();
+      push(ref(db, databasePath), {
+        title: presentTitle,
+        howTo: presentHowTo,
+        ingredients: presentIngredients,
+        duration: duration,
+        difficulty: difficulty,
+        category: category,
+        isFavorite: isFavorite,
+      });
+      addReceipeCloseSheet();
+      setPresentTitle('');
+      setPresentIngredients([]);
+      setPresentHowTo('');
+    }
   }
 
   // update the ingredients array after each input with ingredient object

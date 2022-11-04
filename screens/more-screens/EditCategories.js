@@ -42,13 +42,18 @@ const EditCategories = () => {
 
   function addCategory() {
 
+    if (presentCategory === "") {
+      alert("Bitte gib deiner Kategorie einen Namen!")
+    } else {
+      push(ref(db, databasePathCategories), {
+        id: presentCategory,
+        name: presentCategory
+      })
+      setPresentCategory('');
+    }
+
     // TODO: check if category already existent
 
-    push(ref(db, databasePathCategories), {
-      id: presentCategory,
-      name: presentCategory
-    })
-    setPresentCategory('');
   }
 
   function deleteCategory(key) {

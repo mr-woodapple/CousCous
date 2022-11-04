@@ -9,6 +9,7 @@ import { db } from '../firebase'
 import { useNavigation } from '@react-navigation/native'
 import { Portal } from '@gorhom/portal';
 import { expo } from '../app.json';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import * as Device from 'expo-device';
 
@@ -20,7 +21,6 @@ import Monetization from '../components/core/Monetization';
 
 // screens
 import SectionHeading from '../components/generic/SectionHeading';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MoreScreen = () => {
 
@@ -93,7 +93,7 @@ const MoreScreen = () => {
 
 
       { /* main scroll view def */ }
-      <ScrollView style={styles.mainViewMore}>
+      <ScrollView style={styles.mainViewMore} contentContainerStyle={{ paddingBottom: 50 }}>
 
         <SectionHeading heading={'Verwalten'}/>
 
@@ -123,32 +123,26 @@ const MoreScreen = () => {
         </TouchableOpacity>
 
 
-        {/* these are just for debug, REMOVE IN APP VERSION 
+        
         <SectionHeading heading={'Debug'}/>
+        
+
         { Monetization.I.hasUpgraded() ? (
-            <Text>Ist aktiv</Text>
-          ):(
-            <Text>Ist nicht aktiv</Text>
-          ) 
-        }
+          <Text>Pro Modus ist aktiv</Text>
+        ):(
+          <Text>Pro Modus ist nicht aktiv</Text>
+        )}
 
+        <TouchableOpacity onPress={console.log(AsyncStorage.getItem('hasUpgraded'))}>
+          <SingleRow text={'read async storage'} icon={'code'} navLink={false} />
+        </TouchableOpacity>        
         
-          AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (error, stores) => {
-              stores.map((result, i, store) => {
-                console.log({ [store[i][0]]: store[i][1] });
-                return true;
-              });
-            });
-          })
-        
-
         <TouchableOpacity onPress={() => Monetization.I.setToUpgraded() }>
           <SingleRow text={'add "hasUpgraded" to Async'} icon={'code'} navLink={false} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Monetization.I.setToNotUpgraded() }>
           <SingleRow text={'remove "hasUpgraded" from Async'} icon={'code'} navLink={false} />
-        </TouchableOpacity>*/}
+        </TouchableOpacity>
 
       </ScrollView>
 
