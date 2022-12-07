@@ -113,6 +113,10 @@ const MoreScreen = () => {
         <TouchableOpacity onPress={handleUserAccountDelete }>
           <SingleRow text={'Nutzeraccount löschen'} icon={'trash'} navLink={false} />
         </TouchableOpacity>
+        <Text style={{ padding: 15 }}>
+          Achtung, dieser Schritt kann nicht wiederrufen werden! Dabei werden alle Daten & 
+          dein Account sofort von unseren Servern gelöscht!
+        </Text>
 
 
         {/* 

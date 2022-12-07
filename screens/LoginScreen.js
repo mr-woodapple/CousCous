@@ -117,10 +117,11 @@ const LoginScreen = () => {
 
                     <Text style={genericStyles.headingLarge}>Willkommen!</Text>
                     <Text style={[ genericStyles.headingMedium, { marginTop: -30 } ]}>Registriere dich, um anzufangen.</Text>
+                    <Text style={{ marginBottom: 30 }}>Deine Daten werden sicher in der Cloud gespeichert und sind von überall aus abrufbar - ganz einfach!</Text>
 
                     <View style={styles.inputContainer}>
                         <View style={styles.inputRow}>
-                            <Text style={styles.inputHintText}>E-Mail Adresse</Text>
+                            <Text style={styles.inputHintText}> Deine E-Mail Adresse</Text>
                             <TextInput
                                 placeholder="E-Mail"
                                 autoCapitalize='none'
@@ -131,7 +132,7 @@ const LoginScreen = () => {
                         </View>
                         
                         <View style={styles.inputRow}>
-                            <Text style={styles.inputHintText}>Passwort</Text>
+                            <Text style={styles.inputHintText}>Vergib ein sicheres Passwort</Text>
                             <TextInput
                                 placeholder="Password"
                                 value={password}
@@ -140,7 +141,7 @@ const LoginScreen = () => {
                                 secureTextEntry />
                         </View>
                         <View style={styles.inputRow}>
-                            <Text  style={styles.inputHintText}>Passwort wiederholen</Text>
+                            <Text  style={styles.inputHintText}>Wiederhole dein Passwort</Text>
                             <TextInput
                                 placeholder="Password wiederholen"
                                 value={passwordRepeat}

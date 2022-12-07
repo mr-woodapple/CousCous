@@ -68,6 +68,7 @@ const HomeScreen = ({ route }) => {
       let data = querySnapshot.val() || {};
       let receipeItems = {...data};
       setReceipes(receipeItems);
+      console.log('DEBUG receipeItems = ', receipeItems)
     }),
 
     onValue(ref( db, databasePathIngredients), querySnapshot => {
