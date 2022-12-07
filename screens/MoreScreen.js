@@ -17,7 +17,7 @@ import * as Device from 'expo-device';
 import SingleRow from '../components/SingleRow';
 
 // core tech
-import Monetization from '../components/core/Monetization';
+import Mmonetization from '../components/core/Mmonetization';
 import { buyUpgrade, hasUpgraded } from '../components/core/Mmonetization';
 
 // screens
@@ -115,7 +115,7 @@ const MoreScreen = () => {
         </TouchableOpacity>
 
 
-        
+        {/* 
         <SectionHeading heading={'Pro Version'}/>
 
         <TouchableOpacity onPress={() => Monetization.I.restoreUpgrade() }>
@@ -142,6 +142,7 @@ const MoreScreen = () => {
         <TouchableOpacity onPress={() => hasUpgraded()}>
           <SingleRow text={'hasUpgraded?'} icon={'code'} navLink={false} />
         </TouchableOpacity>
+        */}
 
 
       </ScrollView>
