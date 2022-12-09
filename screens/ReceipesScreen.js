@@ -142,19 +142,22 @@ const HomeScreen = () => {
   // update the ingredients array after each input with ingredient object
   function addIngredient() {
     // create new object with id, title & measurements
-    let newIngredient = {
-      id: uuidv4(),
-      title: presentIngredient,
-
-      // TODO!
-      measurement: '200 tonnen',
-
+    if (presentIngredient === "") {
+      alert("Bitte gib deiner Zutat einen Namen.")
+    } else {
+      let newIngredient = {
+        id: uuidv4(),
+        title: presentIngredient,
+  
+        // TODO!
+        measurement: '200 tonnen',
+      }
+      // add that created object to the array of existing objects, call setPresentIngredients
+      presentIngredients.push(newIngredient)
+      setPresentIngredients(presentIngredients)
+      // removes keyboard and sets input field to empty
+      setPresentIngredient('');
     }
-    // add that created object to the array of existing objects, call setPresentIngredients
-    presentIngredients.push(newIngredient)
-    setPresentIngredients(presentIngredients)
-    // removes keyboard and sets input field to empty
-    setPresentIngredient('');
   }
 
   // remove items by their key
@@ -163,7 +166,6 @@ const HomeScreen = () => {
       el => el.id !== id
     ));
   }
-
 
 
   { /* functions the bottom modal sheets */ }
@@ -244,12 +246,15 @@ const HomeScreen = () => {
   function addCategory() {
 
     // TODO: check if category already existent
-
-    push(ref(db, databasePathCategories), {
-      id: presentCategory,
-      name: presentCategory
-    })
-    setPresentCategory('');
+    if (presentCategory === "") {
+      alert("Bitte gib deiner Kategorie einen Namen!")
+    } else {
+      push(ref(db, databasePathCategories), {
+        id: presentCategory,
+        name: presentCategory
+      })
+      setPresentCategory('');
+    }
   }
 
   // helper value to display the selected value in the picker
