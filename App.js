@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -15,6 +15,9 @@ import MoreScreen from './screens/MoreScreen';
 import ToDoListScreen from './screens/ToDoListScreen';
 import ReceipeDetailScreen from './screens/ReceipeDetailScreen';
 import EditCategories from './screens/more-screens/EditCategories';
+
+// Onboarding
+import Onboarding from './components/Onboarding';
 
 
 // nagivator definitions
@@ -70,15 +73,30 @@ function MoreScreenNavigation() {
 
 { /* main navigator stack*/ }
 export default function App() {
+
+  // setup for the onboarding
+  const [ showOnboard, setShowOnboard ] = useState(true);
+
+  const handleOnboardFinish = () => {
+    setShowOnboard(false);
+  }
+
   return (
-    <PortalProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
-          <Stack.Screen name="TabScreenNav" component={TabScreenNavigation} options={{ headerShown: false }} />
-        </Stack.Navigator>
-      </NavigationContainer>
+    <>
+    { showOnboard && <Onboarding handleDone={handleOnboardFinish} />}
+    { !showOnboard && 
+      <PortalProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
+            <Stack.Screen name="TabScreenNav" component={TabScreenNavigation} options={{ headerShown: false }} />
+          </Stack.Navigator>
+        </NavigationContainer>
     </PortalProvider>
+  }
+
+  </>
+    
   );
 }
 

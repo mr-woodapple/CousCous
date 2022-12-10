@@ -22,6 +22,7 @@ import { buyUpgrade, hasUpgraded } from '../components/core/Mmonetization';
 
 // screens
 import SectionHeading from '../components/generic/SectionHeading';
+import Onboarding from '../components/Onboarding';
 
 
 const MoreScreen = () => {
@@ -103,6 +104,7 @@ const MoreScreen = () => {
         <TouchableOpacity onPress={() => navigation.navigate('EditCategoriesScreen')}>
           <SingleRow text={'Kategorien verwalten'} icon={'edit'} navlink={true} /> 
         </TouchableOpacity>
+
 
         <SectionHeading heading={'Mehr'}/>
 
