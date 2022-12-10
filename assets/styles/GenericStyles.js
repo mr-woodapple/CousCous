@@ -29,6 +29,16 @@ const genericStyles = StyleSheet.create({
         paddingVertical: 20,
     },
 
+    // text
+    textPrimary: {
+      fontSize: 16,
+      color: 'black',
+    },
+    textSecondary: {
+      fontSize: 14,
+      color: 'grey',
+    },
+
     // COMPONENTS
 
     // header

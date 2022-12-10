@@ -74,8 +74,6 @@ const MoreScreen = () => {
     }).catch((error) => alert(error.message))
   }
 
-  { /* messing around with activity state */ }
-  const [ isLoading, setIsLoading ] = useState(false)
 
   return (
     <SafeAreaView
