@@ -1,6 +1,6 @@
-# HouseholdProject
-Simple app build in React Native to create (and share) a shopping list & receipes in a family or with friends.
-Build with React Native (Expo).
+# CousCous (HouseholdProject)
+Simple app build in React Native to create (and in the future share) a shopping list & receipes in a family or with friends.
+Build with React Native (bare workflow).
 
 # To-do list:
 - [x] Implement receipes details screen
@@ -10,7 +10,6 @@ Build with React Native (Expo).
 - [ ] Add dimensions to ingredients
 - [ ] Add "nothing here" illustrations to receipes, categories & shopping list
 - [ ] Implement login animation if the user has saved his credentials (covering the login screen)
-- [ ] Add paywall (3 receipes free, only 10 to-do list items?)
 - [ ] Add parralax functionality & image to detail screen
 - [ ] Implement sharing functionality for receipes and shopping list
 - [x] Style login screen
