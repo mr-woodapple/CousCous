@@ -17,4 +17,4 @@ Build with React Native (bare workflow).
 - [ ] Move often used functions & values / colors / headings into seperate files
 - [ ] Add darkmode (& user selectable color-schemes?)
 - [ ] Add tablet view (with sidebar like spotify, select item above and then display receipes below)
-- [ ] Rebuild to work offline as standard and only create account if wanted -> use async? LOW PRIORITY
+- [ ] Rebuild to work offline as standard and only create account if wanted
